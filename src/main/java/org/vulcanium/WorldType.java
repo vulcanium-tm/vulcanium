@@ -1,9 +1,7 @@
-package org.bukkit;
+package org.vulcanium;
 
-import com.google.common.collect.Maps;
+import java.util.HashMap;
 import java.util.Map;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 /**
  * Represents various types of worlds that may exist
@@ -14,10 +12,10 @@ public enum WorldType {
     LARGE_BIOMES("LARGEBIOMES"),
     AMPLIFIED("AMPLIFIED");
 
-    private static final Map<String, WorldType> BY_NAME = Maps.newHashMap();
+    private static final Map<String, WorldType> BY_NAME = new HashMap<>();
     private final String name;
 
-    private WorldType(/*@NotNull*/ String name) {
+    private WorldType(String name) {
         this.name = name;
     }
 
@@ -26,7 +24,6 @@ public enum WorldType {
      *
      * @return Name of this type
      */
-    @NotNull
     public String getName() {
         return name;
     }
@@ -37,14 +34,13 @@ public enum WorldType {
      * @param name Name of the WorldType to get
      * @return Requested WorldType, or null if not found
      */
-    @Nullable
-    public static WorldType getByName(@NotNull String name) {
-        return BY_NAME.get(name.toUpperCase(java.util.Locale.ENGLISH));
+    public static WorldType getByName(String name) {
+        return BY_NAME.get(name.toUpperCase());
     }
 
     static {
         for (WorldType type : values()) {
-            BY_NAME.put(type.name, type);
+            BY_NAME.put(type.name.toUpperCase(), type);
         }
     }
 }
