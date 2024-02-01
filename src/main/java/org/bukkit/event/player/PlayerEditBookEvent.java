@@ -1,11 +1,12 @@
 package org.bukkit.event.player;
 
-import org.apache.commons.lang.Validate;
+import com.google.common.base.Preconditions;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Cancellable;
 import org.bukkit.event.HandlerList;
 import org.bukkit.inventory.meta.BookMeta;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * Called when a player edits or signs a book and quill item. If the event is
@@ -20,12 +21,12 @@ public class PlayerEditBookEvent extends PlayerEvent implements Cancellable {
     private boolean isSigning;
     private boolean cancel;
 
-    public PlayerEditBookEvent(Player who, int slot, BookMeta previousBookMeta, BookMeta newBookMeta, boolean isSigning) {
+    public PlayerEditBookEvent(@NotNull Player who, int slot, @NotNull BookMeta previousBookMeta, @NotNull BookMeta newBookMeta, boolean isSigning) {
         super(who);
 
-        Validate.isTrue(slot >= 0 && slot <=8, "Slot must be in range 0-8 inclusive");
-        Validate.notNull(previousBookMeta, "Previous book meta must not be null");
-        Validate.notNull(newBookMeta, "New book meta must not be null");
+        Preconditions.checkArgument(slot >= -1 && slot <= 8, "Slot must be in range (-1)-8 inclusive");
+        Preconditions.checkArgument(previousBookMeta != null, "Previous book meta must not be null");
+        Preconditions.checkArgument(newBookMeta != null, "New book meta must not be null");
 
         Bukkit.getItemFactory().equals(previousBookMeta, newBookMeta);
 
@@ -44,6 +45,7 @@ public class PlayerEditBookEvent extends PlayerEvent implements Cancellable {
      *
      * @return the book meta currently on the book
      */
+    @NotNull
     public BookMeta getPreviousBookMeta() {
         return previousBookMeta.clone();
     }
@@ -57,6 +59,7 @@ public class PlayerEditBookEvent extends PlayerEvent implements Cancellable {
      *
      * @return the book meta that the player is attempting to add
      */
+    @NotNull
     public BookMeta getNewBookMeta() {
         return newBookMeta.clone();
     }
@@ -65,10 +68,13 @@ public class PlayerEditBookEvent extends PlayerEvent implements Cancellable {
      * Gets the inventory slot number for the book item that triggered this
      * event.
      * <p>
-     * This is a slot number on the player's hotbar in the range 0-8.
+     * This is a slot number on the player's hotbar in the range 0-8, or -1 for
+     * off hand.
      *
      * @return the inventory slot number that the book item occupies
+     * @deprecated books may be signed from off hand
      */
+    @Deprecated
     public int getSlot() {
         return slot;
     }
@@ -79,8 +85,8 @@ public class PlayerEditBookEvent extends PlayerEvent implements Cancellable {
      * @param newBookMeta new book meta
      * @throws IllegalArgumentException if the new book meta is null
      */
-    public void setNewBookMeta(BookMeta newBookMeta) throws IllegalArgumentException {
-        Validate.notNull(newBookMeta, "New book meta must not be null");
+    public void setNewBookMeta(@NotNull BookMeta newBookMeta) throws IllegalArgumentException {
+        Preconditions.checkArgument(newBookMeta != null, "New book meta must not be null");
         Bukkit.getItemFactory().equals(newBookMeta, null);
         this.newBookMeta = newBookMeta.clone();
     }
@@ -105,19 +111,23 @@ public class PlayerEditBookEvent extends PlayerEvent implements Cancellable {
         isSigning = signing;
     }
 
+    @NotNull
     @Override
     public HandlerList getHandlers() {
         return handlers;
     }
 
+    @NotNull
     public static HandlerList getHandlerList() {
         return handlers;
     }
 
+    @Override
     public boolean isCancelled() {
         return cancel;
     }
 
+    @Override
     public void setCancelled(boolean cancel) {
         this.cancel = cancel;
     }

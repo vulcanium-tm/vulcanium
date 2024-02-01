@@ -1,15 +1,11 @@
 package org.bukkit.metadata;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
-
+import static org.junit.jupiter.api.Assertions.*;
 import java.util.List;
 import java.util.concurrent.Callable;
-
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.TestPlugin;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public class MetadataStoreTest {
     private Plugin pluginX = new TestPlugin("x");
@@ -38,6 +34,7 @@ public class MetadataStoreTest {
         final Counter counter = new Counter();
 
         subject.setMetadata("subject", "key", new LazyMetadataValue(pluginX, new Callable<Object>() {
+            @Override
             public Object call() throws Exception {
                 counter.increment();
                 return 10;
@@ -56,6 +53,7 @@ public class MetadataStoreTest {
         final Counter counter = new Counter();
 
         subject.setMetadata("subject", "key", new LazyMetadataValue(pluginX, new Callable<Object>() {
+            @Override
             public Object call() throws Exception {
                 counter.increment();
                 return 10;
@@ -114,7 +112,7 @@ public class MetadataStoreTest {
         assertEquals(1, subject.getMetadata("subject", "key").size());
         assertEquals(10, subject.getMetadata("subject", "key").get(0).value());
     }
-    
+
     @Test
     public void testHasMetadata() {
         subject.setMetadata("subject", "key", new FixedMetadataValue(pluginX, 10));

@@ -1,27 +1,34 @@
 package org.bukkit.conversations;
 
-import org.apache.commons.lang.ArrayUtils;
-import org.apache.commons.lang.BooleanUtils;
+import com.google.common.collect.ImmutableSet;
+import java.util.Locale;
+import java.util.Set;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * BooleanPrompt is the base class for any prompt that requires a boolean
  * response from the user.
  */
-public abstract class BooleanPrompt extends ValidatingPrompt{
+public abstract class BooleanPrompt extends ValidatingPrompt {
+
+    private static final Set<String> TRUE_INPUTS = ImmutableSet.of("true", "on", "yes", "y", "1", "right", "correct", "valid");
+    private static final Set<String> FALSE_INPUTS = ImmutableSet.of("false", "off", "no", "n", "0", "wrong", "incorrect", "invalid");
+    private static final Set<String> VALID_INPUTS = ImmutableSet.<String>builder().addAll(TRUE_INPUTS).addAll(FALSE_INPUTS).build();
 
     public BooleanPrompt() {
         super();
     }
 
     @Override
-    protected boolean isInputValid(ConversationContext context, String input) {
-        String[] accepted = {"true", "false", "on", "off", "yes", "no"};
-        return ArrayUtils.contains(accepted, input.toLowerCase());
+    protected boolean isInputValid(@NotNull ConversationContext context, @NotNull String input) {
+        return VALID_INPUTS.contains(input.toLowerCase(Locale.ROOT));
     }
 
+    @Nullable
     @Override
-    protected Prompt acceptValidatedInput(ConversationContext context, String input) {
-        return acceptValidatedInput(context, BooleanUtils.toBoolean(input));
+    protected Prompt acceptValidatedInput(@NotNull ConversationContext context, @NotNull String input) {
+        return acceptValidatedInput(context, TRUE_INPUTS.contains(input.toLowerCase(Locale.ROOT)));
     }
 
     /**
@@ -32,5 +39,6 @@ public abstract class BooleanPrompt extends ValidatingPrompt{
      * @param input The user's boolean response.
      * @return The next {@link Prompt} in the prompt graph.
      */
-    protected abstract Prompt acceptValidatedInput(ConversationContext context, boolean input);
+    @Nullable
+    protected abstract Prompt acceptValidatedInput(@NotNull ConversationContext context, boolean input);
 }

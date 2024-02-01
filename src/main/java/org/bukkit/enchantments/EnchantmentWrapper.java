@@ -1,13 +1,14 @@
 package org.bukkit.enchantments;
 
-import org.bukkit.inventory.ItemStack;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * A simple wrapper for ease of selecting {@link Enchantment}s
+ * @deprecated only for backwards compatibility, EnchantmentWrapper is no longer used.
  */
-public class EnchantmentWrapper extends Enchantment {
-    public EnchantmentWrapper(int id) {
-        super(id);
+@Deprecated
+public abstract class EnchantmentWrapper extends Enchantment {
+    protected EnchantmentWrapper() {
     }
 
     /**
@@ -15,37 +16,8 @@ public class EnchantmentWrapper extends Enchantment {
      *
      * @return Enchantment
      */
+    @NotNull
     public Enchantment getEnchantment() {
-        return Enchantment.getById(getId());
-    }
-
-    @Override
-    public int getMaxLevel() {
-        return getEnchantment().getMaxLevel();
-    }
-
-    @Override
-    public int getStartLevel() {
-        return getEnchantment().getStartLevel();
-    }
-
-    @Override
-    public EnchantmentTarget getItemTarget() {
-        return getEnchantment().getItemTarget();
-    }
-
-    @Override
-    public boolean canEnchantItem(ItemStack item) {
-        return getEnchantment().canEnchantItem(item);
-    }
-
-    @Override
-    public String getName() {
-        return getEnchantment().getName();
-    }
-
-    @Override
-    public boolean conflictsWith(Enchantment other) {
-        return getEnchantment().conflictsWith(other);
+        return this;
     }
 }

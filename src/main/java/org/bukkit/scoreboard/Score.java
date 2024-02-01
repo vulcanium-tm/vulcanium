@@ -1,6 +1,8 @@
 package org.bukkit.scoreboard;
 
 import org.bukkit.OfflinePlayer;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * A score entry for an {@link #getEntry() entry} on an {@link
@@ -13,10 +15,11 @@ public interface Score {
      * Gets the OfflinePlayer being tracked by this Score
      *
      * @return this Score's tracked player
-     * @deprecated Scoreboards can contain entries that aren't players
      * @see #getEntry()
+     * @deprecated Scoreboards can contain entries that aren't players
      */
     @Deprecated
+    @NotNull
     OfflinePlayer getPlayer();
 
     /**
@@ -24,6 +27,7 @@ public interface Score {
      *
      * @return this Score's tracked entry
      */
+    @NotNull
     String getEntry();
 
     /**
@@ -31,6 +35,7 @@ public interface Score {
      *
      * @return this Score's tracked objective
      */
+    @NotNull
     Objective getObjective();
 
     /**
@@ -40,7 +45,7 @@ public interface Score {
      * @throws IllegalStateException if the associated objective has been
      *     unregistered
      */
-    int getScore() throws IllegalStateException;
+    int getScore();
 
     /**
      * Sets the current score.
@@ -49,7 +54,16 @@ public interface Score {
      * @throws IllegalStateException if the associated objective has been
      *     unregistered
      */
-    void setScore(int score) throws IllegalStateException;
+    void setScore(int score);
+
+    /**
+     * Shows if this score has been set at any point in time.
+     *
+     * @return if this score has been set before
+     * @throws IllegalStateException if the associated objective has been
+     *     unregistered
+     */
+    boolean isScoreSet();
 
     /**
      * Gets the scoreboard for the associated objective.
@@ -57,5 +71,6 @@ public interface Score {
      * @return the owning objective's scoreboard, or null if it has been
      *     {@link Objective#unregister() unregistered}
      */
+    @Nullable
     Scoreboard getScoreboard();
 }

@@ -69,4 +69,32 @@ public enum TreeType {
      * Tall birch tree
      */
     TALL_BIRCH,
+    /**
+     * Large plant native to The End
+     */
+    CHORUS_PLANT,
+    /**
+     * Large crimson fungus native to the nether
+     */
+    CRIMSON_FUNGUS,
+    /**
+     * Large warped fungus native to the nether
+     */
+    WARPED_FUNGUS,
+    /**
+     * Tree with large roots which grows above lush caves
+     */
+    AZALEA,
+    /**
+     * Mangrove tree
+     */
+    MANGROVE,
+    /**
+     * Tall mangrove tree
+     */
+    TALL_MANGROVE,
+    /**
+     * Cherry tree
+     */
+    CHERRY,
 }

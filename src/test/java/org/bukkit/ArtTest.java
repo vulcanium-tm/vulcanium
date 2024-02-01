@@ -1,16 +1,15 @@
 package org.bukkit;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.Matchers.greaterThan;
-import static org.junit.Assert.assertThat;
-
-import org.junit.Test;
+import static org.bukkit.support.MatcherAssert.*;
+import static org.hamcrest.Matchers.*;
+import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.Test;
 
 public class ArtTest {
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void getByNullName() {
-        Art.getByName(null);
+        assertThrows(IllegalArgumentException.class, () -> Art.getByName(null));
     }
 
     @Test

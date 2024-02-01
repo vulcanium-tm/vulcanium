@@ -1,22 +1,21 @@
 package org.bukkit.plugin;
 
+import static org.bukkit.support.MatcherAssert.*;
 import static org.hamcrest.Matchers.*;
-import static org.junit.Assert.*;
-
-import org.bukkit.TestServer;
+import org.bukkit.Bukkit;
 import org.bukkit.event.Event;
 import org.bukkit.event.TestEvent;
 import org.bukkit.permissions.Permission;
+import org.bukkit.support.AbstractTestingBase;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Test;
 
-import org.junit.After;
-import org.junit.Test;
-
-public class PluginManagerTest {
+public class PluginManagerTest extends AbstractTestingBase {
     private class MutableObject {
         volatile Object value = null;
     }
 
-    private static final PluginManager pm = TestServer.getInstance().getPluginManager();
+    private static final PluginManager pm = Bukkit.getServer().getPluginManager();
 
     private final MutableObject store = new MutableObject();
 
@@ -43,6 +42,7 @@ public class PluginManagerTest {
         final Event event = new TestEvent(true);
         Thread secondThread = new Thread(
             new Runnable() {
+                @Override
                 public void run() {
                     try {
                         synchronized (pm) {
@@ -65,13 +65,16 @@ public class PluginManagerTest {
         final Event event = new TestEvent(true);
         Thread secondThread = new Thread(
             new Runnable() {
+                @Override
                 public void run() {
                     try {
                         pm.callEvent(event);
                     } catch (Throwable ex) {
                         store.value = ex;
                     }
-                }});
+                }
+            }
+        );
         secondThread.start();
         secondThread.join();
         if (store.value != null) {
@@ -84,19 +87,22 @@ public class PluginManagerTest {
         final Event event = new TestEvent(false);
         Thread secondThread = new Thread(
             new Runnable() {
+                @Override
                 public void run() {
                     try {
                         pm.callEvent(event);
                     } catch (Throwable ex) {
                         store.value = ex;
+                        assertThat(event.getEventName() + " cannot be triggered asynchronously from another thread.", is(ex.getMessage()));
+                        return;
                     }
                 }
             }
         );
         secondThread.start();
         secondThread.join();
-        if (store.value != null) {
-            throw new RuntimeException((Throwable) store.value);
+        if (store.value == null) {
+            throw new IllegalStateException("No exception thrown");
         }
     }
 
@@ -105,6 +111,7 @@ public class PluginManagerTest {
         final Event event = new TestEvent(false);
         Thread secondThread = new Thread(
             new Runnable() {
+                @Override
                 public void run() {
                     try {
                         synchronized (pm) {
@@ -112,14 +119,16 @@ public class PluginManagerTest {
                         }
                     } catch (Throwable ex) {
                         store.value = ex;
+                        assertThat(event.getEventName() + " cannot be triggered asynchronously from another thread.", is(ex.getMessage()));
+                        return;
                     }
                 }
             }
         );
         secondThread.start();
         secondThread.join();
-        if (store.value != null) {
-            throw new RuntimeException((Throwable) store.value);
+        if (store.value == null) {
+            throw new IllegalStateException("No exception thrown");
         }
     }
 
@@ -155,20 +164,20 @@ public class PluginManagerTest {
     private void testRemovePermissionByName(final String name) {
         final Permission perm = new Permission(name);
         pm.addPermission(perm);
-        assertThat("Permission \"" + name + "\" was not added", pm.getPermission(name), is(perm));
+        assertThat(pm.getPermission(name), is(perm), "Permission \"" + name + "\" was not added");
         pm.removePermission(name);
-        assertThat("Permission \"" + name + "\" was not removed", pm.getPermission(name), is(nullValue()));
+        assertThat(pm.getPermission(name), is(nullValue()), "Permission \"" + name + "\" was not removed");
     }
 
     private void testRemovePermissionByPermission(final String name) {
         final Permission perm = new Permission(name);
         pm.addPermission(perm);
-        assertThat("Permission \"" + name + "\" was not added", pm.getPermission(name), is(perm));
+        assertThat(pm.getPermission(name), is(perm), "Permission \"" + name + "\" was not added");
         pm.removePermission(perm);
-        assertThat("Permission \"" + name + "\" was not removed", pm.getPermission(name), is(nullValue()));
+        assertThat(pm.getPermission(name), is(nullValue()), "Permission \"" + name + "\" was not removed");
     }
 
-    @After
+    @AfterEach
     public void tearDown() {
         pm.clearPlugins();
         assertThat(pm.getPermissions(), is(empty()));

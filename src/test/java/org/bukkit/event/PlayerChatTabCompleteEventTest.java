@@ -1,13 +1,11 @@
 package org.bukkit.event;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertThat;
-
-import org.bukkit.event.player.PlayerChatTabCompleteEvent;
-import org.bukkit.plugin.messaging.TestPlayer;
-import org.junit.Test;
-
+import static org.bukkit.support.MatcherAssert.*;
+import static org.hamcrest.Matchers.*;
+import static org.mockito.Mockito.*;
 import com.google.common.collect.ImmutableList;
+import org.bukkit.event.player.PlayerChatTabCompleteEvent;
+import org.junit.jupiter.api.Test;
 
 public class PlayerChatTabCompleteEventTest {
 
@@ -23,6 +21,6 @@ public class PlayerChatTabCompleteEventTest {
     }
 
     private String getToken(String message) {
-        return new PlayerChatTabCompleteEvent(TestPlayer.getInstance(), message, ImmutableList.<String>of()).getLastToken();
+        return new PlayerChatTabCompleteEvent(mock(), message, ImmutableList.<String>of()).getLastToken();
     }
 }

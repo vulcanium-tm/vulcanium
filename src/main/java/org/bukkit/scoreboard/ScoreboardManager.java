@@ -1,6 +1,7 @@
 package org.bukkit.scoreboard;
 
 import java.lang.ref.WeakReference;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * Manager of Scoreboards
@@ -13,8 +14,9 @@ public interface ScoreboardManager {
      * This Scoreboard is saved by the server, is affected by the /scoreboard
      * command, and is the scoreboard shown by default to players.
      *
-     * @return the default sever scoreboard
+     * @return the default server scoreboard
      */
+    @NotNull
     Scoreboard getMainScoreboard();
 
     /**
@@ -25,5 +27,6 @@ public interface ScoreboardManager {
      * @return the registered Scoreboard
      * @see WeakReference
      */
+    @NotNull
     Scoreboard getNewScoreboard();
 }

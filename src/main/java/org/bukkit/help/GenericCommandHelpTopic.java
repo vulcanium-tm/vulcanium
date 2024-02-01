@@ -1,13 +1,11 @@
 package org.bukkit.help;
 
+import com.google.common.base.Joiner;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
-import org.apache.commons.lang.StringUtils;
 import org.bukkit.command.ConsoleCommandSender;
-import org.bukkit.command.PluginCommand;
-import org.bukkit.command.defaults.VanillaCommand;
-import org.bukkit.help.HelpTopic;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * Lacking an alternative, the help system will create instances of
@@ -19,7 +17,7 @@ public class GenericCommandHelpTopic extends HelpTopic {
 
     protected Command command;
 
-    public GenericCommandHelpTopic(Command command) {
+    public GenericCommandHelpTopic(@NotNull Command command) {
         this.command = command;
 
         if (command.getLabel().startsWith("/")) {
@@ -29,7 +27,7 @@ public class GenericCommandHelpTopic extends HelpTopic {
         }
 
         // The short text is the first line of the description
-        int i = command.getDescription().indexOf("\n");
+        int i = command.getDescription().indexOf('\n');
         if (i > 1) {
             shortText = command.getDescription().substring(0, i - 1);
         } else {
@@ -37,7 +35,7 @@ public class GenericCommandHelpTopic extends HelpTopic {
         }
 
         // Build full text
-        StringBuffer sb = new StringBuffer();
+        StringBuilder sb = new StringBuilder();
 
         sb.append(ChatColor.GOLD);
         sb.append("Description: ");
@@ -56,14 +54,15 @@ public class GenericCommandHelpTopic extends HelpTopic {
             sb.append(ChatColor.GOLD);
             sb.append("Aliases: ");
             sb.append(ChatColor.WHITE);
-            sb.append(ChatColor.WHITE + StringUtils.join(command.getAliases(), ", "));
+            sb.append(Joiner.on(", ").join(command.getAliases()));
         }
         fullText = sb.toString();
     }
 
-    public boolean canSee(CommandSender sender) {
-        if (!command.isRegistered() && !(command instanceof VanillaCommand)) {
-            // Unregistered commands should not show up in the help (ignore VanillaCommands)
+    @Override
+    public boolean canSee(@NotNull CommandSender sender) {
+        if (!command.isRegistered()) {
+            // Unregistered commands should not show up in the help
             return false;
         }
 

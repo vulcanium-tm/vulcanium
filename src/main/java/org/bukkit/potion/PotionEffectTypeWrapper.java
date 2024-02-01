@@ -1,18 +1,13 @@
 package org.bukkit.potion;
 
-public class PotionEffectTypeWrapper extends PotionEffectType {
-    protected PotionEffectTypeWrapper(int id) {
-        super(id);
-    }
+import org.jetbrains.annotations.NotNull;
 
-    @Override
-    public double getDurationModifier() {
-        return getType().getDurationModifier();
-    }
-
-    @Override
-    public String getName() {
-        return getType().getName();
+/**
+ * @deprecated only for backwards compatibility, PotionEffectTypeWrapper is no longer used.
+ */
+@Deprecated
+public abstract class PotionEffectTypeWrapper extends PotionEffectType {
+    protected PotionEffectTypeWrapper() {
     }
 
     /**
@@ -20,12 +15,8 @@ public class PotionEffectTypeWrapper extends PotionEffectType {
      *
      * @return The potion effect type
      */
+    @NotNull
     public PotionEffectType getType() {
-        return PotionEffectType.getById(getId());
-    }
-
-    @Override
-    public boolean isInstant() {
-        return getType().isInstant();
+        return this;
     }
 }

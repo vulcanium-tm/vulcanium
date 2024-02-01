@@ -1,6 +1,8 @@
 package org.bukkit;
 
 import java.util.Date;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * A single entry from a ban list. This may represent either a player ban or
@@ -8,12 +10,13 @@ import java.util.Date;
  * <p>
  * Ban entries include the following properties:
  * <table border=1>
+ * <caption>Property information</caption>
  * <tr>
  *     <th>Property</th>
  *     <th>Description</th>
  * </tr><tr>
- *     <td>Target Name / IP Address</td>
- *     <td>The target name or IP address</td>
+ *     <td>Target Profile / IP Address</td>
+ *     <td>The target profile or IP address</td>
  * </tr><tr>
  *     <td>Creation Date</td>
  *     <td>The creation date of the ban</td>
@@ -37,22 +40,36 @@ import java.util.Date;
  * <p>
  * Likewise, changes to the associated {@link BanList} or other entries may or
  * may not be reflected in this entry.
+ *
+ * @param <T> The ban target
  */
-public interface BanEntry {
+public interface BanEntry<T> {
 
     /**
      * Gets the target involved. This may be in the form of an IP or a player
      * name.
      *
      * @return the target name or IP address
+     * @deprecated See {@link #getBanTarget()}
      */
+    @Deprecated
+    @NotNull
     public String getTarget();
+
+    /**
+     * Gets the target involved.
+     *
+     * @return the target profile or IP address
+     */
+    @NotNull
+    public T getBanTarget();
 
     /**
      * Gets the date this ban entry was created.
      *
      * @return the creation date
      */
+    @NotNull
     public Date getCreated();
 
     /**
@@ -61,7 +78,7 @@ public interface BanEntry {
      * @param created the new created date, cannot be null
      * @see #save() saving changes
      */
-    public void setCreated(Date created);
+    public void setCreated(@NotNull Date created);
 
     /**
      * Gets the source of this ban.
@@ -71,6 +88,7 @@ public interface BanEntry {
      *
      * @return the source of the ban
      */
+    @NotNull
     public String getSource();
 
     /**
@@ -82,13 +100,14 @@ public interface BanEntry {
      * @param source the new source where null values become empty strings
      * @see #save() saving changes
      */
-    public void setSource(String source);
+    public void setSource(@NotNull String source);
 
     /**
      * Gets the date this ban expires on, or null for no defined end date.
      *
      * @return the expiration date
      */
+    @Nullable
     public Date getExpiration();
 
     /**
@@ -99,13 +118,14 @@ public interface BanEntry {
      *     eternity
      * @see #save() saving changes
      */
-    public void setExpiration(Date expiration);
+    public void setExpiration(@Nullable Date expiration);
 
     /**
      * Gets the reason for this ban.
      *
      * @return the ban reason, or null if not set
      */
+    @Nullable
     public String getReason();
 
     /**
@@ -115,7 +135,7 @@ public interface BanEntry {
      *     default
      * @see #save() saving changes
      */
-    public void setReason(String reason);
+    public void setReason(@Nullable String reason);
 
     /**
      * Saves the ban entry, overwriting any previous data in the ban list.
@@ -124,4 +144,9 @@ public interface BanEntry {
      * banned once again.
      */
     public void save();
+
+    /**
+     * Removes this ban entry from the appropriate ban list.
+     */
+    public void remove();
 }

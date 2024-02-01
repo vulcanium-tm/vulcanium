@@ -1,12 +1,14 @@
 package org.bukkit;
 
+import com.google.common.base.Preconditions;
+import com.google.common.collect.ImmutableMap;
+import java.util.Arrays;
 import java.util.Map;
-
-import org.apache.commons.lang.Validate;
+import java.util.Objects;
 import org.bukkit.configuration.serialization.ConfigurationSerializable;
 import org.bukkit.configuration.serialization.SerializableAs;
-
-import com.google.common.collect.ImmutableMap;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * A container for a color palette. This class is immutable; the set methods
@@ -16,6 +18,7 @@ import com.google.common.collect.ImmutableMap;
 @SerializableAs("Color")
 public final class Color implements ConfigurationSerializable {
     private static final int BIT_MASK = 0xff;
+    private static final int DEFAULT_ALPHA = 255;
 
     /**
      * White, or (0xFF,0xFF,0xFF) in (R,G,B)
@@ -102,9 +105,25 @@ public final class Color implements ConfigurationSerializable {
      */
     public static final Color ORANGE = fromRGB(0xFFA500);
 
+    private final byte alpha;
     private final byte red;
     private final byte green;
     private final byte blue;
+
+    /**
+     * Creates a new Color object from an alpha, red, green, and blue
+     *
+     * @param alpha integer from 0-255
+     * @param red integer from 0-255
+     * @param green integer from 0-255
+     * @param blue integer from 0-255
+     * @return a new Color object for the alpha, red, green, blue
+     * @throws IllegalArgumentException if any value is strictly {@literal >255 or <0}
+     */
+    @NotNull
+    public static Color fromARGB(int alpha, int red, int green, int blue) throws IllegalArgumentException {
+        return new Color(alpha, red, green, blue);
+    }
 
     /**
      * Creates a new Color object from a red, green, and blue
@@ -113,10 +132,11 @@ public final class Color implements ConfigurationSerializable {
      * @param green integer from 0-255
      * @param blue integer from 0-255
      * @return a new Color object for the red, green, blue
-     * @throws IllegalArgumentException if any value is strictly >255 or <0
+     * @throws IllegalArgumentException if any value is strictly {@literal >255 or <0}
      */
+    @NotNull
     public static Color fromRGB(int red, int green, int blue) throws IllegalArgumentException {
-        return new Color(red, green, blue);
+        return new Color(DEFAULT_ALPHA, red, green, blue);
     }
 
     /**
@@ -126,10 +146,11 @@ public final class Color implements ConfigurationSerializable {
      * @param green integer from 0-255
      * @param red integer from 0-255
      * @return a new Color object for the red, green, blue
-     * @throws IllegalArgumentException if any value is strictly >255 or <0
+     * @throws IllegalArgumentException if any value is strictly {@literal >255 or <0}
      */
+    @NotNull
     public static Color fromBGR(int blue, int green, int red) throws IllegalArgumentException {
-        return new Color(red, green, blue);
+        return new Color(DEFAULT_ALPHA, red, green, blue);
     }
 
     /**
@@ -141,9 +162,22 @@ public final class Color implements ConfigurationSerializable {
      * @throws IllegalArgumentException if any data is in the highest order 8
      *     bits
      */
+    @NotNull
     public static Color fromRGB(int rgb) throws IllegalArgumentException {
-        Validate.isTrue((rgb >> 24) == 0, "Extrenuous data in: ", rgb);
-        return fromRGB(rgb >> 16 & BIT_MASK, rgb >> 8 & BIT_MASK, rgb >> 0 & BIT_MASK);
+        Preconditions.checkArgument((rgb >> 24) == 0, "Extraneous data in: %s", rgb);
+        return fromRGB(rgb >> 16 & BIT_MASK, rgb >> 8 & BIT_MASK, rgb & BIT_MASK);
+    }
+
+    /**
+     * Creates a new color object from an integer that contains the alpha, red,
+     * green, and blue bytes.
+     *
+     * @param argb the integer storing the alpha, red, green, and blue values
+     * @return a new color object for specified values
+     */
+    @NotNull
+    public static Color fromARGB(int argb) {
+        return fromARGB(argb >> 24 & BIT_MASK, argb >> 16 & BIT_MASK, argb >> 8 & BIT_MASK, argb & BIT_MASK);
     }
 
     /**
@@ -155,19 +189,46 @@ public final class Color implements ConfigurationSerializable {
      * @throws IllegalArgumentException if any data is in the highest order 8
      *     bits
      */
+    @NotNull
     public static Color fromBGR(int bgr) throws IllegalArgumentException {
-        Validate.isTrue((bgr >> 24) == 0, "Extrenuous data in: ", bgr);
-        return fromBGR(bgr >> 16 & BIT_MASK, bgr >> 8 & BIT_MASK, bgr >> 0 & BIT_MASK);
+        Preconditions.checkArgument((bgr >> 24) == 0, "Extrenuous data in: %s", bgr);
+        return fromBGR(bgr >> 16 & BIT_MASK, bgr >> 8 & BIT_MASK, bgr & BIT_MASK);
     }
 
     private Color(int red, int green, int blue) {
-        Validate.isTrue(red >= 0 && red <= BIT_MASK, "Red is not between 0-255: ", red);
-        Validate.isTrue(green >= 0 && green <= BIT_MASK, "Green is not between 0-255: ", green);
-        Validate.isTrue(blue >= 0 && blue <= BIT_MASK, "Blue is not between 0-255: ", blue);
+        this(DEFAULT_ALPHA, red, green, blue);
+    }
 
+    private Color(int alpha, int red, int green, int blue) {
+        Preconditions.checkArgument(alpha >= 0 && alpha <= BIT_MASK, "Alpha[%s] is not between 0-255", alpha);
+        Preconditions.checkArgument(red >= 0 && red <= BIT_MASK, "Red[%s] is not between 0-255", red);
+        Preconditions.checkArgument(green >= 0 && green <= BIT_MASK, "Green[%s] is not between 0-255", green);
+        Preconditions.checkArgument(blue >= 0 && blue <= BIT_MASK, "Blue[%s] is not between 0-255", blue);
+
+        this.alpha = (byte) alpha;
         this.red = (byte) red;
         this.green = (byte) green;
         this.blue = (byte) blue;
+    }
+
+    /**
+     * Gets the alpha component
+     *
+     * @return alpha component, from 0 to 255
+     */
+    public int getAlpha() {
+        return BIT_MASK & alpha;
+    }
+
+    /**
+     * Creates a new Color object with specified component
+     *
+     * @param alpha the alpha component, from 0 to 255
+     * @return a new color object with the red component
+     */
+    @NotNull
+    public Color setAlpha(int alpha) {
+        return fromARGB(alpha, getRed(), getGreen(), getBlue());
     }
 
     /**
@@ -185,8 +246,9 @@ public final class Color implements ConfigurationSerializable {
      * @param red the red component, from 0 to 255
      * @return a new color object with the red component
      */
+    @NotNull
     public Color setRed(int red) {
-        return fromRGB(red, getGreen(), getBlue());
+        return fromARGB(getAlpha(), red, getGreen(), getBlue());
     }
 
     /**
@@ -204,8 +266,9 @@ public final class Color implements ConfigurationSerializable {
      * @param green the red component, from 0 to 255
      * @return a new color object with the red component
      */
+    @NotNull
     public Color setGreen(int green) {
-        return fromRGB(getRed(), green, getBlue());
+        return fromARGB(getAlpha(), getRed(), green, getBlue());
     }
 
     /**
@@ -223,24 +286,36 @@ public final class Color implements ConfigurationSerializable {
      * @param blue the red component, from 0 to 255
      * @return a new color object with the red component
      */
+    @NotNull
     public Color setBlue(int blue) {
-        return fromRGB(getRed(), getGreen(), blue);
+        return fromARGB(getAlpha(), getRed(), getGreen(), blue);
     }
 
     /**
+     * Gets the color as an RGB integer.
      *
      * @return An integer representation of this color, as 0xRRGGBB
      */
     public int asRGB() {
-        return getRed() << 16 | getGreen() << 8 | getBlue() << 0;
+        return getRed() << 16 | getGreen() << 8 | getBlue();
     }
 
     /**
+     * Gets the color as an ARGB integer.
+     *
+     * @return An integer representation of this color, as 0xAARRGGBB
+     */
+    public int asARGB() {
+        return getAlpha() << 24 | getRed() << 16 | getGreen() << 8 | getBlue();
+    }
+
+    /**
+     * Gets the color as an BGR integer.
      *
      * @return An integer representation of this color, as 0xBBGGRR
      */
     public int asBGR() {
-        return getBlue() << 16 | getGreen() << 8 | getRed() << 0;
+        return getBlue() << 16 | getGreen() << 8 | getRed();
     }
 
     /**
@@ -251,8 +326,9 @@ public final class Color implements ConfigurationSerializable {
      * @return A new color with the changed rgb components
      */
     // TODO: Javadoc what this method does, not what it mimics. API != Implementation
-    public Color mixDyes(DyeColor... colors) {
-        Validate.noNullElements(colors, "Colors cannot be null");
+    @NotNull
+    public Color mixDyes(@NotNull DyeColor... colors) {
+        Preconditions.checkArgument(colors != null && Arrays.stream(colors).allMatch(Objects::nonNull), "DyeColor cannot be null or contain null values");
 
         Color[] toPass = new Color[colors.length];
         for (int i = 0; i < colors.length; i++) {
@@ -264,14 +340,18 @@ public final class Color implements ConfigurationSerializable {
 
     /**
      * Creates a new color with its RGB components changed as if it was dyed
-     * with the colors passed in, replicating vanilla workbench dyeing
+     * with the colors passed in, replicating vanilla workbench dyeing.
+     *
+     * <b>Note that this method does not currently take into account alpha
+     * components.</b>
      *
      * @param colors The colors to dye with
      * @return A new color with the changed rgb components
      */
     // TODO: Javadoc what this method does, not what it mimics. API != Implementation
-    public Color mixColors(Color... colors) {
-        Validate.noNullElements(colors, "Colors cannot be null");
+    @NotNull
+    public Color mixColors(@NotNull Color... colors) {
+        Preconditions.checkArgument(colors != null && Arrays.stream(colors).allMatch(Objects::nonNull), "Colors cannot be null");
 
         int totalRed = this.getRed();
         int totalGreen = this.getGreen();
@@ -301,33 +381,42 @@ public final class Color implements ConfigurationSerializable {
             return false;
         }
         final Color that = (Color) o;
-        return this.blue == that.blue && this.green == that.green && this.red == that.red;
+        return this.alpha == that.alpha && this.blue == that.blue && this.green == that.green && this.red == that.red;
     }
 
     @Override
     public int hashCode() {
-        return asRGB() ^ Color.class.hashCode();
+        return asARGB() ^ Color.class.hashCode();
     }
 
+    @Override
+    @NotNull
     public Map<String, Object> serialize() {
-        return ImmutableMap.<String, Object>of(
-            "RED", getRed(),
-            "BLUE", getBlue(),
-            "GREEN", getGreen()
+        return ImmutableMap.of(
+                "ALPHA", getAlpha(),
+                "RED", getRed(),
+                "BLUE", getBlue(),
+                "GREEN", getGreen()
         );
     }
 
     @SuppressWarnings("javadoc")
-    public static Color deserialize(Map<String, Object> map) {
-        return fromRGB(
-            asInt("RED", map),
-            asInt("GREEN", map),
-            asInt("BLUE", map)
+    @NotNull
+    public static Color deserialize(@NotNull Map<String, Object> map) {
+        return fromARGB(
+                asInt("ALPHA", map, DEFAULT_ALPHA),
+                asInt("RED", map),
+                asInt("GREEN", map),
+                asInt("BLUE", map)
         );
     }
 
-    private static int asInt(String string, Map<String, Object> map) {
-        Object value = map.get(string);
+    private static int asInt(@NotNull String string, @NotNull Map<String, Object> map) {
+        return asInt(string, map, null);
+    }
+
+    private static int asInt(@NotNull String string, @NotNull Map<String, Object> map, @Nullable Object defaultValue) {
+        Object value = map.getOrDefault(string, defaultValue);
         if (value == null) {
             throw new IllegalArgumentException(string + " not in map " + map);
         }
@@ -339,6 +428,6 @@ public final class Color implements ConfigurationSerializable {
 
     @Override
     public String toString() {
-        return "Color:[rgb0x" + Integer.toHexString(getRed()).toUpperCase() + Integer.toHexString(getGreen()).toUpperCase() + Integer.toHexString(getBlue()).toUpperCase() + "]";
+        return "Color:[argb0x" + Integer.toHexString(asARGB()).toUpperCase() + "]";
     }
 }

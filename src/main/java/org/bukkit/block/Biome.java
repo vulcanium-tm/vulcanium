@@ -1,68 +1,92 @@
 package org.bukkit.block;
 
+import java.util.Locale;
+import org.bukkit.Keyed;
+import org.bukkit.NamespacedKey;
+import org.jetbrains.annotations.NotNull;
+
 /**
  * Holds all accepted Biomes in the default server
  */
-public enum Biome {
-    SWAMPLAND,
+public enum Biome implements Keyed {
+    OCEAN,
+    PLAINS,
+    DESERT,
+    WINDSWEPT_HILLS,
     FOREST,
     TAIGA,
-    DESERT,
-    PLAINS,
-    HELL,
-    SKY,
-    OCEAN,
+    SWAMP,
+    MANGROVE_SWAMP,
     RIVER,
-    EXTREME_HILLS,
+    NETHER_WASTES,
+    THE_END,
     FROZEN_OCEAN,
     FROZEN_RIVER,
-    ICE_PLAINS,
-    ICE_MOUNTAINS,
-    MUSHROOM_ISLAND,
-    MUSHROOM_SHORE,
+    SNOWY_PLAINS,
+    MUSHROOM_FIELDS,
     BEACH,
-    DESERT_HILLS,
-    FOREST_HILLS,
-    TAIGA_HILLS,
-    SMALL_MOUNTAINS,
     JUNGLE,
-    JUNGLE_HILLS,
-    JUNGLE_EDGE,
+    SPARSE_JUNGLE,
     DEEP_OCEAN,
-    STONE_BEACH,
-    COLD_BEACH,
+    STONY_SHORE,
+    SNOWY_BEACH,
     BIRCH_FOREST,
-    BIRCH_FOREST_HILLS,
-    ROOFED_FOREST,
-    COLD_TAIGA,
-    COLD_TAIGA_HILLS,
-    MEGA_TAIGA,
-    MEGA_TAIGA_HILLS,
-    EXTREME_HILLS_PLUS,
+    DARK_FOREST,
+    SNOWY_TAIGA,
+    OLD_GROWTH_PINE_TAIGA,
+    WINDSWEPT_FOREST,
     SAVANNA,
     SAVANNA_PLATEAU,
-    MESA,
-    MESA_PLATEAU_FOREST,
-    MESA_PLATEAU,
+    BADLANDS,
+    WOODED_BADLANDS,
+    SMALL_END_ISLANDS,
+    END_MIDLANDS,
+    END_HIGHLANDS,
+    END_BARRENS,
+    WARM_OCEAN,
+    LUKEWARM_OCEAN,
+    COLD_OCEAN,
+    DEEP_LUKEWARM_OCEAN,
+    DEEP_COLD_OCEAN,
+    DEEP_FROZEN_OCEAN,
+    THE_VOID,
     SUNFLOWER_PLAINS,
-    DESERT_MOUNTAINS,
+    WINDSWEPT_GRAVELLY_HILLS,
     FLOWER_FOREST,
-    TAIGA_MOUNTAINS,
-    SWAMPLAND_MOUNTAINS,
-    ICE_PLAINS_SPIKES,
-    JUNGLE_MOUNTAINS,
-    JUNGLE_EDGE_MOUNTAINS,
-    COLD_TAIGA_MOUNTAINS,
-    SAVANNA_MOUNTAINS,
-    SAVANNA_PLATEAU_MOUNTAINS,
-    MESA_BRYCE,
-    MESA_PLATEAU_FOREST_MOUNTAINS,
-    MESA_PLATEAU_MOUNTAINS,
-    BIRCH_FOREST_MOUNTAINS,
-    BIRCH_FOREST_HILLS_MOUNTAINS,
-    ROOFED_FOREST_MOUNTAINS,
-    MEGA_SPRUCE_TAIGA,
-    EXTREME_HILLS_MOUNTAINS,
-    EXTREME_HILLS_PLUS_MOUNTAINS,
-    MEGA_SPRUCE_TAIGA_HILLS,
+    ICE_SPIKES,
+    OLD_GROWTH_BIRCH_FOREST,
+    OLD_GROWTH_SPRUCE_TAIGA,
+    WINDSWEPT_SAVANNA,
+    ERODED_BADLANDS,
+    BAMBOO_JUNGLE,
+    SOUL_SAND_VALLEY,
+    CRIMSON_FOREST,
+    WARPED_FOREST,
+    BASALT_DELTAS,
+    DRIPSTONE_CAVES,
+    LUSH_CAVES,
+    DEEP_DARK,
+    MEADOW,
+    GROVE,
+    SNOWY_SLOPES,
+    FROZEN_PEAKS,
+    JAGGED_PEAKS,
+    STONY_PEAKS,
+    CHERRY_GROVE,
+    /**
+     * Represents a custom Biome
+     */
+    CUSTOM;
+
+    private final NamespacedKey key;
+
+    private Biome() {
+        this.key = NamespacedKey.minecraft(name().toLowerCase(Locale.ROOT));
+    }
+
+    @NotNull
+    @Override
+    public NamespacedKey getKey() {
+        return key;
+    }
 }

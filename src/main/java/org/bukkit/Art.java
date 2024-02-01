@@ -1,15 +1,15 @@
 package org.bukkit;
 
-import java.util.HashMap;
-
-import org.apache.commons.lang.Validate;
-
+import com.google.common.base.Preconditions;
 import com.google.common.collect.Maps;
+import java.util.HashMap;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * Represents the art on a painting
  */
-public enum Art {
+public enum Art implements Keyed {
     KEBAB(0, 1, 1),
     AZTEC(1, 1, 1),
     ALBAN(2, 1, 1),
@@ -33,11 +33,16 @@ public enum Art {
     FIGHTERS(20, 4, 2),
     POINTER(21, 4, 4),
     PIGSCENE(22, 4, 4),
-    BURNINGSKULL(23, 4, 4),
+    BURNING_SKULL(23, 4, 4),
     SKELETON(24, 4, 3),
-    DONKEYKONG(25, 4, 3);
+    DONKEY_KONG(25, 4, 3),
+    EARTH(26, 2, 2),
+    WIND(27, 2, 2),
+    WATER(28, 2, 2),
+    FIRE(29, 2, 2);
 
-    private int id, width, height;
+    private final int id, width, height;
+    private final NamespacedKey key;
     private static final HashMap<String, Art> BY_NAME = Maps.newHashMap();
     private static final HashMap<Integer, Art> BY_ID = Maps.newHashMap();
 
@@ -45,6 +50,7 @@ public enum Art {
         this.id = id;
         this.width = width;
         this.height = height;
+        this.key = NamespacedKey.minecraft(name().toLowerCase(java.util.Locale.ENGLISH));
     }
 
     /**
@@ -76,6 +82,12 @@ public enum Art {
         return id;
     }
 
+    @NotNull
+    @Override
+    public NamespacedKey getKey() {
+        return key;
+    }
+
     /**
      * Get a painting by its numeric ID
      *
@@ -84,6 +96,7 @@ public enum Art {
      * @deprecated Magic value
      */
     @Deprecated
+    @Nullable
     public static Art getById(int id) {
         return BY_ID.get(id);
     }
@@ -96,16 +109,17 @@ public enum Art {
      * @param name The name
      * @return The painting
      */
-    public static Art getByName(String name) {
-        Validate.notNull(name, "Name cannot be null");
+    @Nullable
+    public static Art getByName(@NotNull String name) {
+        Preconditions.checkArgument(name != null, "Name cannot be null");
 
-        return BY_NAME.get(name.toLowerCase().replaceAll("_", ""));
+        return BY_NAME.get(name.toLowerCase(java.util.Locale.ENGLISH));
     }
 
     static {
         for (Art art : values()) {
             BY_ID.put(art.id, art);
-            BY_NAME.put(art.toString().toLowerCase().replaceAll("_", ""), art);
+            BY_NAME.put(art.toString().toLowerCase(java.util.Locale.ENGLISH), art);
         }
     }
 }

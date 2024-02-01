@@ -1,7 +1,8 @@
 package org.bukkit.conversations;
 
-import org.junit.Test;
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
+import org.bukkit.plugin.TestPlugin;
+import org.junit.jupiter.api.Test;
 
 /**
  */
@@ -27,12 +28,12 @@ public class ConversationTest {
         assertEquals("SecondPrompt", forWhom.lastSentMessage);
         assertEquals(conversation, forWhom.abandonedConverstion);
     }
-    
+
     @Test
     public void testConversationFactory() {
         FakeConversable forWhom = new FakeConversable();
         NullConversationPrefix prefix = new NullConversationPrefix();
-        ConversationFactory factory = new ConversationFactory(null)
+        ConversationFactory factory = new ConversationFactory(new TestPlugin("Test"))
                 .withFirstPrompt(new FirstPrompt())
                 .withModality(false)
                 .withPrefix(prefix);
@@ -75,8 +76,7 @@ public class ConversationTest {
     @Test
     public void testNotPlayer() {
         FakeConversable forWhom = new FakeConversable();
-        NullConversationPrefix prefix = new NullConversationPrefix();
-        ConversationFactory factory = new ConversationFactory(null)
+        ConversationFactory factory = new ConversationFactory(new TestPlugin("Test"))
                 .thatExcludesNonPlayersWithMessage("bye");
         Conversation conversation = factory.buildConversation(forWhom);
 
@@ -89,10 +89,12 @@ public class ConversationTest {
 
     private class FirstPrompt extends StringPrompt {
 
+        @Override
         public String getPromptText(ConversationContext context) {
             return "FirstPrompt";
         }
 
+        @Override
         public Prompt acceptInput(ConversationContext context, String input) {
             assertEquals("FirstInput", input);
             context.setSessionData("data", 10);
@@ -107,6 +109,7 @@ public class ConversationTest {
             return Prompt.END_OF_CONVERSATION;
         }
 
+        @Override
         public String getPromptText(ConversationContext context) {
             // Assert that session data passes from one prompt to the next
             assertEquals(context.getSessionData("data"), 10);

@@ -1,19 +1,11 @@
 package org.bukkit;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.nullValue;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
-
-import java.util.Collection;
-
-import org.junit.Test;
-
+import static org.bukkit.support.MatcherAssert.*;
+import static org.hamcrest.CoreMatchers.*;
+import static org.junit.jupiter.api.Assertions.*;
 import com.google.common.collect.Lists;
+import java.util.Collection;
+import org.junit.jupiter.api.Test;
 
 public class NoteTest {
     @Test
@@ -60,24 +52,24 @@ public class NoteTest {
         }
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void createNoteBelowMin() {
-        new Note((byte) -1);
+        assertThrows(IllegalArgumentException.class, () -> new Note((byte) -1));
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void createNoteAboveMax() {
-        new Note((byte) 25);
+        assertThrows(IllegalArgumentException.class, () -> new Note((byte) 25));
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void createNoteOctaveBelowMax() {
-        new Note((byte) -1, Note.Tone.A, true);
+        assertThrows(IllegalArgumentException.class, () -> new Note((byte) -1, Note.Tone.A, true));
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void createNoteOctaveAboveMax() {
-        new Note((byte) 3, Note.Tone.A, true);
+        assertThrows(IllegalArgumentException.class, () -> new Note((byte) 3, Note.Tone.A, true));
     }
 
     @Test
@@ -123,21 +115,21 @@ public class NoteTest {
         assertEquals(note.getOctave(), 2);
     }
 
-    @Test(expected=IllegalArgumentException.class)
+    @Test
     public void testSharpWrapping2() {
-        new Note(2, Note.Tone.F, true).sharped();
+        assertThrows(IllegalArgumentException.class, () -> new Note(2, Note.Tone.F, true).sharped());
     }
 
     @Test
     public void testHighest() {
         Note note = new Note(2, Note.Tone.F, true);
-        assertEquals(note.getId(), (byte)24);
+        assertEquals(note.getId(), (byte) 24);
     }
 
     @Test
     public void testLowest() {
         Note note = new Note(0, Note.Tone.F, true);
-        assertEquals(note.getId(), (byte)0);
+        assertEquals(note.getId(), (byte) 0);
     }
 
     @Test

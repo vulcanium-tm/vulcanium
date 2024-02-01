@@ -3,9 +3,16 @@ package org.bukkit.inventory;
 import org.bukkit.Color;
 import org.bukkit.Material;
 import org.bukkit.Server;
+import org.bukkit.World;
+import org.bukkit.enchantments.Enchantment;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.EntityType;
 import org.bukkit.inventory.meta.BookMeta;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.SkullMeta;
+import org.jetbrains.annotations.ApiStatus;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * An instance of the ItemFactory can be obtained with {@link
@@ -23,7 +30,8 @@ public interface ItemFactory {
      * @return a new ItemMeta that could be applied to an item stack of the
      *     specified material
      */
-    ItemMeta getItemMeta(final Material material);
+    @Nullable
+    ItemMeta getItemMeta(@NotNull final Material material);
 
     /**
      * This method checks the item meta to confirm that it is applicable (no
@@ -39,7 +47,7 @@ public interface ItemFactory {
      * @throws IllegalArgumentException if the meta was not created by this
      *     factory
      */
-    boolean isApplicable(final ItemMeta meta, final ItemStack stack) throws IllegalArgumentException;
+    boolean isApplicable(@Nullable final ItemMeta meta, @Nullable final ItemStack stack) throws IllegalArgumentException;
 
     /**
      * This method checks the item meta to confirm that it is applicable (no
@@ -55,7 +63,7 @@ public interface ItemFactory {
      * @throws IllegalArgumentException if the meta was not created by this
      *     factory
      */
-    boolean isApplicable(final ItemMeta meta, final Material material) throws IllegalArgumentException;
+    boolean isApplicable(@Nullable final ItemMeta meta, @Nullable final Material material) throws IllegalArgumentException;
 
     /**
      * This method is used to compare two item meta data objects.
@@ -68,7 +76,7 @@ public interface ItemFactory {
      * @throws IllegalArgumentException if either meta was not created by this
      *     factory
      */
-    boolean equals(final ItemMeta meta1, final ItemMeta meta2) throws IllegalArgumentException;
+    boolean equals(@Nullable final ItemMeta meta1, @Nullable final ItemMeta meta2) throws IllegalArgumentException;
 
     /**
      * Returns an appropriate item meta for the specified stack.
@@ -91,7 +99,8 @@ public interface ItemFactory {
      * @throws IllegalArgumentException if the specified meta was not created
      *     by this factory
      */
-    ItemMeta asMetaFor(final ItemMeta meta, final ItemStack stack) throws IllegalArgumentException;
+    @Nullable
+    ItemMeta asMetaFor(@NotNull final ItemMeta meta, @NotNull final ItemStack stack) throws IllegalArgumentException;
 
     /**
      * Returns an appropriate item meta for the specified material.
@@ -113,12 +122,97 @@ public interface ItemFactory {
      * @throws IllegalArgumentException if the specified meta was not created
      *     by this factory
      */
-    ItemMeta asMetaFor(final ItemMeta meta, final Material material) throws IllegalArgumentException;
+    @Nullable
+    ItemMeta asMetaFor(@NotNull final ItemMeta meta, @NotNull final Material material) throws IllegalArgumentException;
 
     /**
      * Returns the default color for all leather armor.
      *
      * @return the default color for leather armor
      */
+    @NotNull
     Color getDefaultLeatherColor();
+
+    /**
+     * Create a new {@link ItemStack} given the supplied input.
+     * <p>
+     * The input should match the same input as expected by Minecraft's {@code /give}
+     * command. For example, "minecraft:diamond_sword{Enchantments:[{id:"minecraft:sharpness", lvl:3}]}"
+     * would yield an ItemStack of {@link Material#DIAMOND_SWORD} with an {@link ItemMeta}
+     * containing a level 3 {@link Enchantment#DAMAGE_ALL}
+     * enchantment.
+     *
+     * @param input the item input string
+     * @return the created ItemStack
+     * @throws IllegalArgumentException if the input string was provided in an
+     * invalid or unsupported format
+     */
+    @NotNull
+    ItemStack createItemStack(@NotNull String input) throws IllegalArgumentException;
+
+    /**
+     * Apply a material change for an item meta. Do not use under any
+     * circumstances.
+     *
+     * @param meta meta
+     * @param material material
+     * @return updated material
+     * @throws IllegalArgumentException if bad material or data
+     * @apiNote for internal use only
+     */
+    @ApiStatus.Internal
+    @NotNull
+    Material updateMaterial(@NotNull final ItemMeta meta, @NotNull final Material material) throws IllegalArgumentException;
+
+    /**
+     * Gets a {@link Material} representing the spawn egg for the provided
+     * {@link EntityType}. <br>
+     * Will return null for EntityTypes that do not have a corresponding spawn egg.
+     *
+     * @param type the entity type
+     * @return the Material of this EntityTypes spawn egg or null
+     */
+    @Nullable
+    Material getSpawnEgg(@NotNull EntityType type);
+
+    /**
+     * Enchants the given item at the provided level.
+     * <br>
+     * If an item that is air is passed through an error is thrown.
+     *
+     * @param entity the entity to use as a source of randomness
+     * @param item the item to enchant
+     * @param level the level to use, which is the level in the enchantment table
+     * @param allowTreasures allows treasure enchants, e.g. mending, if true.
+     * @return a new ItemStack containing the result of the Enchantment
+     */
+    @NotNull
+    ItemStack enchantItem(@NotNull final Entity entity, @NotNull final ItemStack item, final int level, final boolean allowTreasures);
+
+    /**
+     * Enchants the given item at the provided level.
+     * <br>
+     * If an item that is air is passed through an error is thrown.
+     *
+     * @param world the world to use as a source of randomness
+     * @param item the item to enchant
+     * @param level the level to use, which is the level in the enchantment table
+     * @param allowTreasures allow the treasure enchants, e.g. mending, if true.
+     * @return a new ItemStack containing the result of the Enchantment
+     */
+    @NotNull
+    ItemStack enchantItem(@NotNull final World world, @NotNull final ItemStack item, final int level, final boolean allowTreasures);
+
+    /**
+     * Enchants the given item at the provided level.
+     * <br>
+     * If an item that is air is passed through an error is thrown.
+     *
+     * @param item the item to enchant
+     * @param level the level to use, which is the level in the enchantment table
+     * @param allowTreasures allow treasure enchantments, e.g. mending, if true.
+     * @return a new ItemStack containing the result of the Enchantment
+     */
+    @NotNull
+    ItemStack enchantItem(@NotNull final ItemStack item, final int level, final boolean allowTreasures);
 }

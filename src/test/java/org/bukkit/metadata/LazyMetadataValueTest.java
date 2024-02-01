@@ -1,11 +1,9 @@
 package org.bukkit.metadata;
 
-import org.bukkit.plugin.TestPlugin;
-import org.junit.Test;
-
+import static org.junit.jupiter.api.Assertions.*;
 import java.util.concurrent.Callable;
-
-import static org.junit.Assert.*;
+import org.bukkit.plugin.TestPlugin;
+import org.junit.jupiter.api.Test;
 
 public class LazyMetadataValueTest {
     private LazyMetadataValue subject;
@@ -24,7 +22,7 @@ public class LazyMetadataValueTest {
         double value = 10.5;
         subject = makeSimpleCallable(value);
 
-        assertEquals(value, (Double)subject.value(), 0.01);
+        assertEquals(value, (Double) subject.value(), 0.01);
     }
 
     @Test
@@ -43,14 +41,15 @@ public class LazyMetadataValueTest {
         assertEquals(value, subject.value());
     }
 
-    @Test(expected=MetadataEvaluationException.class)
+    @Test
     public void testEvalException() {
         subject = new LazyMetadataValue(plugin, LazyMetadataValue.CacheStrategy.CACHE_AFTER_FIRST_EVAL, new Callable<Object>() {
+            @Override
             public Object call() throws Exception {
                 throw new RuntimeException("Gotcha!");
             }
         });
-        subject.value();
+        assertThrows(MetadataEvaluationException.class, () -> subject.value());
     }
 
     @Test
@@ -58,6 +57,7 @@ public class LazyMetadataValueTest {
         final Counter counter = new Counter();
         final int value = 10;
         subject = new LazyMetadataValue(plugin, LazyMetadataValue.CacheStrategy.CACHE_AFTER_FIRST_EVAL, new Callable<Object>() {
+            @Override
             public Object call() throws Exception {
                 counter.increment();
                 return value;
@@ -79,6 +79,7 @@ public class LazyMetadataValueTest {
         final Counter counter = new Counter();
         final int value = 10;
         subject = new LazyMetadataValue(plugin, LazyMetadataValue.CacheStrategy.NEVER_CACHE, new Callable<Object>() {
+            @Override
             public Object call() throws Exception {
                 counter.increment();
                 return value;
@@ -96,6 +97,7 @@ public class LazyMetadataValueTest {
         final Counter counter = new Counter();
         final int value = 10;
         subject = new LazyMetadataValue(plugin, LazyMetadataValue.CacheStrategy.CACHE_ETERNALLY, new Callable<Object>() {
+            @Override
             public Object call() throws Exception {
                 counter.increment();
                 return value;
@@ -115,6 +117,7 @@ public class LazyMetadataValueTest {
 
     private LazyMetadataValue makeSimpleCallable(final Object value) {
         return new LazyMetadataValue(plugin, new Callable<Object>() {
+            @Override
             public Object call() throws Exception {
                 return value;
             }

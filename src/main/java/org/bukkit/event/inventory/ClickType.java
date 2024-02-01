@@ -54,6 +54,10 @@ public enum ClickType {
      */
     CREATIVE,
     /**
+     * The "swap item with offhand" key (defaults to F).
+     */
+    SWAP_OFFHAND,
+    /**
      * A type of inventory manipulation not yet recognized by Bukkit.
      * <p>
      * This is only for transitional purposes on a new Minecraft update, and
@@ -71,7 +75,17 @@ public enum ClickType {
      * @return true if this ClickType represents the pressing of a key
      */
     public boolean isKeyboardClick() {
-        return (this == ClickType.NUMBER_KEY) || (this == ClickType.DROP) || (this == ClickType.CONTROL_DROP);
+        return (this == ClickType.NUMBER_KEY) || (this == ClickType.DROP) || (this == ClickType.CONTROL_DROP) || (this == ClickType.SWAP_OFFHAND);
+    }
+
+    /**
+     * Gets whether this ClickType represents the pressing of a mouse button
+     *
+     * @return true if this ClickType represents the pressing of a mouse button
+     */
+    public boolean isMouseClick() {
+        return (this == ClickType.DOUBLE_CLICK) || (this == ClickType.LEFT) || (this == ClickType.RIGHT) || (this == ClickType.MIDDLE)
+                || (this == ClickType.WINDOW_BORDER_LEFT) || (this == ClickType.SHIFT_LEFT) || (this == ClickType.SHIFT_RIGHT) || (this == ClickType.WINDOW_BORDER_RIGHT);
     }
 
     /**
@@ -110,6 +124,6 @@ public enum ClickType {
      * @return true if the action uses Shift.
      */
     public boolean isShiftClick() {
-        return (this == ClickType.SHIFT_LEFT) || (this == ClickType.SHIFT_RIGHT) || (this == ClickType.CONTROL_DROP);
+        return (this == ClickType.SHIFT_LEFT) || (this == ClickType.SHIFT_RIGHT);
     }
 }

@@ -1,25 +1,30 @@
 package org.bukkit.configuration;
 
 import static org.bukkit.util.NumberConversions.*;
-
+import com.google.common.base.Preconditions;
+import com.google.common.base.Strings;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-
-import org.apache.commons.lang.Validate;
 import org.bukkit.Color;
+import org.bukkit.Location;
 import org.bukkit.OfflinePlayer;
+import org.bukkit.configuration.serialization.ConfigurationSerializable;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.Vector;
+import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * A type of {@link ConfigurationSection} that is stored in memory.
  */
 public class MemorySection implements ConfigurationSection {
-    protected final Map<String, Object> map = new LinkedHashMap<String, Object>();
+    protected final Map<String, SectionPathData> map = new LinkedHashMap<String, SectionPathData>();
     private final Configuration root;
     private final ConfigurationSection parent;
     private final String path;
@@ -55,19 +60,21 @@ public class MemorySection implements ConfigurationSection {
      * @throws IllegalArgumentException Thrown is parent or path is null, or
      *     if parent contains no root Configuration.
      */
-    protected MemorySection(ConfigurationSection parent, String path) {
-        Validate.notNull(parent, "Parent cannot be null");
-        Validate.notNull(path, "Path cannot be null");
+    protected MemorySection(@NotNull ConfigurationSection parent, @NotNull String path) {
+        Preconditions.checkArgument(parent != null, "Parent cannot be null");
+        Preconditions.checkArgument(path != null, "Path cannot be null");
 
         this.path = path;
         this.parent = parent;
         this.root = parent.getRoot();
 
-        Validate.notNull(root, "Path cannot be orphaned");
+        Preconditions.checkArgument(root != null, "Path cannot be orphaned");
 
         this.fullPath = createPath(parent, path);
     }
 
+    @Override
+    @NotNull
     public Set<String> getKeys(boolean deep) {
         Set<String> result = new LinkedHashSet<String>();
 
@@ -85,6 +92,8 @@ public class MemorySection implements ConfigurationSection {
         return result;
     }
 
+    @Override
+    @NotNull
     public Map<String, Object> getValues(boolean deep) {
         Map<String, Object> result = new LinkedHashMap<String, Object>();
 
@@ -102,11 +111,18 @@ public class MemorySection implements ConfigurationSection {
         return result;
     }
 
-    public boolean contains(String path) {
-        return get(path) != null;
+    @Override
+    public boolean contains(@NotNull String path) {
+        return contains(path, false);
     }
 
-    public boolean isSet(String path) {
+    @Override
+    public boolean contains(@NotNull String path, boolean ignoreDefault) {
+        return ((ignoreDefault) ? get(path, null) : get(path)) != null;
+    }
+
+    @Override
+    public boolean isSet(@NotNull String path) {
         Configuration root = getRoot();
         if (root == null) {
             return false;
@@ -117,24 +133,33 @@ public class MemorySection implements ConfigurationSection {
         return get(path, null) != null;
     }
 
+    @Override
+    @NotNull
     public String getCurrentPath() {
         return fullPath;
     }
 
+    @Override
+    @NotNull
     public String getName() {
         return path;
     }
 
+    @Override
+    @Nullable
     public Configuration getRoot() {
         return root;
     }
 
+    @Override
+    @Nullable
     public ConfigurationSection getParent() {
         return parent;
     }
 
-    public void addDefault(String path, Object value) {
-        Validate.notNull(path, "Path cannot be null");
+    @Override
+    public void addDefault(@NotNull String path, @Nullable Object value) {
+        Preconditions.checkArgument(path != null, "Path cannot be null");
 
         Configuration root = getRoot();
         if (root == null) {
@@ -146,6 +171,8 @@ public class MemorySection implements ConfigurationSection {
         root.addDefault(createPath(this, path), value);
     }
 
+    @Override
+    @Nullable
     public ConfigurationSection getDefaultSection() {
         Configuration root = getRoot();
         Configuration defaults = root == null ? null : root.getDefaults();
@@ -159,8 +186,9 @@ public class MemorySection implements ConfigurationSection {
         return null;
     }
 
-    public void set(String path, Object value) {
-        Validate.notEmpty(path, "Cannot set to an empty path");
+    @Override
+    public void set(@NotNull String path, @Nullable Object value) {
+        Preconditions.checkArgument(!Strings.isNullOrEmpty(path), "Cannot set to an empty path");
 
         Configuration root = getRoot();
         if (root == null) {
@@ -176,6 +204,10 @@ public class MemorySection implements ConfigurationSection {
             String node = path.substring(i2, i1);
             ConfigurationSection subSection = section.getConfigurationSection(node);
             if (subSection == null) {
+                if (value == null) {
+                    // no need to create missing sub-sections if we want to remove the value:
+                    return;
+                }
                 section = section.createSection(node);
             } else {
                 section = subSection;
@@ -187,19 +219,29 @@ public class MemorySection implements ConfigurationSection {
             if (value == null) {
                 map.remove(key);
             } else {
-                map.put(key, value);
+                SectionPathData entry = map.get(key);
+                if (entry == null) {
+                    map.put(key, new SectionPathData(value));
+                } else {
+                    entry.setData(value);
+                }
             }
         } else {
             section.set(key, value);
         }
     }
 
-    public Object get(String path) {
+    @Override
+    @Nullable
+    public Object get(@NotNull String path) {
         return get(path, getDefault(path));
     }
 
-    public Object get(String path, Object def) {
-        Validate.notNull(path, "Path cannot be null");
+    @Override
+    @Contract("_, !null -> !null")
+    @Nullable
+    public Object get(@NotNull String path, @Nullable Object def) {
+        Preconditions.checkArgument(path != null, "Path cannot be null");
 
         if (path.length() == 0) {
             return this;
@@ -216,7 +258,11 @@ public class MemorySection implements ConfigurationSection {
         int i1 = -1, i2;
         ConfigurationSection section = this;
         while ((i1 = path.indexOf(separator, i2 = i1 + 1)) != -1) {
-            section = section.getConfigurationSection(path.substring(i2, i1));
+            final String currentPath = path.substring(i2, i1);
+            if (!section.contains(currentPath, true)) {
+                return def;
+            }
+            section = section.getConfigurationSection(currentPath);
             if (section == null) {
                 return def;
             }
@@ -224,14 +270,16 @@ public class MemorySection implements ConfigurationSection {
 
         String key = path.substring(i2);
         if (section == this) {
-            Object result = map.get(key);
-            return (result == null) ? def : result;
+            SectionPathData result = map.get(key);
+            return (result == null) ? def : result.getData();
         }
         return section.get(key, def);
     }
 
-    public ConfigurationSection createSection(String path) {
-        Validate.notEmpty(path, "Cannot create section at empty path");
+    @Override
+    @NotNull
+    public ConfigurationSection createSection(@NotNull String path) {
+        Preconditions.checkArgument(!Strings.isNullOrEmpty(path), "Cannot create section at empty path");
         Configuration root = getRoot();
         if (root == null) {
             throw new IllegalStateException("Cannot create section without a root");
@@ -255,13 +303,15 @@ public class MemorySection implements ConfigurationSection {
         String key = path.substring(i2);
         if (section == this) {
             ConfigurationSection result = new MemorySection(this, key);
-            map.put(key, result);
+            map.put(key, new SectionPathData(result));
             return result;
         }
         return section.createSection(key);
     }
 
-    public ConfigurationSection createSection(String path, Map<?, ?> map) {
+    @Override
+    @NotNull
+    public ConfigurationSection createSection(@NotNull String path, @NotNull Map<?, ?> map) {
         ConfigurationSection section = createSection(path);
 
         for (Map.Entry<?, ?> entry : map.entrySet()) {
@@ -276,98 +326,124 @@ public class MemorySection implements ConfigurationSection {
     }
 
     // Primitives
-    public String getString(String path) {
+    @Override
+    @Nullable
+    public String getString(@NotNull String path) {
         Object def = getDefault(path);
         return getString(path, def != null ? def.toString() : null);
     }
 
-    public String getString(String path, String def) {
+    @Override
+    @Contract("_, !null -> !null")
+    @Nullable
+    public String getString(@NotNull String path, @Nullable String def) {
         Object val = get(path, def);
         return (val != null) ? val.toString() : def;
     }
 
-    public boolean isString(String path) {
+    @Override
+    public boolean isString(@NotNull String path) {
         Object val = get(path);
         return val instanceof String;
     }
 
-    public int getInt(String path) {
+    @Override
+    public int getInt(@NotNull String path) {
         Object def = getDefault(path);
         return getInt(path, (def instanceof Number) ? toInt(def) : 0);
     }
 
-    public int getInt(String path, int def) {
+    @Override
+    public int getInt(@NotNull String path, int def) {
         Object val = get(path, def);
         return (val instanceof Number) ? toInt(val) : def;
     }
 
-    public boolean isInt(String path) {
+    @Override
+    public boolean isInt(@NotNull String path) {
         Object val = get(path);
         return val instanceof Integer;
     }
 
-    public boolean getBoolean(String path) {
+    @Override
+    public boolean getBoolean(@NotNull String path) {
         Object def = getDefault(path);
         return getBoolean(path, (def instanceof Boolean) ? (Boolean) def : false);
     }
 
-    public boolean getBoolean(String path, boolean def) {
+    @Override
+    public boolean getBoolean(@NotNull String path, boolean def) {
         Object val = get(path, def);
         return (val instanceof Boolean) ? (Boolean) val : def;
     }
 
-    public boolean isBoolean(String path) {
+    @Override
+    public boolean isBoolean(@NotNull String path) {
         Object val = get(path);
         return val instanceof Boolean;
     }
 
-    public double getDouble(String path) {
+    @Override
+    public double getDouble(@NotNull String path) {
         Object def = getDefault(path);
         return getDouble(path, (def instanceof Number) ? toDouble(def) : 0);
     }
 
-    public double getDouble(String path, double def) {
+    @Override
+    public double getDouble(@NotNull String path, double def) {
         Object val = get(path, def);
         return (val instanceof Number) ? toDouble(val) : def;
     }
 
-    public boolean isDouble(String path) {
+    @Override
+    public boolean isDouble(@NotNull String path) {
         Object val = get(path);
         return val instanceof Double;
     }
 
-    public long getLong(String path) {
+    @Override
+    public long getLong(@NotNull String path) {
         Object def = getDefault(path);
         return getLong(path, (def instanceof Number) ? toLong(def) : 0);
     }
 
-    public long getLong(String path, long def) {
+    @Override
+    public long getLong(@NotNull String path, long def) {
         Object val = get(path, def);
         return (val instanceof Number) ? toLong(val) : def;
     }
 
-    public boolean isLong(String path) {
+    @Override
+    public boolean isLong(@NotNull String path) {
         Object val = get(path);
         return val instanceof Long;
     }
 
     // Java
-    public List<?> getList(String path) {
+    @Override
+    @Nullable
+    public List<?> getList(@NotNull String path) {
         Object def = getDefault(path);
         return getList(path, (def instanceof List) ? (List<?>) def : null);
     }
 
-    public List<?> getList(String path, List<?> def) {
+    @Override
+    @Contract("_, !null -> !null")
+    @Nullable
+    public List<?> getList(@NotNull String path, @Nullable List<?> def) {
         Object val = get(path, def);
         return (List<?>) ((val instanceof List) ? val : def);
     }
 
-    public boolean isList(String path) {
+    @Override
+    public boolean isList(@NotNull String path) {
         Object val = get(path);
         return val instanceof List;
     }
 
-    public List<String> getStringList(String path) {
+    @Override
+    @NotNull
+    public List<String> getStringList(@NotNull String path) {
         List<?> list = getList(path);
 
         if (list == null) {
@@ -385,7 +461,9 @@ public class MemorySection implements ConfigurationSection {
         return result;
     }
 
-    public List<Integer> getIntegerList(String path) {
+    @Override
+    @NotNull
+    public List<Integer> getIntegerList(@NotNull String path) {
         List<?> list = getList(path);
 
         if (list == null) {
@@ -412,7 +490,9 @@ public class MemorySection implements ConfigurationSection {
         return result;
     }
 
-    public List<Boolean> getBooleanList(String path) {
+    @Override
+    @NotNull
+    public List<Boolean> getBooleanList(@NotNull String path) {
         List<?> list = getList(path);
 
         if (list == null) {
@@ -436,7 +516,9 @@ public class MemorySection implements ConfigurationSection {
         return result;
     }
 
-    public List<Double> getDoubleList(String path) {
+    @Override
+    @NotNull
+    public List<Double> getDoubleList(@NotNull String path) {
         List<?> list = getList(path);
 
         if (list == null) {
@@ -463,7 +545,9 @@ public class MemorySection implements ConfigurationSection {
         return result;
     }
 
-    public List<Float> getFloatList(String path) {
+    @Override
+    @NotNull
+    public List<Float> getFloatList(@NotNull String path) {
         List<?> list = getList(path);
 
         if (list == null) {
@@ -490,7 +574,9 @@ public class MemorySection implements ConfigurationSection {
         return result;
     }
 
-    public List<Long> getLongList(String path) {
+    @Override
+    @NotNull
+    public List<Long> getLongList(@NotNull String path) {
         List<?> list = getList(path);
 
         if (list == null) {
@@ -517,7 +603,9 @@ public class MemorySection implements ConfigurationSection {
         return result;
     }
 
-    public List<Byte> getByteList(String path) {
+    @Override
+    @NotNull
+    public List<Byte> getByteList(@NotNull String path) {
         List<?> list = getList(path);
 
         if (list == null) {
@@ -544,7 +632,9 @@ public class MemorySection implements ConfigurationSection {
         return result;
     }
 
-    public List<Character> getCharacterList(String path) {
+    @Override
+    @NotNull
+    public List<Character> getCharacterList(@NotNull String path) {
         List<?> list = getList(path);
 
         if (list == null) {
@@ -570,7 +660,9 @@ public class MemorySection implements ConfigurationSection {
         return result;
     }
 
-    public List<Short> getShortList(String path) {
+    @Override
+    @NotNull
+    public List<Short> getShortList(@NotNull String path) {
         List<?> list = getList(path);
 
         if (list == null) {
@@ -597,7 +689,9 @@ public class MemorySection implements ConfigurationSection {
         return result;
     }
 
-    public List<Map<?, ?>> getMapList(String path) {
+    @Override
+    @NotNull
+    public List<Map<?, ?>> getMapList(@NotNull String path) {
         List<?> list = getList(path);
         List<Map<?, ?>> result = new ArrayList<Map<?, ?>>();
 
@@ -615,67 +709,129 @@ public class MemorySection implements ConfigurationSection {
     }
 
     // Bukkit
-    public Vector getVector(String path) {
+    @Nullable
+    @Override
+    public <T extends Object> T getObject(@NotNull String path, @NotNull Class<T> clazz) {
+        Preconditions.checkArgument(clazz != null, "Class cannot be null");
         Object def = getDefault(path);
-        return getVector(path, (def instanceof Vector) ? (Vector) def : null);
+        return getObject(path, clazz, (def != null && clazz.isInstance(def)) ? clazz.cast(def) : null);
     }
 
-    public Vector getVector(String path, Vector def) {
+    @Contract("_, _, !null -> !null")
+    @Nullable
+    @Override
+    public <T extends Object> T getObject(@NotNull String path, @NotNull Class<T> clazz, @Nullable T def) {
+        Preconditions.checkArgument(clazz != null, "Class cannot be null");
         Object val = get(path, def);
-        return (val instanceof Vector) ? (Vector) val : def;
+        return (val != null && clazz.isInstance(val)) ? clazz.cast(val) : def;
     }
 
-    public boolean isVector(String path) {
-        Object val = get(path);
-        return val instanceof Vector;
+    @Nullable
+    @Override
+    public <T extends ConfigurationSerializable> T getSerializable(@NotNull String path, @NotNull Class<T> clazz) {
+        return getObject(path, clazz);
     }
 
-    public OfflinePlayer getOfflinePlayer(String path) {
-        Object def = getDefault(path);
-        return getOfflinePlayer(path, (def instanceof OfflinePlayer) ? (OfflinePlayer) def : null);
+    @Contract("_, _, !null -> !null")
+    @Nullable
+    @Override
+    public <T extends ConfigurationSerializable> T getSerializable(@NotNull String path, @NotNull Class<T> clazz, @Nullable T def) {
+        return getObject(path, clazz, def);
     }
 
-    public OfflinePlayer getOfflinePlayer(String path, OfflinePlayer def) {
-        Object val = get(path, def);
-        return (val instanceof OfflinePlayer) ? (OfflinePlayer) val : def;
+    @Override
+    @Nullable
+    public Vector getVector(@NotNull String path) {
+        return getSerializable(path, Vector.class);
     }
 
-    public boolean isOfflinePlayer(String path) {
-        Object val = get(path);
-        return val instanceof OfflinePlayer;
+    @Override
+    @Contract("_, !null -> !null")
+    @Nullable
+    public Vector getVector(@NotNull String path, @Nullable Vector def) {
+        return getSerializable(path, Vector.class, def);
     }
 
-    public ItemStack getItemStack(String path) {
-        Object def = getDefault(path);
-        return getItemStack(path, (def instanceof ItemStack) ? (ItemStack) def : null);
+    @Override
+    public boolean isVector(@NotNull String path) {
+        return getSerializable(path, Vector.class) != null;
     }
 
-    public ItemStack getItemStack(String path, ItemStack def) {
-        Object val = get(path, def);
-        return (val instanceof ItemStack) ? (ItemStack) val : def;
+    @Override
+    @Nullable
+    public OfflinePlayer getOfflinePlayer(@NotNull String path) {
+        return getSerializable(path, OfflinePlayer.class);
     }
 
-    public boolean isItemStack(String path) {
-        Object val = get(path);
-        return val instanceof ItemStack;
+    @Override
+    @Contract("_, !null -> !null")
+    @Nullable
+    public OfflinePlayer getOfflinePlayer(@NotNull String path, @Nullable OfflinePlayer def) {
+        return getSerializable(path, OfflinePlayer.class, def);
     }
 
-    public Color getColor(String path) {
-        Object def = getDefault(path);
-        return getColor(path, (def instanceof Color) ? (Color) def : null);
+    @Override
+    public boolean isOfflinePlayer(@NotNull String path) {
+        return getSerializable(path, OfflinePlayer.class) != null;
     }
 
-    public Color getColor(String path, Color def) {
-        Object val = get(path, def);
-        return (val instanceof Color) ? (Color) val : def;
+    @Override
+    @Nullable
+    public ItemStack getItemStack(@NotNull String path) {
+        return getSerializable(path, ItemStack.class);
     }
 
-    public boolean isColor(String path) {
-        Object val = get(path);
-        return val instanceof Color;
+    @Override
+    @Contract("_, !null -> !null")
+    @Nullable
+    public ItemStack getItemStack(@NotNull String path, @Nullable ItemStack def) {
+        return getSerializable(path, ItemStack.class, def);
     }
 
-    public ConfigurationSection getConfigurationSection(String path) {
+    @Override
+    public boolean isItemStack(@NotNull String path) {
+        return getSerializable(path, ItemStack.class) != null;
+    }
+
+    @Override
+    @Nullable
+    public Color getColor(@NotNull String path) {
+        return getSerializable(path, Color.class);
+    }
+
+    @Override
+    @Contract("_, !null -> !null")
+    @Nullable
+    public Color getColor(@NotNull String path, @Nullable Color def) {
+        return getSerializable(path, Color.class, def);
+    }
+
+    @Override
+    public boolean isColor(@NotNull String path) {
+        return getSerializable(path, Color.class) != null;
+    }
+
+    @Override
+    @Nullable
+    public Location getLocation(@NotNull String path) {
+        return getSerializable(path, Location.class);
+    }
+
+    @Override
+    @Contract("_, !null -> !null")
+    @Nullable
+    public Location getLocation(@NotNull String path, @Nullable Location def) {
+        return getSerializable(path, Location.class, def);
+    }
+
+    @Override
+    public boolean isLocation(@NotNull String path) {
+        return getSerializable(path, Location.class) != null;
+    }
+
+    @Override
+    @Nullable
+    public ConfigurationSection getConfigurationSection(@NotNull String path) {
         Object val = get(path, null);
         if (val != null) {
             return (val instanceof ConfigurationSection) ? (ConfigurationSection) val : null;
@@ -685,35 +841,37 @@ public class MemorySection implements ConfigurationSection {
         return (val instanceof ConfigurationSection) ? createSection(path) : null;
     }
 
-    public boolean isConfigurationSection(String path) {
+    @Override
+    public boolean isConfigurationSection(@NotNull String path) {
         Object val = get(path);
         return val instanceof ConfigurationSection;
     }
 
-    protected boolean isPrimitiveWrapper(Object input) {
-        return input instanceof Integer || input instanceof Boolean ||
-                input instanceof Character || input instanceof Byte ||
-                input instanceof Short || input instanceof Double ||
-                input instanceof Long || input instanceof Float;
+    protected boolean isPrimitiveWrapper(@Nullable Object input) {
+        return input instanceof Integer || input instanceof Boolean
+                || input instanceof Character || input instanceof Byte
+                || input instanceof Short || input instanceof Double
+                || input instanceof Long || input instanceof Float;
     }
 
-    protected Object getDefault(String path) {
-        Validate.notNull(path, "Path cannot be null");
+    @Nullable
+    protected Object getDefault(@NotNull String path) {
+        Preconditions.checkArgument(path != null, "Path cannot be null");
 
         Configuration root = getRoot();
         Configuration defaults = root == null ? null : root.getDefaults();
         return (defaults == null) ? null : defaults.get(createPath(this, path));
     }
 
-    protected void mapChildrenKeys(Set<String> output, ConfigurationSection section, boolean deep) {
+    protected void mapChildrenKeys(@NotNull Set<String> output, @NotNull ConfigurationSection section, boolean deep) {
         if (section instanceof MemorySection) {
             MemorySection sec = (MemorySection) section;
 
-            for (Map.Entry<String, Object> entry : sec.map.entrySet()) {
+            for (Map.Entry<String, SectionPathData> entry : sec.map.entrySet()) {
                 output.add(createPath(section, entry.getKey(), this));
 
-                if ((deep) && (entry.getValue() instanceof ConfigurationSection)) {
-                    ConfigurationSection subsection = (ConfigurationSection) entry.getValue();
+                if ((deep) && (entry.getValue().getData() instanceof ConfigurationSection)) {
+                    ConfigurationSection subsection = (ConfigurationSection) entry.getValue().getData();
                     mapChildrenKeys(output, subsection, deep);
                 }
             }
@@ -726,16 +884,21 @@ public class MemorySection implements ConfigurationSection {
         }
     }
 
-    protected void mapChildrenValues(Map<String, Object> output, ConfigurationSection section, boolean deep) {
+    protected void mapChildrenValues(@NotNull Map<String, Object> output, @NotNull ConfigurationSection section, boolean deep) {
         if (section instanceof MemorySection) {
             MemorySection sec = (MemorySection) section;
 
-            for (Map.Entry<String, Object> entry : sec.map.entrySet()) {
-                output.put(createPath(section, entry.getKey(), this), entry.getValue());
+            for (Map.Entry<String, SectionPathData> entry : sec.map.entrySet()) {
+                // Because of the copyDefaults call potentially copying out of order, we must remove and then add in our saved order
+                // This means that default values we haven't set end up getting placed first
+                // See SPIGOT-4558 for an example using spigot.yml - watch subsections move around to default order
+                String childPath = createPath(section, entry.getKey(), this);
+                output.remove(childPath);
+                output.put(childPath, entry.getValue().getData());
 
-                if (entry.getValue() instanceof ConfigurationSection) {
+                if (entry.getValue().getData() instanceof ConfigurationSection) {
                     if (deep) {
-                        mapChildrenValues(output, (ConfigurationSection) entry.getValue(), deep);
+                        mapChildrenValues(output, (ConfigurationSection) entry.getValue().getData(), deep);
                     }
                 }
             }
@@ -759,7 +922,8 @@ public class MemorySection implements ConfigurationSection {
      * @param key Name of the specified section.
      * @return Full path of the section from its root.
      */
-    public static String createPath(ConfigurationSection section, String key) {
+    @NotNull
+    public static String createPath(@NotNull ConfigurationSection section, @Nullable String key) {
         return createPath(section, key, (section == null) ? null : section.getRoot());
     }
 
@@ -775,8 +939,9 @@ public class MemorySection implements ConfigurationSection {
      * @param relativeTo Section to create the path relative to.
      * @return Full path of the section from its root.
      */
-    public static String createPath(ConfigurationSection section, String key, ConfigurationSection relativeTo) {
-        Validate.notNull(section, "Cannot create path without a section");
+    @NotNull
+    public static String createPath(@NotNull ConfigurationSection section, @Nullable String key, @Nullable ConfigurationSection relativeTo) {
+        Preconditions.checkArgument(section != null, "Cannot create path without a section");
         Configuration root = section.getRoot();
         if (root == null) {
             throw new IllegalStateException("Cannot create path without a root");
@@ -784,14 +949,11 @@ public class MemorySection implements ConfigurationSection {
         char separator = root.options().pathSeparator();
 
         StringBuilder builder = new StringBuilder();
-        if (section != null) {
-            for (ConfigurationSection parent = section; (parent != null) && (parent != relativeTo); parent = parent.getParent()) {
-                if (builder.length() > 0) {
-                    builder.insert(0, separator);
-                }
-
-                builder.insert(0, parent.getName());
+        for (ConfigurationSection parent = section; (parent != null) && (parent != relativeTo); parent = parent.getParent()) {
+            if (builder.length() > 0) {
+                builder.insert(0, separator);
             }
+            builder.insert(0, parent.getName());
         }
 
         if ((key != null) && (key.length() > 0)) {
@@ -803,6 +965,69 @@ public class MemorySection implements ConfigurationSection {
         }
 
         return builder.toString();
+    }
+
+    @Override
+    @NotNull
+    public List<String> getComments(@NotNull final String path) {
+        final SectionPathData pathData = getSectionPathData(path);
+        return pathData == null ? Collections.emptyList() : pathData.getComments();
+    }
+
+    @Override
+    @NotNull
+    public List<String> getInlineComments(@NotNull final String path) {
+        final SectionPathData pathData = getSectionPathData(path);
+        return pathData == null ? Collections.emptyList() : pathData.getInlineComments();
+    }
+
+    @Override
+    public void setComments(@NotNull final String path, @Nullable final List<String> comments) {
+        final SectionPathData pathData = getSectionPathData(path);
+        if (pathData != null) {
+            pathData.setComments(comments);
+        }
+    }
+
+    @Override
+    public void setInlineComments(@NotNull final String path, @Nullable final List<String> comments) {
+        final SectionPathData pathData = getSectionPathData(path);
+        if (pathData != null) {
+            pathData.setInlineComments(comments);
+        }
+    }
+
+    @Nullable
+    private SectionPathData getSectionPathData(@NotNull String path) {
+        Preconditions.checkArgument(path != null, "Path cannot be null");
+
+        Configuration root = getRoot();
+        if (root == null) {
+            throw new IllegalStateException("Cannot access section without a root");
+        }
+
+        final char separator = root.options().pathSeparator();
+        // i1 is the leading (higher) index
+        // i2 is the trailing (lower) index
+        int i1 = -1, i2;
+        ConfigurationSection section = this;
+        while ((i1 = path.indexOf(separator, i2 = i1 + 1)) != -1) {
+            section = section.getConfigurationSection(path.substring(i2, i1));
+            if (section == null) {
+                return null;
+            }
+        }
+
+        String key = path.substring(i2);
+        if (section == this) {
+            SectionPathData entry = map.get(key);
+            if (entry != null) {
+                return entry;
+            }
+        } else if (section instanceof MemorySection) {
+            return ((MemorySection) section).getSectionPathData(key);
+        }
+        return null;
     }
 
     @Override

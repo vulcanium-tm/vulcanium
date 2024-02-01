@@ -1,15 +1,17 @@
 package org.bukkit.configuration;
 
-import org.bukkit.Material;
+import static org.junit.jupiter.api.Assertions.*;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import org.bukkit.Material;
+import org.bukkit.configuration.serialization.ConfigurationSerializable;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.Vector;
-import org.junit.Test;
-import static org.junit.Assert.*;
+import org.junit.jupiter.api.Test;
 
 public abstract class ConfigurationSectionTest {
     public abstract ConfigurationSection getConfigurationSection();
@@ -25,9 +27,9 @@ public abstract class ConfigurationSectionTest {
         section.set("key2", true);
         section.set("42", true);
 
-        assertArrayEquals(new String[] { "key", "subsection", "key2", "42" }, section.getKeys(false).toArray());
-        assertArrayEquals(new String[] { "key", "subsection", "subsection.subkey", "subsection.subkey2", "subsection.subsubsection", "subsection.subsubsection.key", "key2", "42" }, section.getKeys(true).toArray());
-        assertArrayEquals(new String[] { "subkey", "subkey2", "subsubsection", "subsubsection.key" }, section.getConfigurationSection("subsection").getKeys(true).toArray());
+        assertArrayEquals(new String[]{"key", "subsection", "key2", "42"}, section.getKeys(false).toArray());
+        assertArrayEquals(new String[]{"key", "subsection", "subsection.subkey", "subsection.subkey2", "subsection.subsubsection", "subsection.subsubsection.key", "key2", "42"}, section.getKeys(true).toArray());
+        assertArrayEquals(new String[]{"subkey", "subkey2", "subsubsection", "subsubsection.key"}, section.getConfigurationSection("subsection").getKeys(true).toArray());
     }
 
     @Test
@@ -41,9 +43,9 @@ public abstract class ConfigurationSectionTest {
         section.addDefault("subsection.subsubsection.key", true);
         section.addDefault("key2", true);
 
-        assertArrayEquals(new String[] { "subsection", "key2", "key" }, section.getKeys(false).toArray());
-        assertArrayEquals(new String[] { "subsection", "subsection.subkey", "subsection.subkey2", "subsection.subsubsection", "subsection.subsubsection.key", "key2", "key" }, section.getKeys(true).toArray());
-        assertArrayEquals(new String[] { "subkey", "subkey2", "subsubsection", "subsubsection.key" }, section.getConfigurationSection("subsection").getKeys(true).toArray());
+        assertArrayEquals(new String[]{"subsection", "key2", "key"}, section.getKeys(false).toArray());
+        assertArrayEquals(new String[]{"subsection", "subsection.subkey", "subsection.subkey2", "subsection.subsubsection", "subsection.subsubsection.key", "key2", "key"}, section.getKeys(true).toArray());
+        assertArrayEquals(new String[]{"subkey", "subkey2", "subsubsection", "subsubsection.key"}, section.getConfigurationSection("subsection").getKeys(true).toArray());
     }
 
     @Test
@@ -56,12 +58,12 @@ public abstract class ConfigurationSectionTest {
         section.set("int", 42);
 
         Map<String, Object> shallowValues = section.getValues(false);
-        assertArrayEquals(new String[] { "bool", "subsection", "int" }, shallowValues.keySet().toArray());
-        assertArrayEquals(new Object[] { true, section.getConfigurationSection("subsection"), 42 }, shallowValues.values().toArray());
+        assertArrayEquals(new String[]{"bool", "subsection", "int"}, shallowValues.keySet().toArray());
+        assertArrayEquals(new Object[]{true, section.getConfigurationSection("subsection"), 42}, shallowValues.values().toArray());
 
         Map<String, Object> deepValues = section.getValues(true);
-        assertArrayEquals(new String[] { "bool", "subsection", "subsection.string", "subsection.long", "int" }, deepValues.keySet().toArray());
-        assertArrayEquals(new Object[] { true, section.getConfigurationSection("subsection"), "test", Long.MAX_VALUE, 42 }, deepValues.values().toArray());
+        assertArrayEquals(new String[]{"bool", "subsection", "subsection.string", "subsection.long", "int"}, deepValues.keySet().toArray());
+        assertArrayEquals(new Object[]{true, section.getConfigurationSection("subsection"), "test", Long.MAX_VALUE, 42}, deepValues.values().toArray());
     }
 
     @Test
@@ -69,18 +71,21 @@ public abstract class ConfigurationSectionTest {
         ConfigurationSection section = getConfigurationSection();
         section.getRoot().options().copyDefaults(true);
 
+        // Fix for SPIGOT-4558 means that defaults will always be first
+        // This is a little bit unintuitive for section defaults when deep iterating keys / values as shown below
+        // But the API doesn't guarantee order & when serialized (using shallow getters) all is well
         section.set("bool", true);
         section.set("subsection.string", "test");
         section.addDefault("subsection.long", Long.MAX_VALUE);
         section.addDefault("int", 42);
 
         Map<String, Object> shallowValues = section.getValues(false);
-        assertArrayEquals(new String[] { "subsection", "int", "bool" }, shallowValues.keySet().toArray());
-        assertArrayEquals(new Object[] { section.getConfigurationSection("subsection"), 42, true }, shallowValues.values().toArray());
+        assertArrayEquals(new String[]{"int", "bool", "subsection"}, shallowValues.keySet().toArray());
+        assertArrayEquals(new Object[]{42, true, section.getConfigurationSection("subsection")}, shallowValues.values().toArray());
 
         Map<String, Object> deepValues = section.getValues(true);
-        assertArrayEquals(new String[] { "subsection", "subsection.long", "int", "bool", "subsection.string" }, deepValues.keySet().toArray());
-        assertArrayEquals(new Object[] { section.getConfigurationSection("subsection"), Long.MAX_VALUE, 42, true, "test" }, deepValues.values().toArray());
+        assertArrayEquals(new String[]{"subsection.long", "int", "bool", "subsection", "subsection.string"}, deepValues.keySet().toArray());
+        assertArrayEquals(new Object[]{Long.MAX_VALUE, 42, true, section.getConfigurationSection("subsection"), "test"}, deepValues.values().toArray());
     }
 
     @Test
@@ -91,6 +96,28 @@ public abstract class ConfigurationSectionTest {
 
         assertTrue(section.contains("exists"));
         assertFalse(section.contains("doesnt-exist"));
+
+        assertTrue(section.contains("exists", true));
+        assertTrue(section.contains("exists", false));
+
+        assertFalse(section.contains("doesnt-exist", true));
+        assertFalse(section.contains("doesnt-exist", false));
+
+        section.addDefault("doenst-exist-two", true);
+        section.set("doenst-exist-two", null);
+
+        assertFalse(section.contains("doenst-exist-two", true));
+        assertTrue(section.contains("doenst-exist-two", false));
+    }
+
+    @Test
+    public void testContainsDoesNotCreateSection() {
+        ConfigurationSection section = getConfigurationSection();
+        section.addDefault("notExistingSection.Value", "Test String");
+
+        assertFalse(section.contains("notExistingSection", true));
+        assertFalse(section.contains("notExistingSection.Value", true));
+        assertFalse(section.contains("notExistingSection", true));
     }
 
     @Test
@@ -413,7 +440,7 @@ public abstract class ConfigurationSectionTest {
         assertEquals(Arrays.asList((Object) true, false), section.getBooleanList(key));
         assertEquals(Arrays.asList((Object) 4.0, 5.0, 6.0), section.getDoubleList(key));
         assertEquals(Arrays.asList((Object) 4.0f, 5.0f, 6.0f), section.getFloatList(key));
-        assertEquals(Arrays.asList((Object) 4l, 5l, 6l), section.getLongList(key));
+        assertEquals(Arrays.asList((Object) 4L, 5L, 6L), section.getLongList(key));
         assertEquals(Arrays.asList((Object) (byte) 4, (byte) 5, (byte) 6), section.getByteList(key));
         assertEquals(Arrays.asList((Object) (short) 4, (short) 5, (short) 6), section.getShortList(key));
         assertEquals(map, section.getMapList(key).get(0));
@@ -443,6 +470,43 @@ public abstract class ConfigurationSectionTest {
 
         assertTrue(section.isList(key));
         assertFalse(section.isList("doesntExist"));
+    }
+
+    @Test
+    public void testGetObject_String_Class() {
+        ConfigurationSection section = getConfigurationSection();
+
+        section.set("set", Integer.valueOf(1));
+        section.addDefault("default", Integer.valueOf(2));
+        section.addDefault("defaultAndSet", Boolean.TRUE);
+        section.set("defaultAndSet", Integer.valueOf(3));
+
+        assertEquals(Integer.valueOf(1), section.getObject("set", Integer.class));
+        assertNull(section.getObject("set", Boolean.class));
+        assertEquals(Integer.valueOf(2), section.getObject("default", Number.class));
+        assertNull(section.getObject("default", Boolean.class));
+        assertEquals(Integer.valueOf(3), section.getObject("defaultAndSet", Integer.class));
+        assertEquals(Boolean.TRUE, section.getObject("defaultAndSet", Boolean.class));
+        assertEquals(Integer.valueOf(3), section.getObject("defaultAndSet", Object.class));
+        assertNull(section.getObject("defaultAndSet", String.class));
+        assertNull(section.getObject("doesntExist", Boolean.class));
+        assertNull(section.getString("doesntExist"));
+    }
+
+    @Test
+    public void testGetObject_String_Class_T() {
+        ConfigurationSection section = getConfigurationSection();
+
+        section.set("set", Integer.valueOf(1));
+        section.addDefault("default", Integer.valueOf(2));
+
+        assertEquals(Integer.valueOf(1), section.getObject("set", Integer.class, null));
+        assertEquals(Integer.valueOf(1), section.getObject("set", Integer.class, Integer.valueOf(4)));
+        assertNull(section.getObject("set", Boolean.class, null));
+        assertNull(section.getObject("default", Integer.class, null));
+        assertNull(section.getObject("doesntExist", Boolean.class, null));
+        assertEquals(Boolean.TRUE, section.getObject("doesntExist", Boolean.class, Boolean.TRUE));
+        assertNull(section.getString("doesntExist"));
     }
 
     @Test
@@ -486,7 +550,7 @@ public abstract class ConfigurationSectionTest {
     public void testGetItemStack_String() {
         ConfigurationSection section = getConfigurationSection();
         String key = "exists";
-        ItemStack value = new ItemStack(Material.WOOD, 50, (short) 2);
+        ItemStack value = new ItemStack(Material.ACACIA_WOOD, 50);
 
         section.set(key, value);
 
@@ -498,7 +562,7 @@ public abstract class ConfigurationSectionTest {
     public void testGetItemStack_String_ItemStack() {
         ConfigurationSection section = getConfigurationSection();
         String key = "exists";
-        ItemStack value = new ItemStack(Material.WOOD, 50, (short) 2);
+        ItemStack value = new ItemStack(Material.ACACIA_WOOD, 50);
         ItemStack def = new ItemStack(Material.STONE, 1);
 
         section.set(key, value);
@@ -511,7 +575,7 @@ public abstract class ConfigurationSectionTest {
     public void testIsItemStack() {
         ConfigurationSection section = getConfigurationSection();
         String key = "exists";
-        ItemStack value = new ItemStack(Material.WOOD, 50, (short) 2);
+        ItemStack value = new ItemStack(Material.ACACIA_WOOD, 50);
 
         section.set(key, value);
 
@@ -540,9 +604,18 @@ public abstract class ConfigurationSectionTest {
         assertFalse(section.isConfigurationSection("doesntExist"));
     }
 
-    public enum TestEnum {
+    public enum TestEnum implements ConfigurationSerializable {
         HELLO,
         WORLD,
-        BANANAS
+        BANANAS;
+
+        @Override
+        public Map<String, Object> serialize() {
+            return Collections.singletonMap("variant", this.name());
+        }
+
+        public static TestEnum deserialize(Map<String, Object> map) {
+            return TestEnum.valueOf((String) map.get("variant"));
+        }
     }
 }

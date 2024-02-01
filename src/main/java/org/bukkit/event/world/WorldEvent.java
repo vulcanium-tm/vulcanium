@@ -2,6 +2,7 @@ package org.bukkit.event.world;
 
 import org.bukkit.World;
 import org.bukkit.event.Event;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * Represents events within a world
@@ -9,7 +10,12 @@ import org.bukkit.event.Event;
 public abstract class WorldEvent extends Event {
     private final World world;
 
-    public WorldEvent(final World world) {
+    public WorldEvent(@NotNull final World world) {
+        this(world, false);
+    }
+
+    public WorldEvent(@NotNull World world, boolean isAsync) {
+        super(isAsync);
         this.world = world;
     }
 
@@ -18,6 +24,7 @@ public abstract class WorldEvent extends Event {
      *
      * @return World which caused this event
      */
+    @NotNull
     public World getWorld() {
         return world;
     }

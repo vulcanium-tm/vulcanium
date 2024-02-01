@@ -1,10 +1,9 @@
 package org.bukkit.conversations;
 
-import org.junit.Test;
-import static org.junit.Assert.*;
-
+import static org.junit.jupiter.api.Assertions.*;
 import java.util.HashMap;
 import java.util.Map;
+import org.junit.jupiter.api.Test;
 
 /**
  */
@@ -20,7 +19,7 @@ public class ConversationContextTest {
     public void TestPlugin() {
         Conversable conversable = new FakeConversable();
         ConversationContext context = new ConversationContext(null, conversable, new HashMap<Object, Object>());
-        assertEquals(null, context.getPlugin());
+        assertNull(context.getPlugin());
     }
 
     @Test

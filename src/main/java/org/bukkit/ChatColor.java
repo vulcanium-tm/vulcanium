@@ -1,11 +1,12 @@
 package org.bukkit;
 
+import com.google.common.base.Preconditions;
+import com.google.common.collect.Maps;
 import java.util.Map;
 import java.util.regex.Pattern;
-
-import org.apache.commons.lang.Validate;
-
-import com.google.common.collect.Maps;
+import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * All supported color values for chat
@@ -105,14 +106,14 @@ public enum ChatColor {
      * you need to dynamically convert colour codes from your custom format.
      */
     public static final char COLOR_CHAR = '\u00A7';
-    private static final Pattern STRIP_COLOR_PATTERN = Pattern.compile("(?i)" + String.valueOf(COLOR_CHAR) + "[0-9A-FK-OR]");
+    private static final Pattern STRIP_COLOR_PATTERN = Pattern.compile("(?i)" + String.valueOf(COLOR_CHAR) + "[0-9A-FK-ORX]");
 
     private final int intCode;
     private final char code;
     private final boolean isFormat;
     private final String toString;
-    private final static Map<Integer, ChatColor> BY_ID = Maps.newHashMap();
-    private final static Map<Character, ChatColor> BY_CHAR = Maps.newHashMap();
+    private static final Map<Integer, ChatColor> BY_ID = Maps.newHashMap();
+    private static final Map<Character, ChatColor> BY_CHAR = Maps.newHashMap();
 
     private ChatColor(char code, int intCode) {
         this(code, intCode, false);
@@ -134,6 +135,7 @@ public enum ChatColor {
         return code;
     }
 
+    @NotNull
     @Override
     public String toString() {
         return toString;
@@ -141,6 +143,8 @@ public enum ChatColor {
 
     /**
      * Checks if this code is a format code as opposed to a color code.
+     *
+     * @return whether this ChatColor is a format code
      */
     public boolean isFormat() {
         return isFormat;
@@ -148,6 +152,8 @@ public enum ChatColor {
 
     /**
      * Checks if this code is a color code as opposed to a format code.
+     *
+     * @return whether this ChatColor is a color code
      */
     public boolean isColor() {
         return !isFormat && this != RESET;
@@ -160,6 +166,7 @@ public enum ChatColor {
      * @return Associative {@link org.bukkit.ChatColor} with the given code,
      *     or null if it doesn't exist
      */
+    @Nullable
     public static ChatColor getByChar(char code) {
         return BY_CHAR.get(code);
     }
@@ -171,9 +178,10 @@ public enum ChatColor {
      * @return Associative {@link org.bukkit.ChatColor} with the given code,
      *     or null if it doesn't exist
      */
-    public static ChatColor getByChar(String code) {
-        Validate.notNull(code, "Code cannot be null");
-        Validate.isTrue(code.length() > 0, "Code must have at least one char");
+    @Nullable
+    public static ChatColor getByChar(@NotNull String code) {
+        Preconditions.checkArgument(code != null, "Code cannot be null");
+        Preconditions.checkArgument(code.length() > 0, "Code must have at least one char");
 
         return BY_CHAR.get(code.charAt(0));
     }
@@ -184,7 +192,9 @@ public enum ChatColor {
      * @param input String to strip of color
      * @return A copy of the input string, without any coloring
      */
-    public static String stripColor(final String input) {
+    @Contract("!null -> !null; null -> null")
+    @Nullable
+    public static String stripColor(@Nullable final String input) {
         if (input == null) {
             return null;
         }
@@ -198,16 +208,19 @@ public enum ChatColor {
      * character. The alternate color code character will only be replaced if
      * it is immediately followed by 0-9, A-F, a-f, K-O, k-o, R or r.
      *
-     * @param altColorChar The alternate color code character to replace. Ex: &
+     * @param altColorChar The alternate color code character to replace. Ex: {@literal &}
      * @param textToTranslate Text containing the alternate color code character.
      * @return Text containing the ChatColor.COLOR_CODE color code character.
      */
-    public static String translateAlternateColorCodes(char altColorChar, String textToTranslate) {
+    @NotNull
+    public static String translateAlternateColorCodes(char altColorChar, @NotNull String textToTranslate) {
+        Preconditions.checkArgument(textToTranslate != null, "Cannot translate null text");
+
         char[] b = textToTranslate.toCharArray();
         for (int i = 0; i < b.length - 1; i++) {
-            if (b[i] == altColorChar && "0123456789AaBbCcDdEeFfKkLlMmNnOoRr".indexOf(b[i+1]) > -1) {
+            if (b[i] == altColorChar && "0123456789AaBbCcDdEeFfKkLlMmNnOoRrXx".indexOf(b[i + 1]) > -1) {
                 b[i] = ChatColor.COLOR_CHAR;
-                b[i+1] = Character.toLowerCase(b[i+1]);
+                b[i + 1] = Character.toLowerCase(b[i + 1]);
             }
         }
         return new String(b);
@@ -219,7 +232,10 @@ public enum ChatColor {
      * @param input Input string to retrieve the colors from.
      * @return Any remaining ChatColors to pass onto the next line.
      */
-    public static String getLastColors(String input) {
+    @NotNull
+    public static String getLastColors(@NotNull String input) {
+        Preconditions.checkArgument(input != null, "Cannot get last colors from null text");
+
         String result = "";
         int length = input.length();
 
@@ -227,6 +243,15 @@ public enum ChatColor {
         for (int index = length - 1; index > -1; index--) {
             char section = input.charAt(index);
             if (section == COLOR_CHAR && index < length - 1) {
+
+                String hexColor = getHexColor(input, index);
+                if (hexColor != null) {
+                    // We got a hex color
+                    result = hexColor + result;
+                    break;
+                }
+
+                // It is not a hex color, check normal color
                 char c = input.charAt(index + 1);
                 ChatColor color = getByChar(c);
 
@@ -242,6 +267,48 @@ public enum ChatColor {
         }
 
         return result;
+    }
+
+    @Nullable
+    private static String getHexColor(@NotNull String input, int index) {
+        // Check for hex color with the format '§x§1§2§3§4§5§6'
+        // Our index is currently on the last '§' which means to have a potential hex color
+        // The index - 11 must be an 'x' and index - 12 must be a '§'
+        // But first check if the string is long enough
+        if (index < 12) {
+            return null;
+        }
+
+        if (input.charAt(index - 11) != 'x' || input.charAt(index - 12) != COLOR_CHAR) {
+            return null;
+        }
+
+        // We got a potential hex color
+        // Now check if every the chars switches between '§' and a hex number
+        // First check '§'
+        for (int i = index - 10; i <= index; i += 2) {
+            if (input.charAt(i) != COLOR_CHAR) {
+                return null;
+            }
+        }
+
+        for (int i = index - 9; i <= (index + 1); i += 2) {
+            char toCheck = input.charAt(i);
+            if (toCheck < '0' || toCheck > 'f') {
+                return null;
+            }
+
+            if (toCheck > '9' && toCheck < 'A') {
+                return null;
+            }
+
+            if (toCheck > 'F' && toCheck < 'a') {
+                return null;
+            }
+        }
+
+        // We got a hex color return it
+        return input.substring(index - 12, index + 2);
     }
 
     static {
