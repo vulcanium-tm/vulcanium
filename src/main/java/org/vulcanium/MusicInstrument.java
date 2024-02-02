@@ -1,9 +1,7 @@
 package org.vulcanium;
 
 import com.google.common.base.Preconditions;
-import com.google.common.collect.Lists;
 
-import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
@@ -27,7 +25,7 @@ public abstract class MusicInstrument implements Keyed {
     }
 
     @NotNull
-    public static Collection<MusicInstrument> values() {
+    public static List<Registry<MusicInstrument>> values() {
         return Collections.unmodifiableList(List.of(Registry.INSTRUMENT));
     }
 
