@@ -171,11 +171,11 @@ public class Particle {
         this(key, Void.class, register);
     }
 
-    Particle(String key, @NotNull Class<?> data) {
+    Particle(String key, Class<?> data) {
         this(key, data, true);
     }
 
-    Particle(String key, @NotNull Class<?> data, boolean register) {
+    Particle(String key, Class<?> data, boolean register) {
         this.key = (key != null) ? NamespacedKey.minecraft(key) : null;
         dataType = data;
         this.register = register;
@@ -195,23 +195,13 @@ public class Particle {
         return key;
     }
 
-    public static Particle createRedstoneParticle(Color color, float size) {
-        return new Particle("dust", DustOptions.class, true);
-    }
-
-    public static Particle createBlockDustParticle(BlockData blockData) {
-        return new Particle("block", BlockData.class, false);
-    }
-
-    // ... (other factory methods)
-
     public static class DustOptions {
+
         private final Color color;
         private final float size;
 
         public DustOptions(@NotNull Color color, float size) {
-            Preconditions.checkArgument(color != null, "color");
-            this.color = color;
+            this.color = Objects.requireNonNull(color, "color");
             this.size = size;
         }
 
@@ -226,12 +216,12 @@ public class Particle {
     }
 
     public static class DustTransition extends DustOptions {
+
         private final Color toColor;
 
         public DustTransition(@NotNull Color fromColor, @NotNull Color toColor, float size) {
             super(fromColor, size);
-            Preconditions.checkArgument(toColor != null, "toColor");
-            this.toColor = toColor;
+            this.toColor = Objects.requireNonNull(toColor, "toColor");
         }
 
         @NotNull
