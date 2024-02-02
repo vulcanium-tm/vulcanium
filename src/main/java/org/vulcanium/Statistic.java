@@ -147,7 +147,7 @@ public enum Statistic implements Keyed {
 
     @NotNull
     @Override
-    public org.bukkit.NamespacedKey getKey() {
+    public NamespacedKey getKey() {
         return key;
     }
 

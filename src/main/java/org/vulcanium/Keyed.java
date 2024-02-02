@@ -13,5 +13,5 @@ public interface Keyed {
      * @return this object's key
      */
     @NotNull
-    org.bukkit.NamespacedKey getKey();
+    NamespacedKey getKey();
 }

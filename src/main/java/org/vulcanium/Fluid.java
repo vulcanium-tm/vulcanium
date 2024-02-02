@@ -2,7 +2,6 @@ package org.vulcanium;
 
 import java.util.Locale;
 
-import org.bukkit.NamespacedKey;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -35,7 +34,7 @@ public enum Fluid implements Keyed {
 
     @NotNull
     @Override
-    public NamespacedKey getKey() {
+    public org.vulcanium.NamespacedKey getKey() {
         return key;
     }
 }
