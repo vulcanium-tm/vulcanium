@@ -898,11 +898,11 @@ public interface Tag<T extends Keyed> extends Keyed {
     /**
      * Vanilla fluid tag representing lava and flowing lava.
      */
-    org.bukkit.Tag<Fluid> FLUIDS_LAVA = Bukkit.getTag(REGISTRY_FLUIDS, NamespacedKey.minecraft("lava"), Fluid.class);
+    Tag<Fluid> FLUIDS_LAVA = Bukkit.getTag(REGISTRY_FLUIDS, NamespacedKey.minecraft("lava"), Fluid.class);
     /**
      * Vanilla fluid tag representing water and flowing water.
      */
-    org.bukkit.Tag<Fluid> FLUIDS_WATER = Bukkit.getTag(REGISTRY_FLUIDS, NamespacedKey.minecraft("water"), Fluid.class);
+    Tag<Fluid> FLUIDS_WATER = Bukkit.getTag(REGISTRY_FLUIDS, NamespacedKey.minecraft("water"), Fluid.class);
     /**
      * Key for the built in entity registry.
      */

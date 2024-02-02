@@ -4602,7 +4602,7 @@ public enum Material implements Keyed, Translatable {
 
     @NotNull
     @Override
-    public NamespacedKey getKey() {
+    public org.bukkit.NamespacedKey getKey() {
         Preconditions.checkArgument(!legacy, "Cannot get key of Legacy Material");
         return key;
     }
