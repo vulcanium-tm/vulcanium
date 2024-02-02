@@ -13,33 +13,33 @@ import java.util.stream.StreamSupport;
 
 public interface Registry<T extends Keyed> extends Iterable<T> {
 
-    Registry<Advancement> ADVANCEMENT = new SimpleRegistry<>(Advancement.class, Bukkit::getAdvancement, Bukkit::advancementIterator);
+    Registry<Advancement> ADVANCEMENT = new SimpleRegistry<>(Advancement.class, Vulcanium::getAdvancement, Vulcanium::advancementIterator);
     Registry<Art> ART = new SimpleRegistry<>(Art.class);
     Registry<Attribute> ATTRIBUTE = new SimpleRegistry<>(Attribute.class);
     Registry<PatternType> BANNER_PATTERN = new SimpleRegistry<>(PatternType.class);
     Registry<Biome> BIOME = new SimpleRegistry<>(Biome.class);
-    Registry<KeyedBossBar> BOSS_BARS = new SimpleRegistry<>(KeyedBossBar.class, Bukkit::getBossBar, Bukkit::getBossBars);
+    Registry<KeyedBossBar> BOSS_BARS = new SimpleRegistry<>(KeyedBossBar.class, Vulcanium::getBossBar, Vulcanium::getBossBars);
     Registry<Cat.Type> CAT_VARIANT = new SimpleRegistry<>(Cat.Type.class);
-    Registry<Enchantment> ENCHANTMENT = new SimpleRegistry<>(Enchantment.class, () -> Objects.requireNonNull(Bukkit.getRegistry(Enchantment.class)));
+    Registry<Enchantment> ENCHANTMENT = new SimpleRegistry<>(Enchantment.class, () -> Objects.requireNonNull(Vulcanium.getRegistry(Enchantment.class)));
     Registry<EntityType> ENTITY_TYPE = new SimpleRegistry<>(EntityType.class, (entity) -> entity != EntityType.UNKNOWN);
-    Registry<MusicInstrument> INSTRUMENT = new SimpleRegistry<>(MusicInstrument.class, () -> Objects.requireNonNull(Bukkit.getRegistry(MusicInstrument.class)));
+    Registry<MusicInstrument> INSTRUMENT = new SimpleRegistry<>(MusicInstrument.class, () -> Objects.requireNonNull(Vulcanium.getRegistry(MusicInstrument.class)));
     Registry<LootTables> LOOT_TABLES = new SimpleRegistry<>(LootTables.class);
     Registry<Material> MATERIAL = new SimpleRegistry<>(Material.class, (mat) -> !mat.isLegacy());
-    Registry<PotionEffectType> EFFECT = new SimpleRegistry<>(PotionEffectType.class, () -> Objects.requireNonNull(Bukkit.getRegistry(PotionEffectType.class)));
+    Registry<PotionEffectType> EFFECT = new SimpleRegistry<>(PotionEffectType.class, () -> Objects.requireNonNull(Vulcanium.getRegistry(PotionEffectType.class)));
     Registry<Particle> PARTICLE_TYPE = new SimpleRegistry<>(Particle.class, (par) -> par.register);
     Registry<PotionType> POTION = new SimpleRegistry<>(PotionType.class);
     Registry<Statistic> STATISTIC = new SimpleRegistry<>(Statistic.class);
-    Registry<Structure> STRUCTURE = new SimpleRegistry<>(Structure.class, Bukkit::getRegistry);
-    Registry<StructureType> STRUCTURE_TYPE = new SimpleRegistry<>(StructureType.class, Bukkit::getRegistry);
+    Registry<Structure> STRUCTURE = new SimpleRegistry<>(Structure.class, Vulcanium::getRegistry);
+    Registry<StructureType> STRUCTURE_TYPE = new SimpleRegistry<>(StructureType.class, Vulcanium::getRegistry);
     Registry<Sound> SOUNDS = new SimpleRegistry<>(Sound.class);
-    Registry<TrimMaterial> TRIM_MATERIAL = new SimpleRegistry<>(TrimMaterial.class, Bukkit::getRegistry);
-    Registry<TrimPattern> TRIM_PATTERN = new SimpleRegistry<>(TrimPattern.class, Bukkit::getRegistry);
+    Registry<TrimMaterial> TRIM_MATERIAL = new SimpleRegistry<>(TrimMaterial.class, Vulcanium::getRegistry);
+    Registry<TrimPattern> TRIM_PATTERN = new SimpleRegistry<>(TrimPattern.class, Vulcanium::getRegistry);
     Registry<Villager.Profession> VILLAGER_PROFESSION = new SimpleRegistry<>(Villager.Profession.class);
     Registry<Villager.Type> VILLAGER_TYPE = new SimpleRegistry<>(Villager.Type.class);
     Registry<MemoryKey> MEMORY_MODULE_TYPE = new SimpleRegistry<>(MemoryKey.class, () -> Iterators.forArray(MemoryKey.values()));
     Registry<Fluid> FLUID = new SimpleRegistry<>(Fluid.class);
     Registry<Frog.Variant> FROG_VARIANT = new SimpleRegistry<>(Frog.Variant.class);
-    Registry<GameEvent> GAME_EVENT = new SimpleRegistry<>(GameEvent.class, () -> Objects.requireNonNull(Bukkit.getRegistry(GameEvent.class)));
+    Registry<GameEvent> GAME_EVENT = new SimpleRegistry<>(GameEvent.class, () -> Objects.requireNonNull(Vulcanium.getRegistry(GameEvent.class)));
 
     @Nullable
     T get(@NotNull NamespacedKey key);
@@ -68,11 +68,11 @@ public interface Registry<T extends Keyed> extends Iterable<T> {
     class SimpleRegistry<T extends Enum<T> & Keyed> implements Registry<T> {
         private final Map<NamespacedKey, T> map;
 
-        SimpleRegistry(@NotNull Class<T> type, Supplier<org.bukkit.Registry<T>> registrySupplier) {
+        SimpleRegistry(@NotNull Class<T> type, Supplier<Registry<T>> registrySupplier) {
             this(type, registrySupplier, Iterators::empty);
         }
 
-        SimpleRegistry(@NotNull Class<T> type, Supplier<org.bukkit.Registry<T>> registrySupplier, IterableSupplier<T> iteratorSupplier) {
+        SimpleRegistry(@NotNull Class<T> type, Supplier<Registry<T>> registrySupplier, IterableSupplier<T> iteratorSupplier) {
             Objects.requireNonNull(registrySupplier, "Registry supplier must not be null");
             Objects.requireNonNull(iteratorSupplier, "Iterator supplier must not be null");
 

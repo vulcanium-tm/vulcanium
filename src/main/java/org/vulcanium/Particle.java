@@ -37,9 +37,9 @@ public class Particle {
     LAVA("lava"),
     CLOUD("cloud"),
     /**
-     * Uses {@link org.bukkit.Particle.DustOptions} as DataType
+     * Uses {@link Particle.DustOptions} as DataType
      */
-    REDSTONE("dust",org.bukkit.Particle.DustOptions .class),
+    REDSTONE("dust",Particle.DustOptions .class),
     SNOWBALL("item_snowball"),
     SNOW_SHOVEL("item_snowball", false),
     SLIME("item_slime"),
@@ -97,11 +97,11 @@ public class Particle {
     REVERSE_PORTAL("reverse_portal"),
     WHITE_ASH("white_ash"),
     /**
-     * Uses {@link org.bukkit.Particle.DustTransition} as DataType
+     * Uses {@link Particle.DustTransition} as DataType
      */
-    DUST_COLOR_TRANSITION("dust_color_transition",org.bukkit.Particle.DustTransition .class),
+    DUST_COLOR_TRANSITION("dust_color_transition",Particle.DustTransition .class),
     /**
-     * Uses {@link org.bukkit.Vibration} as DataType
+     * Uses {@link Vibration} as DataType
      */
     VIBRATION("vibration",Vibration .class),
     FALLING_SPORE_BLOSSOM("falling_spore_blossom"),

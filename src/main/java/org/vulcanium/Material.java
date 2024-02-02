@@ -4602,7 +4602,7 @@ public enum Material implements Keyed, Translatable {
 
     @NotNull
     @Override
-    public org.bukkit.NamespacedKey getKey() {
+    public NamespacedKey getKey() {
         Preconditions.checkArgument(!legacy, "Cannot get key of Legacy Material");
         return key;
     }
@@ -4633,7 +4633,7 @@ public enum Material implements Keyed, Translatable {
      */
     @NotNull
     public BlockData createBlockData() {
-        return Bukkit.createBlockData(this);
+        return Vulcanium.createBlockData(this);
     }
 
     /**
@@ -4645,7 +4645,7 @@ public enum Material implements Keyed, Translatable {
      */
     @NotNull
     public BlockData createBlockData(@Nullable Consumer<? super BlockData> consumer) {
-        return Bukkit.createBlockData(this, consumer);
+        return Vulcanium.createBlockData(this, consumer);
     }
 
     /**
@@ -4659,7 +4659,7 @@ public enum Material implements Keyed, Translatable {
      */
     @NotNull
     public BlockData createBlockData(@Nullable String data) throws IllegalArgumentException {
-        return Bukkit.createBlockData(this, data);
+        return Vulcanium.createBlockData(this, data);
     }
 
     /**
@@ -5897,7 +5897,7 @@ public enum Material implements Keyed, Translatable {
             }
 
             Material match = BY_NAME.get(name);
-            return Bukkit.getUnsafe().fromLegacy(match);
+            return Vulcanium.getUnsafe().fromLegacy(match);
         }
 
         return BY_NAME.get(name);
@@ -11249,7 +11249,7 @@ public enum Material implements Keyed, Translatable {
     public Multimap<Attribute, AttributeModifier> getDefaultAttributeModifiers(@NotNull EquipmentSlot slot) {
         Preconditions.checkArgument(isItem(), "The Material is not an item!");
 
-        return Bukkit.getUnsafe().getDefaultAttributeModifiers(this, slot);
+        return Vulcanium.getUnsafe().getDefaultAttributeModifiers(this, slot);
     }
 
     /**
@@ -11259,7 +11259,7 @@ public enum Material implements Keyed, Translatable {
      */
     @Nullable
     public CreativeCategory getCreativeCategory() {
-        return Bukkit.getUnsafe().getCreativeCategory(this);
+        return Vulcanium.getUnsafe().getCreativeCategory(this);
     }
 
     /**
@@ -11278,9 +11278,9 @@ public enum Material implements Keyed, Translatable {
     @NotNull
     public String getTranslationKey() {
         if (this.isItem()) {
-            return Bukkit.getUnsafe().getItemTranslationKey(this);
+            return Vulcanium.getUnsafe().getItemTranslationKey(this);
         } else {
-            return Bukkit.getUnsafe().getBlockTranslationKey(this);
+            return Vulcanium.getUnsafe().getBlockTranslationKey(this);
         }
     }
 
@@ -11293,7 +11293,7 @@ public enum Material implements Keyed, Translatable {
      */
     @Nullable
     public String getBlockTranslationKey() {
-        return Bukkit.getUnsafe().getBlockTranslationKey(this);
+        return Vulcanium.getUnsafe().getBlockTranslationKey(this);
     }
 
     /**
@@ -11305,7 +11305,7 @@ public enum Material implements Keyed, Translatable {
      */
     @Nullable
     public String getItemTranslationKey() {
-        return Bukkit.getUnsafe().getItemTranslationKey(this);
+        return Vulcanium.getUnsafe().getItemTranslationKey(this);
     }
 
     /**
