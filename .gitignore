@@ -1,6 +1,6 @@
 ### Java template
 # Compiled class file
-*.clas
+*.class
 
 # Log file
 *.log
