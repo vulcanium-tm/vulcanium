@@ -5,7 +5,6 @@ import java.io.InputStream;
 import java.io.ObjectInputStream;
 import org.bukkit.configuration.serialization.ConfigurationSerializable;
 import org.bukkit.configuration.serialization.ConfigurationSerialization;
-import org.bukkit.util.io.Wrapper;
 
 /**
  * This class is designed to be used in conjunction with the {@link
@@ -45,9 +44,9 @@ public class BukkitObjectInputStream extends ObjectInputStream {
 
     @Override
     protected Object resolveObject(Object obj) throws IOException {
-        if (obj instanceof org.bukkit.util.io.Wrapper) {
+        if (obj instanceof Wrapper) {
             try {
-                (obj = ConfigurationSerialization.deserializeObject(((org.bukkit.util.io.Wrapper<?>) obj).map)).getClass(); // NPE
+                (obj = ConfigurationSerialization.deserializeObject(((Wrapper<?>) obj).map)).getClass(); // NPE
             } catch (Throwable ex) {
                 throw newIOException("Failed to deserialize object", ex);
             }

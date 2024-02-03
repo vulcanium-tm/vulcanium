@@ -6,6 +6,7 @@ import org.jetbrains.annotations.NotNull;
 /**
  * Creates noise using unbiased octaves
  */
+@Deprecated
 public abstract class OctaveGenerator {
     @NotNull
     protected final NoiseGenerator[] octaves;

@@ -4,7 +4,7 @@ import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.io.OutputStream;
 import java.io.Serializable;
-import org.bukkit.configuration.serialization.ConfigurationSerializable;
+import org.vulcanium.configuration.serialization.ConfigurationSerializable;
 
 /**
  * This class is designed to be used in conjunction with the {@link
@@ -27,7 +27,7 @@ public class BukkitObjectOutputStream extends ObjectOutputStream {
      */
     protected BukkitObjectOutputStream() throws IOException, SecurityException {
         super();
-        super.enableReplaceObject(true);
+        enableReplaceObject(true);
     }
 
     /**
@@ -39,12 +39,12 @@ public class BukkitObjectOutputStream extends ObjectOutputStream {
      */
     public BukkitObjectOutputStream(OutputStream out) throws IOException {
         super(out);
-        super.enableReplaceObject(true);
+        enableReplaceObject(true);
     }
 
     @Override
     protected Object replaceObject(Object obj) throws IOException {
-        if (!(obj instanceof Serializable) && (obj instanceof ConfigurationSerializable)) {
+        if (obj instanceof ConfigurationSerializable && !(obj instanceof Serializable)) {
             obj = Wrapper.newWrapper((ConfigurationSerializable) obj);
         }
 

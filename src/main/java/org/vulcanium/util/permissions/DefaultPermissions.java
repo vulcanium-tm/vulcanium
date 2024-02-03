@@ -1,13 +1,15 @@
 package org.vulcanium.util.permissions;
 
-import java.util.Map;
-import org.bukkit.Bukkit;
-import org.bukkit.permissions.Permission;
-import org.bukkit.permissions.PermissionDefault;
-import org.bukkit.util.permissions.BroadcastPermissions;
-import org.bukkit.util.permissions.CommandPermissions;
+import org.vulcanium.Vulcanium;
+import org.vulcanium.permissions.Permission;
+import org.vulcanium.permissions.PermissionDefault;
+import org.vulcanium.util.permissions.DefaultPermissions;
+import org.vulcanium.util.permissions.BroadcastPermissions;
+import org.vulcanium.util.permissions.CommandPermissions;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.Map;
 
 public final class DefaultPermissions {
     private static final String ROOT = "craftbukkit";
@@ -25,16 +27,16 @@ public final class DefaultPermissions {
         Permission result = perm;
 
         try {
-            Bukkit.getPluginManager().addPermission(perm);
+            Vulcanium.getPluginManager().addPermission(perm);
         } catch (IllegalArgumentException ex) {
-            result = Bukkit.getPluginManager().getPermission(perm.getName());
+            result = Vulcanium.getPluginManager().getPermission(perm.getName());
             assert result != null;
         }
 
         if (withLegacy) {
             Permission legacy = new Permission(LEGACY_PREFIX + result.getName(), result.getDescription(), PermissionDefault.FALSE);
             legacy.getChildren().put(result.getName(), true);
-            registerPermission(perm, false);
+            registerPermission(legacy, false);
         }
 
         return result;

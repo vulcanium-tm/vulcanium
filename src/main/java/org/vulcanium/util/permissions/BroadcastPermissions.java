@@ -1,8 +1,8 @@
 package org.vulcanium.util.permissions;
 
-import org.bukkit.permissions.Permission;
-import org.bukkit.permissions.PermissionDefault;
-import org.bukkit.util.permissions.DefaultPermissions;
+import org.vulcanium.permissions.Permission;
+import org.vulcanium.permissions.PermissionDefault;
+import org.vulcanium.util.permissions.DefaultPermissions;
 import org.jetbrains.annotations.NotNull;
 
 public final class BroadcastPermissions {
@@ -13,9 +13,9 @@ public final class BroadcastPermissions {
 
     @NotNull
     public static Permission registerPermissions(@NotNull Permission parent) {
-        Permission broadcasts = org.bukkit.util.permissions.DefaultPermissions.registerPermission(ROOT, "Allows the user to receive all broadcast messages", parent);
+        Permission broadcasts = DefaultPermissions.registerPermission(ROOT, "Allows the user to receive all broadcast messages", parent);
 
-        org.bukkit.util.permissions.DefaultPermissions.registerPermission(PREFIX + "admin", "Allows the user to receive administrative broadcasts", PermissionDefault.OP, broadcasts);
+        DefaultPermissions.registerPermission(PREFIX + "admin", "Allows the user to receive administrative broadcasts", PermissionDefault.OP, broadcasts);
         DefaultPermissions.registerPermission(PREFIX + "user", "Allows the user to receive user broadcasts", PermissionDefault.TRUE, broadcasts);
 
         broadcasts.recalculatePermissibles();

@@ -3,6 +3,7 @@ package org.vulcanium.util.noise;
 /**
  * Base class for all noise generators
  */
+@Deprecated
 public abstract class NoiseGenerator {
     protected final int[] perm = new int[512];
     protected double offsetX;

@@ -7,9 +7,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Objects;
-import java.util.function.Predicate;
 import java.util.stream.Stream;
-import java.util.stream.StreamSupport;
 
 public interface Registry<T extends Keyed> extends Iterable<T> {
 
