@@ -1,10 +1,10 @@
 package org.vulcanium.util.noise;
 
 import java.util.Random;
-import org.bukkit.World;
-import org.bukkit.util.noise.NoiseGenerator;
-import org.bukkit.util.noise.OctaveGenerator;
-import org.bukkit.util.noise.SimplexNoiseGenerator;
+import org.vulcanium.World;
+import org.vulcanium.util.noise.NoiseGenerator;
+import org.vulcanium.util.noise.OctaveGenerator;
+import org.vulcanium.util.noise.SimplexNoiseGenerator;
 import org.jetbrains.annotations.NotNull;
 
 /**

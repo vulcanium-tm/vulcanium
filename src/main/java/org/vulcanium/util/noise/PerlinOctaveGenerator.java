@@ -1,7 +1,7 @@
 package org.vulcanium.util.noise;
 
 import java.util.Random;
-import org.bukkit.World;
+import org.vulcanium.World;
 import org.jetbrains.annotations.NotNull;
 
 /**

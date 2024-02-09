@@ -1,4 +1,4 @@
-package org.bukkit.plugin;
+package org.vulcanium.plugin;
 
 import org.yaml.snakeyaml.nodes.Tag;
 import org.yaml.snakeyaml.resolver.Resolver;

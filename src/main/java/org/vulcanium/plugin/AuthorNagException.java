@@ -1,4 +1,4 @@
-package org.bukkit.plugin;
+package org.vulcanium.plugin;
 
 @SuppressWarnings("serial")
 public class AuthorNagException extends RuntimeException {

@@ -1,4 +1,4 @@
-package org.bukkit.plugin;
+package org.vulcanium.plugin;
 
 import java.util.Set;
 

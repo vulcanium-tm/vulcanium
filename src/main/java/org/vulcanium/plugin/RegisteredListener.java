@@ -1,4 +1,4 @@
-package org.bukkit.plugin;
+package org.vulcanium.plugin;
 
 import org.bukkit.event.Cancellable;
 import org.bukkit.event.Event;

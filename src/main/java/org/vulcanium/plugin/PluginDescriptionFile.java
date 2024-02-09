@@ -1,4 +1,4 @@
-package org.bukkit.plugin;
+package org.vulcanium.plugin;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;

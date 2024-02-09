@@ -18,6 +18,8 @@ import java.util.logging.Logger;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.vulcanium.advancement.Advancement;
+import org.vulcanium.packs.DataPackManager;
 
 /**
  * Represents the Vulcanium core, for version and Server singleton handling

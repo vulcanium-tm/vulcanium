@@ -20,177 +20,177 @@ public interface Criteria {
     /**
      * The dummy criteria. Not changed by the server.
      */
-    public static final Criteria DUMMY Vulcanium.getScoreboardCriteria("dummy");
+    public static final Criteria DUMMY = Vulcanium.getScoreboardCriteria("dummy");
     /**
      * The trigger criteria. Changed when a player runs the /trigger command for an objective.
      */
-    public static final Criteria TRIGGER Vulcanium.getScoreboardCriteria("trigger");
+    public static final Criteria TRIGGER = Vulcanium.getScoreboardCriteria("trigger");
     /**
      * Increments automatically when a player dies.
      */
-    public static final Criteria DEATH_COUNT Vulcanium.getScoreboardCriteria("deathCount");
+    public static final Criteria DEATH_COUNT = Vulcanium.getScoreboardCriteria("deathCount");
     /**
      * Increments automatically when a player kills another player.
      */
-    public static final Criteria PLAYER_KILL_COUNT Vulcanium.getScoreboardCriteria("playerKillCount");
+    public static final Criteria PLAYER_KILL_COUNT = Vulcanium.getScoreboardCriteria("playerKillCount");
     /**
      * Increments automatically when a player kills another living entity.
      */
-    public static final Criteria TOTAL_KILL_COUNT Vulcanium.getScoreboardCriteria("totalKillCount");
+    public static final Criteria TOTAL_KILL_COUNT = Vulcanium.getScoreboardCriteria("totalKillCount");
     /**
      * Mirrors the player's health points (0 for no health, 20 for maximum default health).
      */
-    public static final Criteria HEALTH Vulcanium.getScoreboardCriteria("health");
+    public static final Criteria HEALTH = Vulcanium.getScoreboardCriteria("health");
     /**
      * Mirrors the player's food points (0 for no food, 20 for maximum food).
      */
-    public static final Criteria FOOD Vulcanium.getScoreboardCriteria("food");
+    public static final Criteria FOOD = Vulcanium.getScoreboardCriteria("food");
     /**
      * Mirrors the player's air supply (0 for no air, 300 for maximum air).
      */
-    public static final Criteria AIR Vulcanium.getScoreboardCriteria("air");
+    public static final Criteria AIR = Vulcanium.getScoreboardCriteria("air");
     /**
      * Mirrors the player's armor points (0 for no armor, 20 for maximum armor).
      */
-    public static final Criteria ARMOR Vulcanium.getScoreboardCriteria("armor");
+    public static final Criteria ARMOR = Vulcanium.getScoreboardCriteria("armor");
     /**
      * Mirrors the player's experience points.
      */
-    public static final Criteria XP Vulcanium.getScoreboardCriteria("xp");
+    public static final Criteria XP = Vulcanium.getScoreboardCriteria("xp");
     /**
      * Mirrors the player's experience level.
      */
-    public static final Criteria LEVEL Vulcanium.getScoreboardCriteria("level");
+    public static final Criteria LEVEL = Vulcanium.getScoreboardCriteria("level");
 
     /**
      * Increments automatically when a player kills another player on the black team.
      */
-    public static final Criteria TEAM_KILL_BLACK Vulcanium.getScoreboardCriteria("teamkill.black");
+    public static final Criteria TEAM_KILL_BLACK = Vulcanium.getScoreboardCriteria("teamkill.black");
     /**
      * Increments automatically when a player kills another player on the dark blue team.
      */
-    public static final Criteria TEAM_KILL_DARK_BLUE Vulcanium.getScoreboardCriteria("teamkill.dark_blue");
+    public static final Criteria TEAM_KILL_DARK_BLUE = Vulcanium.getScoreboardCriteria("teamkill.dark_blue");
     /**
      * Increments automatically when a player kills another player on the dark green team.
      */
-    public static final Criteria TEAM_KILL_DARK_GREEN Vulcanium.getScoreboardCriteria("teamkill.dark_green");
+    public static final Criteria TEAM_KILL_DARK_GREEN = Vulcanium.getScoreboardCriteria("teamkill.dark_green");
     /**
      * Increments automatically when a player kills another player on the dark aqua team.
      */
-    public static final Criteria TEAM_KILL_DARK_AQUA Vulcanium.getScoreboardCriteria("teamkill.dark_aqua");
+    public static final Criteria TEAM_KILL_DARK_AQUA = Vulcanium.getScoreboardCriteria("teamkill.dark_aqua");
     /**
      * Increments automatically when a player kills another player on the dark red team.
      */
-    public static final Criteria TEAM_KILL_DARK_RED Vulcanium.getScoreboardCriteria("teamkill.dark_red");
+    public static final Criteria TEAM_KILL_DARK_RED = Vulcanium.getScoreboardCriteria("teamkill.dark_red");
     /**
      * Increments automatically when a player kills another player on the dark purple team.
      */
-    public static final Criteria TEAM_KILL_DARK_PURPLE Vulcanium.getScoreboardCriteria("teamkill.dark_purple");
+    public static final Criteria TEAM_KILL_DARK_PURPLE = Vulcanium.getScoreboardCriteria("teamkill.dark_purple");
     /**
      * Increments automatically when a player kills another player on the gold team.
      */
-    public static final Criteria TEAM_KILL_GOLD Vulcanium.getScoreboardCriteria("teamkill.gold");
+    public static final Criteria TEAM_KILL_GOLD = Vulcanium.getScoreboardCriteria("teamkill.gold");
     /**
      * Increments automatically when a player kills another player on the gray team.
      */
-    public static final Criteria TEAM_KILL_GRAY Vulcanium.getScoreboardCriteria("teamkill.gray");
+    public static final Criteria TEAM_KILL_GRAY = Vulcanium.getScoreboardCriteria("teamkill.gray");
     /**
      * Increments automatically when a player kills another player on the dark gray team.
      */
-    public static final Criteria TEAM_KILL_DARK_GRAY Vulcanium.getScoreboardCriteria("teamkill.dark_gray");
+    public static final Criteria TEAM_KILL_DARK_GRAY = Vulcanium.getScoreboardCriteria("teamkill.dark_gray");
     /**
      * Increments automatically when a player kills another player on the blue team.
      */
-    public static final Criteria TEAM_KILL_BLUE Vulcanium.getScoreboardCriteria("teamkill.blue");
+    public static final Criteria TEAM_KILL_BLUE = Vulcanium.getScoreboardCriteria("teamkill.blue");
     /**
      * Increments automatically when a player kills another player on the green team.
      */
-    public static final Criteria TEAM_KILL_GREEN Vulcanium.getScoreboardCriteria("teamkill.green");
+    public static final Criteria TEAM_KILL_GREEN = Vulcanium.getScoreboardCriteria("teamkill.green");
     /**
      * Increments automatically when a player kills another player on the aqua team.
      */
-    public static final Criteria TEAM_KILL_AQUA Vulcanium.getScoreboardCriteria("teamkill.aqua");
+    public static final Criteria TEAM_KILL_AQUA = Vulcanium.getScoreboardCriteria("teamkill.aqua");
     /**
      * Increments automatically when a player kills another player on the red team.
      */
-    public static final Criteria TEAM_KILL_RED Vulcanium.getScoreboardCriteria("teamkill.red");
+    public static final Criteria TEAM_KILL_RED = Vulcanium.getScoreboardCriteria("teamkill.red");
     /**
      * Increments automatically when a player kills another player on the light purple team.
      */
-    public static final Criteria TEAM_KILL_LIGHT_PURPLE Vulcanium.getScoreboardCriteria("teamkill.light_purple");
+    public static final Criteria TEAM_KILL_LIGHT_PURPLE = Vulcanium.getScoreboardCriteria("teamkill.light_purple");
     /**
      * Increments automatically when a player kills another player on the yellow team.
      */
-    public static final Criteria TEAM_KILL_YELLOW Vulcanium.getScoreboardCriteria("teamkill.yellow");
+    public static final Criteria TEAM_KILL_YELLOW = Vulcanium.getScoreboardCriteria("teamkill.yellow");
     /**
      * Increments automatically when a player kills another player on the white team.
      */
-    public static final Criteria TEAM_KILL_WHITE Vulcanium.getScoreboardCriteria("teamkill.white");
+    public static final Criteria TEAM_KILL_WHITE = Vulcanium.getScoreboardCriteria("teamkill.white");
 
     /**
      * Increments automatically when a player is killed by a player on the black team.
      */
-    public static final Criteria KILLED_BY_TEAM_BLACK Vulcanium.getScoreboardCriteria("killedByTeam.black");
+    public static final Criteria KILLED_BY_TEAM_BLACK = Vulcanium.getScoreboardCriteria("killedByTeam.black");
     /**
      * Increments automatically when a player is killed by a player on the dark blue team.
      */
-    public static final Criteria KILLED_BY_TEAM_DARK_BLUE Vulcanium.getScoreboardCriteria("killedByTeam.dark_blue");
+    public static final Criteria KILLED_BY_TEAM_DARK_BLUE = Vulcanium.getScoreboardCriteria("killedByTeam.dark_blue");
     /**
      * Increments automatically when a player is killed by a player on the dark green team.
      */
-    public static final Criteria KILLED_BY_TEAM_DARK_GREEN Vulcanium.getScoreboardCriteria("killedByTeam.dark_green");
+    public static final Criteria KILLED_BY_TEAM_DARK_GREEN = Vulcanium.getScoreboardCriteria("killedByTeam.dark_green");
     /**
      * Increments automatically when a player is killed by a player on the dark aqua team.
      */
-    public static final Criteria KILLED_BY_TEAM_DARK_AQUA Vulcanium.getScoreboardCriteria("killedByTeam.dark_aqua");
+    public static final Criteria KILLED_BY_TEAM_DARK_AQUA = Vulcanium.getScoreboardCriteria("killedByTeam.dark_aqua");
     /**
      * Increments automatically when a player is killed by a player on the dark red team.
      */
-    public static final Criteria KILLED_BY_TEAM_DARK_RED Vulcanium.getScoreboardCriteria("killedByTeam.dark_red");
+    public static final Criteria KILLED_BY_TEAM_DARK_RED = Vulcanium.getScoreboardCriteria("killedByTeam.dark_red");
     /**
      * Increments automatically when a player is killed by a player on the dark purple team.
      */
-    public static final Criteria KILLED_BY_TEAM_DARK_PURPLE Vulcanium.getScoreboardCriteria("killedByTeam.dark_purple");
+    public static final Criteria KILLED_BY_TEAM_DARK_PURPLE = Vulcanium.getScoreboardCriteria("killedByTeam.dark_purple");
     /**
      * Increments automatically when a player is killed by a player on the gold team.
      */
-    public static final Criteria KILLED_BY_TEAM_GOLD Vulcanium.getScoreboardCriteria("killedByTeam.gold");
+    public static final Criteria KILLED_BY_TEAM_GOLD = Vulcanium.getScoreboardCriteria("killedByTeam.gold");
     /**
      * Increments automatically when a player is killed by a player on the gray team.
      */
-    public static final Criteria KILLED_BY_TEAM_GRAY Vulcanium.getScoreboardCriteria("killedByTeam.gray");
+    public static final Criteria KILLED_BY_TEAM_GRAY = Vulcanium.getScoreboardCriteria("killedByTeam.gray");
     /**
      * Increments automatically when a player is killed by a player on the dark gray team.
      */
-    public static final Criteria KILLED_BY_TEAM_DARK_GRAY Vulcanium.getScoreboardCriteria("killedByTeam.dark_gray");
+    public static final Criteria KILLED_BY_TEAM_DARK_GRAY = Vulcanium.getScoreboardCriteria("killedByTeam.dark_gray");
     /**
      * Increments automatically when a player is killed by a player on the blue team.
      */
-    public static final Criteria KILLED_BY_TEAM_BLUE Vulcanium.getScoreboardCriteria("killedByTeam.blue");
+    public static final Criteria KILLED_BY_TEAM_BLUE = Vulcanium.getScoreboardCriteria("killedByTeam.blue");
     /**
      * Increments automatically when a player is killed by a player on the green team.
      */
-    public static final Criteria KILLED_BY_TEAM_GREEN Vulcanium.getScoreboardCriteria("killedByTeam.green");
+    public static final Criteria KILLED_BY_TEAM_GREEN = Vulcanium.getScoreboardCriteria("killedByTeam.green");
     /**
      * Increments automatically when a player is killed by a player on the aqua team.
      */
-    public static final Criteria KILLED_BY_TEAM_AQUA Vulcanium.getScoreboardCriteria("killedByTeam.aqua");
+    public static final Criteria KILLED_BY_TEAM_AQUA = Vulcanium.getScoreboardCriteria("killedByTeam.aqua");
     /**
      * Increments automatically when a player is killed by a player on the red team.
      */
-    public static final Criteria KILLED_BY_TEAM_RED Vulcanium.getScoreboardCriteria("killedByTeam.red");
+    public static final Criteria KILLED_BY_TEAM_RED = Vulcanium.getScoreboardCriteria("killedByTeam.red");
     /**
      * Increments automatically when a player is killed by a player on the light purple team.
      */
-    public static final Criteria KILLED_BY_TEAM_LIGHT_PURPLE Vulcanium.getScoreboardCriteria("killedByTeam.light_purple");
+    public static final Criteria KILLED_BY_TEAM_LIGHT_PURPLE = Vulcanium.getScoreboardCriteria("killedByTeam.light_purple");
     /**
      * Increments automatically when a player is killed by a player on the yellow team.
      */
-    public static final Criteria KILLED_BY_TEAM_YELLOW Vulcanium.getScoreboardCriteria("killedByTeam.yellow");
+    public static final Criteria KILLED_BY_TEAM_YELLOW = Vulcanium.getScoreboardCriteria("killedByTeam.yellow");
     /**
      * Increments automatically when a player is killed by a player on the white team.
      */
-    public static final Criteria KILLED_BY_TEAM_WHITE Vulcanium.getScoreboardCriteria("killedByTeam.white");
+    public static final Criteria KILLED_BY_TEAM_WHITE = Vulcanium.getScoreboardCriteria("killedByTeam.white");
 
     /**
      * Get the name of this criteria (its unique id).

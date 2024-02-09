@@ -3,6 +3,7 @@ package org.vulcanium;
 import com.google.common.base.Preconditions;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.vulcanium.advancement.Advancement;
 
 import java.util.Iterator;
 import java.util.Map;

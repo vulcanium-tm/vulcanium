@@ -10,8 +10,8 @@ import org.jetbrains.annotations.Nullable;
  */
 public enum WorldType {
     NORMAL("DEFAULT"),
-    FLAT("FLAT"),
-    LARGE_BIOMES("LARGEBIOMES"),
+    FLAT("FLAT"),    LARGE_BIOMES("LARGEBIOMES"),
+
     AMPLIFIED("AMPLIFIED");
 
     private static final Map<String, WorldType> BY_NAME = Maps.newHashMap();

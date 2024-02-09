@@ -1,6 +1,5 @@
 package org.vulcanium.util.noise;
 
-import org.bukkit.util.noise.NoiseGenerator;
 import org.jetbrains.annotations.NotNull;
 
 /**

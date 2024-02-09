@@ -1,12 +1,11 @@
 package org.vulcanium;
 
-import com.google.common.base.Preconditions;
-import org.bukkit.block.data.BlockData;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.material.MaterialData;
+import org.vulcanium.block.data.BlockData;
+import org.vulcanium.inventory.ItemStack;
+import org.vulcanium.material.MaterialData;
 import org.jetbrains.annotations.NotNull;
 
-public class Particle {
+public class Particle implements Keyed {
     EXPLOSION_NORMAL("poof"),
     EXPLOSION_LARGE("explosion"),
     EXPLOSION_HUGE("explosion_emitter"),

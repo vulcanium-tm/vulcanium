@@ -2,8 +2,8 @@
 package org.vulcanium.util.noise;
 
 import java.util.Random;
-import org.bukkit.World;
-import org.bukkit.util.noise.PerlinNoiseGenerator;
+import org.vulcanium.World;
+import org.vulcanium.util.noise.PerlinNoiseGenerator;
 import org.jetbrains.annotations.NotNull;
 
 /**

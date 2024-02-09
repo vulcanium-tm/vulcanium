@@ -1,4 +1,4 @@
-package org.bukkit.plugin;
+package org.vulcanium.plugin;
 
 import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableSet;

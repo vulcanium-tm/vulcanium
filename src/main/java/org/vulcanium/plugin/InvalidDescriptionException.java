@@ -1,4 +1,4 @@
-package org.bukkit.plugin;
+package org.vulcanium.plugin;
 
 /**
  * Thrown when attempting to load an invalid PluginDescriptionFile

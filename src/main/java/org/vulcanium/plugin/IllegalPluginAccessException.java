@@ -1,4 +1,4 @@
-package org.bukkit.plugin;
+package org.vulcanium.plugin;
 
 /**
  * Thrown when a plugin attempts to interact with the server when it is not
