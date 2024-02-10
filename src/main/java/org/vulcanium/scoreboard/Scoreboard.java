@@ -40,6 +40,7 @@ public interface Scoreboard {
      *     exists
      * @deprecated use {@link #registerNewObjective(String, Criteria, String)}
      */
+    @Deprecated
     @NotNull
     Objective registerNewObjective(@NotNull String name, @NotNull String criteria, @NotNull String displayName);
 
@@ -58,6 +59,7 @@ public interface Scoreboard {
      * @deprecated use {@link #registerNewObjective(String, Criteria, String, RenderType)}
      */
     @NotNull
+    @Deprecated
     Objective registerNewObjective(@NotNull String name, @NotNull String criteria, @NotNull String displayName, @NotNull RenderType renderType);
 
     /**

@@ -43,7 +43,6 @@ public abstract class MetadataValueAdapter implements MetadataValue {
      *
      * @return The value as an integer.
      */
-    @Override
     public int asInt() {
         return (int) value();
     }
@@ -53,7 +52,6 @@ public abstract class MetadataValueAdapter implements MetadataValue {
      *
      * @return The value as a float.
      */
-    @Override
     public float asFloat() {
         return (float) value();
     }
@@ -63,7 +61,6 @@ public abstract class MetadataValueAdapter implements MetadataValue {
      *
      * @return The value as a double.
      */
-    @Override
     public double asDouble() {
         return (double) value();
     }
@@ -73,7 +70,6 @@ public abstract class MetadataValueAdapter implements MetadataValue {
      *
      * @return The value as a long.
      */
-    @Override
     public long asLong() {
         return (long) value();
     }
@@ -83,7 +79,6 @@ public abstract class MetadataValueAdapter implements MetadataValue {
      *
      * @return The value as a short.
      */
-    @Override
     public short asShort() {
         return (short) value();
     }
@@ -93,7 +88,6 @@ public abstract class MetadataValueAdapter implements MetadataValue {
      *
      * @return The value as a byte.
      */
-    @Override
     public byte asByte() {
         return (byte) value();
     }
@@ -103,7 +97,6 @@ public abstract class MetadataValueAdapter implements MetadataValue {
      *
      * @return The value as a boolean.
      */
-    @Override
     public boolean asBoolean() {
         Object value = value();
         return value instanceof Boolean ? (Boolean) value : (value instanceof Number && ((Number) value).intValue() != 0);
@@ -114,7 +107,6 @@ public abstract class MetadataValueAdapter implements MetadataValue {
      *
      * @return The value as a string.
      */
-    @Override
     @NotNull
     public String asString() {
         Object value = value();

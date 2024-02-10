@@ -17,9 +17,16 @@
  */
 package org.vulcanium;
 
+
 import com.google.common.base.Preconditions;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import com.google.common.base.Predicates;
+import com.google.common.collect.ImmutableMap;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Objects;
+import java.util.function.Predicate;
+import java.util.stream.Stream;
+import java.util.stream.StreamSupport;
 import org.vulcanium.advancement.Advancement;
 import org.vulcanium.attribute.Attribute;
 import org.vulcanium.block.Biome;
@@ -38,50 +45,267 @@ import org.vulcanium.inventory.meta.trim.TrimPattern;
 import org.vulcanium.loot.LootTables;
 import org.vulcanium.potion.PotionEffectType;
 import org.vulcanium.potion.PotionType;
+import org.jetbrains.annotations.ApiStatus;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-import java.util.Iterator;
-import java.util.Map;
-import java.util.Objects;
-import java.util.function.Function;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
-
+/**
+ * Represents a registry of Bukkit objects that may be retrieved by
+ * {@link NamespacedKey}.
+ *
+ * @param <T> type of item in the registry
+ */
 public interface Registry<T extends Keyed> extends Iterable<T> {
 
-    Registry<Advancement> ADVANCEMENT = new SimpleRegistry<>(Advancement.class, Vulcanium::getAdvancement, Vulcanium::advancementIterator);
-    Registry<Art> ART = new SimpleRegistry<>(Art.class);
-    Registry<Attribute> ATTRIBUTE = new SimpleRegistry<>(Attribute.class);
-    Registry<PatternType> BANNER_PATTERN = new SimpleRegistry<>(PatternType.class);
-    Registry<Biome> BIOME = new SimpleRegistry<>(Biome.class);
-    Registry<KeyedBossBar> BOSS_BARS = new SimpleRegistry<>(KeyedBossBar.class, Vulcanium::getBossBar, Vulcanium::getBossBars);
-    Registry<Cat.Type> CAT_VARIANT = new SimpleRegistry<>(Cat.Type.class);
-    Registry<Enchantment> ENCHANTMENT = new SimpleRegistry<>(Enchantment.class, () -> Objects.requireNonNull(Vulcanium.getRegistry(Enchantment.class)));
-    Registry<EntityType> ENTITY_TYPE = new SimpleRegistry<>(EntityType.class, (entity) -> entity != EntityType.UNKNOWN);
-    Registry<MusicInstrument> INSTRUMENT = new SimpleRegistry<>(MusicInstrument.class, () -> Objects.requireNonNull(Vulcanium.getRegistry(MusicInstrument.class)));
-    Registry<LootTables> LOOT_TABLES = new SimpleRegistry<>(LootTables.class);
-    Registry<Material> MATERIAL = new SimpleRegistry<>(Material.class, (mat) -> !mat.isLegacy());
-    Registry<PotionEffectType> EFFECT = new SimpleRegistry<>(PotionEffectType.class, () -> Objects.requireNonNull(Vulcanium.getRegistry(PotionEffectType.class)));
-    Registry<Particle> PARTICLE_TYPE = new SimpleRegistry<>(Particle.class, (par) -> par.register);
-    Registry<PotionType> POTION = new SimpleRegistry<>(PotionType.class);
-    Registry<Statistic> STATISTIC = new SimpleRegistry<>(Statistic.class);
-    Registry<Structure> STRUCTURE = new SimpleRegistry<>(Structure.class, Vulcanium::getRegistry);
-    Registry<StructureType> STRUCTURE_TYPE = new SimpleRegistry<>(StructureType.class, Vulcanium::getRegistry);
-    Registry<Sound> SOUNDS = new SimpleRegistry<>(Sound.class);
-    Registry<TrimMaterial> TRIM_MATERIAL = new SimpleRegistry<>(TrimMaterial.class, Vulcanium::getRegistry);
-    Registry<TrimPattern> TRIM_PATTERN = new SimpleRegistry<>(TrimPattern.class, Vulcanium::getRegistry);
-    Registry<Villager.Profession> VILLAGER_PROFESSION = new SimpleRegistry<>(Villager.Profession.class);
-    Registry<Villager.Type> VILLAGER_TYPE = new SimpleRegistry<>(Villager.Type.class);
-    Registry<MemoryKey> MEMORY_MODULE_TYPE = new SimpleRegistry<>(MemoryKey.class, () -> Iterators.forArray(MemoryKey.values()));
-    Registry<Fluid> FLUID = new SimpleRegistry<>(Fluid.class);
-    Registry<Frog.Variant> FROG_VARIANT = new SimpleRegistry<>(Frog.Variant.class);
-    Registry<GameEvent> GAME_EVENT = new SimpleRegistry<>(GameEvent.class, () -> Objects.requireNonNull(Vulcanium.getRegistry(GameEvent.class)));
+    /**
+     * Server advancements.
+     *
+     * @see Vulcanium#getAdvancement(org.vulcanium.NamespacedKey)
+     * @see Vulcanium#advancementIterator()
+     */
+    Registry<Advancement> ADVANCEMENT = new Registry<Advancement>() {
 
+        @Nullable
+        @Override
+        public Advancement get(@NotNull NamespacedKey key) {
+            return Vulcanium.getAdvancement(key);
+        }
+
+        @NotNull
+        @Override
+        public Stream<Advancement> stream() {
+            return StreamSupport.stream(spliterator(), false);
+        }
+
+        @NotNull
+        @Override
+        public Iterator<Advancement> iterator() {
+            return Vulcanium.advancementIterator();
+        }
+    };
+    /**
+     * Server art.
+     *
+     * @see Art
+     */
+    Registry<Art> ART = new SimpleRegistry<>(Art.class);
+    /**
+     * Attribute.
+     *
+     * @see Attribute
+     */
+    Registry<Attribute> ATTRIBUTE = new SimpleRegistry<>(Attribute.class);
+    /**
+     * Server banner patterns.
+     *
+     * @see PatternType
+     */
+    Registry<PatternType> BANNER_PATTERN = new SimpleRegistry<>(PatternType.class);
+    /**
+     * Server biomes.
+     *
+     * @see Biome
+     */
+    Registry<Biome> BIOME = new SimpleRegistry<>(Biome.class);
+    /**
+     * Custom boss bars.
+     *
+     * @see Vulcanium#getBossBar(org.vulcanium.NamespacedKey)
+     * @see Vulcanium#getBossBars()
+     */
+    Registry<KeyedBossBar> BOSS_BARS = new Registry<KeyedBossBar>() {
+
+        @Nullable
+        @Override
+        public KeyedBossBar get(@NotNull NamespacedKey key) {
+            return Vulcanium.getBossBar(key);
+        }
+
+        @NotNull
+        @Override
+        public Stream<KeyedBossBar> stream() {
+            return StreamSupport.stream(spliterator(), false);
+        }
+
+        @NotNull
+        @Override
+        public Iterator<KeyedBossBar> iterator() {
+            return Vulcanium.getBossBars();
+        }
+    };
+    /**
+     * Server cat types.
+     *
+     * @see Cat.Type
+     */
+    Registry<Cat.Type> CAT_VARIANT = new SimpleRegistry<>(Cat.Type.class);
+    /**
+     * Server enchantments.
+     *
+     * @see Enchantment
+     */
+    Registry<Enchantment> ENCHANTMENT = Objects.requireNonNull(Vulcanium.getRegistry(Enchantment.class), "No registry present for Enchantment. This is a bug.");
+    /**
+     * Server entity types.
+     *
+     * @see EntityType
+     */
+    Registry<EntityType> ENTITY_TYPE = new SimpleRegistry<>(EntityType.class, (entity) -> entity != EntityType.UNKNOWN);
+    /**
+     * Server instruments.
+     *
+     * @see MusicInstrument
+     */
+    Registry<MusicInstrument> INSTRUMENT = Objects.requireNonNull(Vulcanium.getRegistry(MusicInstrument.class), "No registry present for MusicInstrument. This is a bug.");
+    /**
+     * Default server loot tables.
+     *
+     * @see LootTables
+     */
+    Registry<LootTables> LOOT_TABLES = new SimpleRegistry<>(LootTables.class);
+    /**
+     * Server materials.
+     *
+     * @see Material
+     */
+    Registry<Material> MATERIAL = new SimpleRegistry<>(Material.class, (mat) -> !mat.isLegacy());
+    /**
+     * Server mob effects.
+     *
+     * @see PotionEffectType
+     */
+    Registry<PotionEffectType> EFFECT = Objects.requireNonNull(Vulcanium.getRegistry(PotionEffectType.class), "No registry present for PotionEffectType. This is a bug.");
+    /**
+     * Server particles.
+     *
+     * @see Particle
+     */
+    Registry<Particle> PARTICLE_TYPE = new SimpleRegistry<>(Particle.class, (par) -> par.register);
+    /**
+     * Server potions.
+     *
+     * @see PotionType
+     */
+    Registry<PotionType> POTION = new SimpleRegistry<>(PotionType.class);
+    /**
+     * Server statistics.
+     *
+     * @see Statistic
+     */
+    Registry<Statistic> STATISTIC = new SimpleRegistry<>(Statistic.class);
+    /**
+     * Server structures.
+     *
+     * @see Structure
+     */
+    Registry<Structure> STRUCTURE = Vulcanium.getRegistry(Structure.class);
+    /**
+     * Server structure types.
+     *
+     * @see StructureType
+     */
+    Registry<StructureType> STRUCTURE_TYPE = Vulcanium.getRegistry(StructureType.class);
+    /**
+     * Sound keys.
+     *
+     * @see Sound
+     */
+    Registry<Sound> SOUNDS = new SimpleRegistry<>(Sound.class);
+    /**
+     * Trim materials.
+     *
+     * @see TrimMaterial
+     */
+    @ApiStatus.Experimental
+    Registry<TrimMaterial> TRIM_MATERIAL = Vulcanium.getRegistry(TrimMaterial.class);
+    /**
+     * Trim patterns.
+     *
+     * @see TrimPattern
+     */
+    @ApiStatus.Experimental
+    Registry<TrimPattern> TRIM_PATTERN = Vulcanium.getRegistry(TrimPattern.class);
+    /**
+     * Villager profession.
+     *
+     * @see Villager.Profession
+     */
+    Registry<Villager.Profession> VILLAGER_PROFESSION = new SimpleRegistry<>(Villager.Profession.class);
+    /**
+     * Villager type.
+     *
+     * @see Villager.Type
+     */
+    Registry<Villager.Type> VILLAGER_TYPE = new SimpleRegistry<>(Villager.Type.class);
+    /**
+     * Memory Keys.
+     *
+     * @see MemoryKey
+     */
+    Registry<MemoryKey> MEMORY_MODULE_TYPE = new Registry<MemoryKey>() {
+
+        @NotNull
+        @Override
+        public Iterator iterator() {
+            return MemoryKey.values().iterator();
+        }
+
+        @Nullable
+        @Override
+        public MemoryKey get(@NotNull NamespacedKey key) {
+            return MemoryKey.getByKey(key);
+        }
+
+        @NotNull
+        @Override
+        public Stream<MemoryKey> stream() {
+            return StreamSupport.stream(spliterator(), false);
+        }
+    };
+    /**
+     * Server fluids.
+     *
+     * @see Fluid
+     */
+    Registry<Fluid> FLUID = new SimpleRegistry<>(Fluid.class);
+    /**
+     * Frog variants.
+     *
+     * @see Frog.Variant
+     */
+    Registry<Frog.Variant> FROG_VARIANT = new SimpleRegistry<>(Frog.Variant.class);
+    /**
+     * Game events.
+     *
+     * @see GameEvent
+     */
+    Registry<GameEvent> GAME_EVENT = Objects.requireNonNull(Vulcanium.getRegistry(GameEvent.class), "No registry present for GameEvent. This is a bug.");
+    /**
+     * Get the object by its key.
+     *
+     * @param key non-null key
+     * @return item or null if does not exist
+     */
     @Nullable
     T get(@NotNull NamespacedKey key);
 
+    /**
+     * Returns a new stream, which contains all registry items, which are registered to the registry.
+     *
+     * @return a stream of all registry items
+     */
     @NotNull
     Stream<T> stream();
 
+    /**
+     * Attempts to match the registered object with the given key.
+     * <p>
+     * This will attempt to find a reasonable match based on the provided input
+     * and may do so through unspecified means.
+     *
+     * @param input non-null input
+     * @return registered object or null if does not exist
+     */
     @Nullable
     default T match(@NotNull String input) {
         Preconditions.checkArgument(input != null, "input must not be null");
@@ -91,30 +315,24 @@ public interface Registry<T extends Keyed> extends Iterable<T> {
         return (namespacedKey != null) ? get(namespacedKey) : null;
     }
 
-    interface Supplier<T> {
-        T get();
-    }
+    static final class SimpleRegistry<T extends Enum<T> & Keyed> implements Registry<T> {
 
-    interface IterableSupplier<T> extends Supplier<Iterator<T>> {
-        @Override
-        Iterator<T> get();
-    }
-
-    class SimpleRegistry<T extends Enum<T> & Keyed> implements Registry<T> {
         private final Map<NamespacedKey, T> map;
 
-        SimpleRegistry(@NotNull Class<T> type, Supplier<Registry<T>> registrySupplier) {
-            this(type, registrySupplier, Iterators::empty);
+        protected SimpleRegistry(@NotNull Class<T> type) {
+            this(type, Predicates.<T>alwaysTrue());
         }
 
-        SimpleRegistry(@NotNull Class<T> type, Supplier<Registry<T>> registrySupplier, IterableSupplier<T> iteratorSupplier) {
-            Objects.requireNonNull(registrySupplier, "Registry supplier must not be null");
-            Objects.requireNonNull(iteratorSupplier, "Iterator supplier must not be null");
+        protected SimpleRegistry(@NotNull Class<T> type, @NotNull Predicate<T> predicate) {
+            ImmutableMap.Builder<NamespacedKey, T> builder = ImmutableMap.builder();
 
-            this.map = registrySupplier.get().getEntries().stream()
-                    .filter(entry -> entry != null && type.isInstance(entry))
-                    .map(entry -> (T) entry)
-                    .collect(Collectors.toMap(Keyed::getKey, Function.identity()));
+            for (T entry : type.getEnumConstants()) {
+                if (predicate.test(entry)) {
+                    builder.put(entry.getKey(), entry);
+                }
+            }
+
+            map = builder.build();
         }
 
         @Nullable
@@ -126,13 +344,13 @@ public interface Registry<T extends Keyed> extends Iterable<T> {
         @NotNull
         @Override
         public Stream<T> stream() {
-            return map.values().stream();
+            return StreamSupport.stream(spliterator(), false);
         }
 
         @NotNull
         @Override
         public Iterator<T> iterator() {
-            return iteratorSupplier.get();
+            return map.values().iterator();
         }
     }
 }

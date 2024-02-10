@@ -40,7 +40,7 @@ public class VersionCommand extends VulcaniumCommand {
         if (!testPermission(sender)) return true;
 
         if (args.length == 0) {
-            sender.sendMessage("This server is running " + Vulcanium.getName() + " version " + Vulcanium.getVersion() + " (Implementing API version " + Bukkit.getBukkitVersion() + ")");
+            sender.sendMessage("This server is running " + Vulcanium.getName() + " version " + Vulcanium.getVersion() + " (Implementing API version " + Vulcanium.getVulcaniumVersion() + ")");
             sendVersion(sender);
         } else {
             StringBuilder name = new StringBuilder();

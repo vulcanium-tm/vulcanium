@@ -33,6 +33,7 @@ import java.lang.annotation.RetentionPolicy;
  */
 @Retention(RetentionPolicy.CLASS)
 @ApiStatus.Internal
+@Deprecated
 public @interface UndefinedNullability {
 
     /**

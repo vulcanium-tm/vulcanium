@@ -4,7 +4,7 @@ import org.vulcanium.plugin.Plugin;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public class FixedMetadataValue implements MetadataValue {
+public abstract class FixedMetadataValue implements MetadataValue {
     private final Object internalValue;
 
     /**

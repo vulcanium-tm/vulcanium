@@ -39,8 +39,6 @@ public class LazyMetadataValue extends MetadataValueAdapter {
         }
         return internalValue;
     }
-
-    @Override
     public void invalidate() {
         if (cacheStrategy != CacheStrategy.CACHE_ETERNALLY) {
             internalValue = null;
