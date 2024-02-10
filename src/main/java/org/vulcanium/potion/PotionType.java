@@ -10,6 +10,8 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 import java.util.function.Supplier;
+import java.util.stream.Stream;
+
 /**
  * This enum reflects and matches each potion state that can be obtained from
  * the Creative mode inventory
