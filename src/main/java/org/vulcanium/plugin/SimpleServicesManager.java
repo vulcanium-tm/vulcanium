@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.Set;
-import org.vulcanium.Bukkit;
+import org.vulcanium.Vulcanium;
 import org.vulcanium.event.server.ServiceRegisterEvent;
 import org.vulcanium.event.server.ServiceUnregisterEvent;
 import org.jetbrains.annotations.NotNull;
@@ -56,7 +56,7 @@ public class SimpleServicesManager implements ServicesManager {
             }
 
         }
-        Bukkit.getServer().getPluginManager().callEvent(new ServiceRegisterEvent(registeredProvider));
+        Vulcanium.getServer().getPluginManager().callEvent(new ServiceRegisterEvent(registeredProvider));
     }
 
     /**
@@ -97,7 +97,7 @@ public class SimpleServicesManager implements ServicesManager {
             } catch (NoSuchElementException e) {}
         }
         for (ServiceUnregisterEvent event : unregisteredEvents) {
-            Bukkit.getServer().getPluginManager().callEvent(event);
+            Vulcanium.getServer().getPluginManager().callEvent(event);
         }
     }
 
@@ -146,7 +146,7 @@ public class SimpleServicesManager implements ServicesManager {
             } catch (NoSuchElementException e) {}
         }
         for (ServiceUnregisterEvent event : unregisteredEvents) {
-            Bukkit.getServer().getPluginManager().callEvent(event);
+            Vulcanium.getServer().getPluginManager().callEvent(event);
         }
     }
 
@@ -188,7 +188,7 @@ public class SimpleServicesManager implements ServicesManager {
             } catch (NoSuchElementException e) {}
         }
         for (ServiceUnregisterEvent event : unregisteredEvents) {
-            Bukkit.getServer().getPluginManager().callEvent(event);
+            Vulcanium.getServer().getPluginManager().callEvent(event);
         }
     }
 

@@ -59,7 +59,6 @@ public class AsyncStructureGenerateEvent extends WorldEvent {
      * @return the chunk x coordinate
      */
     @Getter
-    @Getter
     private final int chunkX, /**
      * -- GETTER --
      *  Get the z coordinate of the origin chunk of the structure.

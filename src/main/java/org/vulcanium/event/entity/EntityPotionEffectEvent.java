@@ -23,8 +23,6 @@ public class EntityPotionEffectEvent extends EntityEvent implements Cancellable 
     private final Cause cause;
     private final Action action;
     private boolean override;
-
-    @Contract("_, null, null, _, _, _ -> fail")
     public EntityPotionEffectEvent(@NotNull LivingEntity livingEntity, @Nullable PotionEffect oldEffect, @Nullable PotionEffect newEffect, @NotNull Cause cause, @NotNull Action action, boolean override) {
         super(livingEntity);
         this.oldEffect = oldEffect;

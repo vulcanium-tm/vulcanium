@@ -57,7 +57,6 @@ public class Button extends SimpleAttachableMaterialData implements Redstone {
      * @return BlockFace attached to
      */
     @NotNull
-    @NotNull
     @Override
     public BlockFace getAttachedFace() {
         byte data = (byte) (getData() & 0x7);

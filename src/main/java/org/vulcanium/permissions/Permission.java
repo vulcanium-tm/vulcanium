@@ -1,12 +1,14 @@
 package org.vulcanium.permissions;
 
-import org.vulcanium.Bukkit;
+import org.vulcanium.Vulcanium;
 import org.vulcanium.plugin.PluginManager;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.vulcanium.Vulcanium;
 
 import java.util.*;
+
+import static org.vulcanium.Vulcanium.getLogger;
 
 /**
  * Represents a unique permission that may be attached to a {@link Permissible}
@@ -131,7 +133,7 @@ public class Permission {
      */
     public void recalculatePermissibles() {
         Set<Permissible> perms = getPermissibles();
-        PluginManager pm = Bukkit.getServer().getPluginManager();
+        PluginManager pm = Vulcanium.getServer().getPluginManager();
         pm.recalculatePermissionDefaults(this);
         perms.forEach(Permissible::recalculatePermissions);
     }
@@ -162,10 +164,10 @@ public class Permission {
             try {
                 String name = entry.getKey().toString();
                 Map<?, ?> permData = (Map<?, ?>) entry.getValue();
-                Permission permission = loadPermission(name, permData, def, result);
+                Permission permission = loadPermission(name, (Map<Object, String>) permData, def, result);
                 result.add(permission);
             } catch (Exception ex) {
-                Bukkit.getLogger().severe(String.format(error, entry.getKey()));
+                getLogger().severe(String.format(error, entry.getKey()));
             }
         }
         return result;
@@ -181,7 +183,7 @@ public class Permission {
      * @return Permission object
      */
     @NotNull
-    public static Permission loadPermission(@NotNull String name, @NotNull Map<?, ?> data, @Nullable PermissionDefault def, @Nullable List<Permission> output) {
+    public static Permission loadPermission(@NotNull String name, @NotNull Map<Object, String> data, @Nullable PermissionDefault def, @Nullable List<Permission> output) {
         String desc = data.getOrDefault("description", "").toString();
         PermissionDefault defaultValue = def;
         if (data.containsKey("default")) {
@@ -191,23 +193,23 @@ public class Permission {
             }
         }
         Map<String, Boolean> children = new LinkedHashMap<>();
-        Object childrenNode = data.getOrDefault("children", Collections.emptyMap());
+        Object childrenNode = data.getOrDefault("children", Collections.emptyMap().toString());
         if (childrenNode instanceof Map) {
             ((Map<?, ?>) childrenNode).forEach((key, value) -> {
                 if (value instanceof Boolean) {
                     children.put(key.toString(), (Boolean) value);
                 } else if (value instanceof Map) {
                     try {
-                        Permission perm = loadPermission(key.toString(), (Map<?, ?>) value, def, output);
+                        Permission perm = loadPermission(key.toString(), (Map<Object, String>) value, def, output);
                         children.put(perm.getName(), Boolean.TRUE);
                         if (output != null) {
                             output.add(perm);
                         }
                     } catch (Exception ex) {
-                        Bukkit.getLogger().severe("Permission node '" + key + "' in child of " + name + " is invalid");
+                        getLogger().severe("Permission node '" + key + "' in child of " + name + " is invalid");
                     }
                 } else {
-                    Bukkit.getLogger().severe("Child '" + key + "' contains invalid value");
+                    Vulcanium.getLogger().severe("Child '" + key + "' contains invalid value");
                 }
             });
         }

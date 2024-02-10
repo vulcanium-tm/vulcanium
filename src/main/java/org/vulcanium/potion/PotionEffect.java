@@ -1,6 +1,7 @@
 package org.vulcanium.potion;
 
 import com.google.common.base.Preconditions;
+import org.jetbrains.annotations.Nullable;
 import org.vulcanium.Color;
 import org.vulcanium.NamespacedKey;
 import org.vulcanium.configuration.serialization.ConfigurationSerializable;
