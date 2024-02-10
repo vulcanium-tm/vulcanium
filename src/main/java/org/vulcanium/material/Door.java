@@ -1,8 +1,10 @@
 package org.vulcanium.material;
 
-import org.bukkit.Material;
-import org.bukkit.TreeSpecies;
-import org.bukkit.block.BlockFace;
+import org.jetbrains.annotations.NotNull;
+import org.vulcanium.Material;
+import org.vulcanium.TreeSpecies;
+import org.vulcanium.block.BlockFace;
+import org.vulcanium.block.data.BlockData;
 
 /**
  * Represents a door.
@@ -20,7 +22,7 @@ import org.bukkit.block.BlockFace;
  * @see Material#LEGACY_DARK_OAK_DOOR
  *
  * @deprecated all usage of MaterialData is deprecated and subject to removal.
- * Use {@link org.bukkit.block.data.BlockData}.
+ * Use {@link BlockData}.
  */
 @Deprecated
 public class Door extends MaterialData implements Directional, Openable {
@@ -255,7 +257,7 @@ public class Door extends MaterialData implements Directional, Openable {
      * @param face the direction
      */
     @Override
-    public void setFacingDirection(BlockFace face) {
+    public void setFacingDirection(@NotNull BlockFace face) {
         byte data = (byte) (getData() & 0xC);
         switch (face) {
             case WEST:
@@ -281,6 +283,7 @@ public class Door extends MaterialData implements Directional, Openable {
      *
      * @return the direction
      */
+    @NotNull
     @Override
     public BlockFace getFacing() {
         byte data = (byte) (getData() & 0x3);

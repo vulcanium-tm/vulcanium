@@ -1,11 +1,11 @@
 package org.vulcanium.util.permissions;
 
-import org.bukkit.permissions.Permission;
-import org.bukkit.permissions.PermissionDefault;
+import org.vulcanium.permissions.Permission;
+import org.vulcanium.permissions.PermissionDefault;
 import org.jetbrains.annotations.NotNull;
 
 public final class CommandPermissions {
-    private static final String ROOT = "bukkit.command";
+    private static final String ROOT = "vulcanium.command";
     private static final String PREFIX = ROOT + ".";
 
     private CommandPermissions() {}

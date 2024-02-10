@@ -1,8 +1,8 @@
 package org.vulcanium.util.io;
 
 import com.google.common.collect.ImmutableMap;
-import org.bukkit.configuration.serialization.ConfigurationSerializable;
-import org.bukkit.configuration.serialization.ConfigurationSerialization;
+import org.vulcanium.configuration.serialization.ConfigurationSerializable;
+import org.vulcanium.configuration.serialization.ConfigurationSerialization;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.Serializable;

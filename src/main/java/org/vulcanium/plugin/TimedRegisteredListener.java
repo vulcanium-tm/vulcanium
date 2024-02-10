@@ -1,11 +1,11 @@
 package org.vulcanium.plugin;
 
-import org.bukkit.event.Event;
-import org.bukkit.event.EventException;
-import org.bukkit.event.EventPriority;
-import org.bukkit.event.Listener;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.vulcanium.event.Event;
+import org.vulcanium.event.EventException;
+import org.vulcanium.event.EventPriority;
+import org.vulcanium.event.Listener;
 
 /**
  * Extends RegisteredListener to include timing information
@@ -19,7 +19,6 @@ public class TimedRegisteredListener extends RegisteredListener {
     public TimedRegisteredListener(@NotNull final Listener pluginListener, @NotNull final EventExecutor eventExecutor, @NotNull final EventPriority eventPriority, @NotNull final Plugin registeredPlugin, final boolean listenCancelled) {
         super(pluginListener, eventExecutor, eventPriority, registeredPlugin, listenCancelled);
     }
-
     @Override
     public void callEvent(@NotNull Event event) throws EventException {
         if (event.isAsynchronous()) {

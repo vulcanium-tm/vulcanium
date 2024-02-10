@@ -1,13 +1,13 @@
 package org.vulcanium.material;
 
-import org.bukkit.CoalType;
-import org.bukkit.Material;
+import org.vulcanium.CoalType;
+import org.vulcanium.Material;
 
 /**
  * Represents the different types of coals.
  *
  * @deprecated all usage of MaterialData is deprecated and subject to removal.
- * Use {@link org.bukkit.block.data.BlockData}.
+ * Use {@link org.vulcanium.block.data.BlockData}.
  */
 @Deprecated
 public class Coal extends MaterialData {

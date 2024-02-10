@@ -1,6 +1,6 @@
 package org.vulcanium.scheduler;
 
-import org.bukkit.plugin.Plugin;
+import org.vulcanium.plugin.Plugin;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
@@ -218,7 +218,7 @@ public interface VulcaniumScheduler {
      * @throws IllegalArgumentException if task is null
      */
     @NotNull
-    public VulaciumTask runTask(@NotNull Plugin plugin, @NotNull Runnable task) throws IllegalArgumentException;
+    public VulcaniumTask runTask(@NotNull Plugin plugin, @NotNull Runnable task) throws IllegalArgumentException;
 
     /**
      * Returns a task that will run on the next server tick.

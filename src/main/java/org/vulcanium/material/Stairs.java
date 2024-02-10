@@ -1,5 +1,6 @@
 package org.vulcanium.material;
 
+import org.jetbrains.annotations.NotNull;
 import org.vulcanium.Material;
 import org.vulcanium.block.BlockFace;
 
@@ -7,7 +8,7 @@ import org.vulcanium.block.BlockFace;
  * Represents stairs.
  *
  * @deprecated all usage of MaterialData is deprecated and subject to removal.
- * Use {@link org.bukkit.block.data.BlockData}.
+ * Use {@link org.vulcanium.block.data.BlockData}.
  */
 @Deprecated
 public class Stairs extends MaterialData implements Directional {
@@ -59,7 +60,7 @@ public class Stairs extends MaterialData implements Directional {
      * Set the direction the stair part of the block is facing
      */
     @Override
-    public void setFacingDirection(BlockFace face) {
+    public void setFacingDirection(@NotNull BlockFace face) {
         byte data;
 
         switch (face) {
@@ -87,6 +88,7 @@ public class Stairs extends MaterialData implements Directional {
     /**
      * @return the direction the stair part of the block is facing
      */
+    @NotNull
     @Override
     public BlockFace getFacing() {
         return getDescendingDirection();

@@ -1,5 +1,5 @@
 // CHECKSTYLE:OFF
-package org.bukkit.plugin.java;
+package org.vulcanium.plugin.java;
 
 import java.io.File;
 import java.net.MalformedURLException;
@@ -7,11 +7,11 @@ import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.apache.maven.repository.internal.MavenRepositorySystemUtils;
-import org.bukkit.plugin.PluginDescriptionFile;
 import org.eclipse.aether.DefaultRepositorySystemSession;
 import org.eclipse.aether.RepositorySystem;
 import org.eclipse.aether.artifact.Artifact;
@@ -35,6 +35,7 @@ import org.eclipse.aether.transfer.TransferEvent;
 import org.eclipse.aether.transport.http.HttpTransporterFactory;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.vulcanium.plugin.PluginDescriptionFile;
 
 class LibraryLoader
 {
@@ -67,7 +68,7 @@ class LibraryLoader
         } );
         session.setReadOnly();
 
-        this.repositories = repository.newResolutionRepositories( session, Arrays.asList( new RemoteRepository.Builder( "central", "default", "https://repo.maven.apache.org/maven2" ).build() ) );
+        this.repositories = repository.newResolutionRepositories( session, Collections.singletonList(new RemoteRepository.Builder("central", "default", "https://repo.maven.apache.org/maven2").build()));
     }
 
     @Nullable
@@ -121,7 +122,7 @@ class LibraryLoader
             } );
         }
 
-        URLClassLoader loader = new URLClassLoader( jarFiles.toArray( new URL[ jarFiles.size() ] ), getClass().getClassLoader() );
+        URLClassLoader loader = new URLClassLoader( jarFiles.toArray(new URL[0]), getClass().getClassLoader() );
 
         return loader;
     }

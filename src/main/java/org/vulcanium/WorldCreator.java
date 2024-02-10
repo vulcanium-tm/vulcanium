@@ -1,6 +1,27 @@
+/*
+ Copyright © 2023
+
+ Owner: Vulcanium
+
+ Contributor: Shadowflare
+ ────────────────────────────────────────────────────────────────────
+ Permission is hereby granted to use and modify the Vulcanium plugin freely:
+
+ 1. Include copyright and permission notice in all copies of the Software.
+ 2. Users can depend on Vulcanium, create, and distribute plugins that rely on it.
+ 3. Republishing Vulcanium elsewhere is prohibited.
+ 4. Source code distribution is not allowed.
+ 5. Publishing a derivative version of the plugin is prohibited.
+ ────────────────────────────────────────────────────────────────────
+ SOFTWARE PROVIDED "AS IT IS," NO WARRANTY. AUTHORS NOT LIABLE FOR DAMAGES.
+ */
 package org.vulcanium;
 
 import com.google.common.base.Preconditions;
+import org.vulcanium.command.CommandSender;
+import org.vulcanium.generator.BiomeProvider;
+import org.vulcanium.generator.ChunkGenerator;
+import org.vulcanium.plugin.Plugin;
 
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -155,7 +176,7 @@ public class WorldCreator {
     }
 
     public World createWorld() {
-        return Bukkit.createWorld(this);
+        return Vulcanium.createWorld(this);
     }
 
     public static WorldCreator name(String name) {
@@ -167,13 +188,13 @@ public class WorldCreator {
         ChunkGenerator result = null;
 
         if (output == null) {
-            output = Bukkit.getConsoleSender();
+            output = Vulcanium.getConsoleSender();
         }
 
         if (name != null) {
             String[] split = name.split(":", 2);
             String id = (split.length > 1) ? split[1] : null;
-            Plugin plugin = Bukkit.getPluginManager().getPlugin(split[0]);
+            Plugin plugin = Vulcanium.getPluginManager().getPlugin(split[0]);
 
             if (plugin == null) {
                 output.sendMessage("Plugin '" + split[0] + "' does not exist");
@@ -192,13 +213,13 @@ public class WorldCreator {
         BiomeProvider result = null;
 
         if (output == null) {
-            output = Bukkit.getConsoleSender();
+            output = Vulcanium.getConsoleSender();
         }
 
         if (name != null) {
             String[] split = name.split(":", 2);
             String id = (split.length > 1) ? split[1] : null;
-            Plugin plugin = Bukkit.getPluginManager().getPlugin(split[0]);
+            Plugin plugin = Vulcanium.getPluginManager().getPlugin(split[0]);
 
             if (plugin == null) {
                 output.sendMessage("Plugin '" + split[0] + "' does not exist");

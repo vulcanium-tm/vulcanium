@@ -1,5 +1,6 @@
 package org.vulcanium.material;
 
+import org.jetbrains.annotations.NotNull;
 import org.vulcanium.Material;
 import org.vulcanium.block.BlockFace;
 
@@ -29,7 +30,7 @@ public class PistonBaseMaterial extends MaterialData implements Directional, Red
     }
 
     @Override
-    public void setFacingDirection(BlockFace face) {
+    public void setFacingDirection(@NotNull BlockFace face) {
         byte data = (byte) (getData() & 0x8);
 
         switch (face) {
@@ -52,6 +53,7 @@ public class PistonBaseMaterial extends MaterialData implements Directional, Red
         setData(data);
     }
 
+    @NotNull
     @Override
     public BlockFace getFacing() {
         byte dir = (byte) (getData() & 7);

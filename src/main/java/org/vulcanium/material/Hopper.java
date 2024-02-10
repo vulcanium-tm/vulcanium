@@ -1,5 +1,6 @@
 package org.vulcanium.material;
 
+import org.jetbrains.annotations.NotNull;
 import org.vulcanium.Material;
 import org.vulcanium.block.BlockFace;
 
@@ -94,7 +95,7 @@ public class Hopper extends MaterialData implements Directional, Redstone {
      * @see BlockFace
      */
     @Override
-    public void setFacingDirection(BlockFace face) {
+    public void setFacingDirection(@NotNull BlockFace face) {
         int data = getData() & 0x8;
 
         switch (face) {
@@ -125,6 +126,7 @@ public class Hopper extends MaterialData implements Directional, Redstone {
      *
      * @see BlockFace
      */
+    @NotNull
     @Override
     public BlockFace getFacing() {
         byte data = (byte) (getData() & 0x7);

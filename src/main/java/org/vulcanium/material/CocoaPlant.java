@@ -1,13 +1,14 @@
 package org.vulcanium.material;
 
-import org.bukkit.Material;
-import org.bukkit.block.BlockFace;
+import org.jetbrains.annotations.NotNull;
+import org.vulcanium.Material;
+import org.vulcanium.block.BlockFace;
 
 /**
  * Represents the cocoa plant
  *
  * @deprecated all usage of MaterialData is deprecated and subject to removal.
- * Use {@link org.bukkit.block.data.BlockData}.
+ * Use {@link BlockData}.
  */
 @Deprecated
 public class CocoaPlant extends MaterialData implements Directional, Attachable {
@@ -79,13 +80,14 @@ public class CocoaPlant extends MaterialData implements Directional, Attachable 
         setData((byte) dat);
     }
 
+    @NotNull
     @Override
     public BlockFace getAttachedFace() {
         return getFacing().getOppositeFace();
     }
 
     @Override
-    public void setFacingDirection(BlockFace face) {
+    public void setFacingDirection(@NotNull BlockFace face) {
         int dat = getData() & 0xC;
         switch (face) {
             default:
@@ -104,6 +106,7 @@ public class CocoaPlant extends MaterialData implements Directional, Attachable 
         setData((byte) dat);
     }
 
+    @NotNull
     @Override
     public BlockFace getFacing() {
         switch (getData() & 0x3) {

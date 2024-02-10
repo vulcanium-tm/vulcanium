@@ -6,7 +6,7 @@ import org.vulcanium.util.permissions.DefaultPermissions;
 import org.jetbrains.annotations.NotNull;
 
 public final class BroadcastPermissions {
-    private static final String ROOT = "bukkit.broadcast";
+    private static final String ROOT = "vulcanium.broadcast";
     private static final String PREFIX = ROOT + ".";
 
     private BroadcastPermissions() {}

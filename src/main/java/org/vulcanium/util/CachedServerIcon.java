@@ -1,7 +1,8 @@
 package org.vulcanium.util;
 
-import org.bukkit.Server;
-import org.bukkit.event.server.ServerListPingEvent;
+
+import org.vulcanium.Server;
+import org.vulcanium.event.server.ServerListPingEvent;
 
 /**
  * This is a cached version of a server-icon. It's internal representation

@@ -23,17 +23,17 @@ public class Potion {
     private boolean extended = false;
     private boolean splash = false;
     private int level = 1;
-    private org.bukkit.potion.PotionType type;
+    private org.vulcanium.potion.PotionType type;
 
     /**
      * Construct a new potion of the given type. Unless the type is {@link
-     * org.bukkit.potion.PotionType#WATER}, it will be level one, without extended duration.
+     * org.vulcanium.potion.PotionType#WATER}, it will be level one, without extended duration.
      * Don't use this constructor to create a no-effect potion other than
      * water bottle.
      *
      * @param type The potion type
      */
-    public Potion(@NotNull org.bukkit.potion.PotionType type) {
+    public Potion(@NotNull org.vulcanium.potion.PotionType type) {
         Preconditions.checkArgument(type != null, "Null PotionType");
         this.type = type;
     }
@@ -44,7 +44,7 @@ public class Potion {
      * @param type The type of potion.
      * @param level The potion's level.
      */
-    public Potion(@NotNull org.bukkit.potion.PotionType type, int level) {
+    public Potion(@NotNull org.vulcanium.potion.PotionType type, int level) {
         this(type);
         Preconditions.checkArgument(type != null, "Type cannot be null");
         Preconditions.checkArgument(level > 0 && level < 3, "Level must be 1 or 2");
@@ -57,11 +57,11 @@ public class Potion {
      * @param type The type of potion.
      * @param level The potion's level.
      * @param splash Whether it is a splash potion.
-     * @deprecated In favour of using {@link #Potion(org.bukkit.potion.PotionType)} with {@link
+     * @deprecated In favour of using {@link #Potion(org.vulcanium.potion.PotionType)} with {@link
      *     #splash()}.
      */
     @Deprecated
-    public Potion(@NotNull org.bukkit.potion.PotionType type, int level, boolean splash) {
+    public Potion(@NotNull org.vulcanium.potion.PotionType type, int level, boolean splash) {
         this(type, level);
         this.splash = splash;
     }
@@ -73,11 +73,11 @@ public class Potion {
      * @param level The potion's level.
      * @param splash Whether it is a splash potion.
      * @param extended Whether it has an extended duration.
-     * @deprecated In favour of using {@link #Potion(org.bukkit.potion.PotionType)} with {@link
+     * @deprecated In favour of using {@link #Potion(org.vulcanium.potion.PotionType)} with {@link
      *     #extend()} and possibly {@link #splash()}.
      */
     @Deprecated
-    public Potion(@NotNull org.bukkit.potion.PotionType type, int level, boolean splash, boolean extended) {
+    public Potion(@NotNull org.vulcanium.potion.PotionType type, int level, boolean splash, boolean extended) {
         this(type, level, splash);
         this.extended = extended;
     }
@@ -88,7 +88,7 @@ public class Potion {
      * @return The potion.
      */
     @NotNull
-    public org.bukkit.potion.Potion splash() {
+    public org.vulcanium.potion.Potion splash() {
         setSplash(true);
         return this;
     }
@@ -99,7 +99,7 @@ public class Potion {
      * @return The potion.
      */
     @NotNull
-    public org.bukkit.potion.Potion extend() {
+    public org.vulcanium.potion.Potion extend() {
         setHasExtendedDuration(true);
         return this;
     }
@@ -115,7 +115,7 @@ public class Potion {
         Preconditions.checkArgument(to.hasItemMeta(), "given itemstack is not a potion");
         Preconditions.checkArgument(to.getItemMeta() instanceof PotionMeta, "given itemstack is not a potion");
         PotionMeta meta = (PotionMeta) to.getItemMeta();
-        meta.setBasePotionData(new org.bukkit.potion.PotionData(type, extended, level == 2));
+        meta.setBasePotionData(new org.vulcanium.potion.PotionData(type, extended, level == 2));
         to.setItemMeta(meta);
     }
 
@@ -139,17 +139,17 @@ public class Potion {
         if (obj == null || getClass() != obj.getClass()) {
             return false;
         }
-        org.bukkit.potion.Potion other = (org.bukkit.potion.Potion) obj;
+        org.vulcanium.potion.Potion other = (org.vulcanium.potion.Potion) obj;
         return extended == other.extended && splash == other.splash && level == other.level && type == other.type;
     }
 
     /**
-     * Returns a collection of {@link org.bukkit.potion.PotionEffect}s that this {@link org.bukkit.potion.Potion}
+     * Returns a collection of {@link org.vulcanium.potion.PotionEffect}s that this {@link org.vulcanium.potion.Potion}
      * would confer upon a {@link LivingEntity}.
      *
      * @return The effects that this potion applies
-     * @see org.bukkit.potion.PotionBrewer#getEffectsFromDamage(int)
-     * @see org.bukkit.potion.Potion#toDamageValue()
+     * @see org.vulcanium.potion.PotionBrewer#getEffectsFromDamage(int)
+     * @see org.vulcanium.potion.Potion#toDamageValue()
      */
     @NotNull
     public Collection<PotionEffect> getEffects() {
@@ -166,12 +166,12 @@ public class Potion {
     }
 
     /**
-     * Returns the {@link org.bukkit.potion.PotionType} of this potion.
+     * Returns the {@link org.vulcanium.potion.PotionType} of this potion.
      *
      * @return The type of this potion
      */
     @NotNull
-    public org.bukkit.potion.PotionType getType() {
+    public org.vulcanium.potion.PotionType getType() {
         return type;
     }
 
@@ -225,11 +225,11 @@ public class Potion {
     }
 
     /**
-     * Sets the {@link org.bukkit.potion.PotionType} of this potion.
+     * Sets the {@link org.vulcanium.potion.PotionType} of this potion.
      *
      * @param type The new type of this potion
      */
-    public void setType(@NotNull org.bukkit.potion.PotionType type) {
+    public void setType(@NotNull org.vulcanium.potion.PotionType type) {
         this.type = type;
     }
 
@@ -278,7 +278,7 @@ public class Potion {
         return itemStack;
     }
 
-    private static org.bukkit.potion.PotionBrewer brewer;
+    private static org.vulcanium.potion.PotionBrewer brewer;
 
     private static final int EXTENDED_BIT = 0x40;
     private static final int POTION_BIT = 0xF;
@@ -359,7 +359,7 @@ public class Potion {
     }
 
     @NotNull
-    public static org.bukkit.potion.Potion fromItemStack(@NotNull ItemStack item) {
+    public static org.vulcanium.potion.Potion fromItemStack(@NotNull ItemStack item) {
         Preconditions.checkArgument(item != null, "item cannot be null");
         if (item.getType() != Material.POTION)
             throw new IllegalArgumentException("item is not a potion");
@@ -367,17 +367,17 @@ public class Potion {
     }
 
     /**
-     * Returns an instance of {@link org.bukkit.potion.PotionBrewer}.
+     * Returns an instance of {@link org.vulcanium.potion.PotionBrewer}.
      *
      * @return An instance of PotionBrewer
      */
     @NotNull
-    public static org.bukkit.potion.PotionBrewer getBrewer() {
+    public static org.vulcanium.potion.PotionBrewer getBrewer() {
         return brewer;
     }
 
     /**
-     * Sets the current instance of {@link org.bukkit.potion.PotionBrewer}. Generally not to be
+     * Sets the current instance of {@link org.vulcanium.potion.PotionBrewer}. Generally not to be
      * used from within a plugin.
      *
      * @param other The new PotionBrewer

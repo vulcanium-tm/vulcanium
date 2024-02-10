@@ -1,13 +1,15 @@
 package org.vulcanium.material;
 
-import org.bukkit.Material;
-import org.bukkit.block.BlockFace;
+import org.jetbrains.annotations.NotNull;
+import org.vulcanium.Material;
+import org.vulcanium.block.BlockFace;
+import org.vulcanium.block.data.BlockData;
 
 /**
  * Represents a furnace or a dispenser.
  *
  * @deprecated all usage of MaterialData is deprecated and subject to removal.
- * Use {@link org.bukkit.block.data.BlockData}.
+ * Use {@link BlockData}.
  */
 @Deprecated
 public class DirectionalContainer extends MaterialData implements Directional {
@@ -27,7 +29,7 @@ public class DirectionalContainer extends MaterialData implements Directional {
     }
 
     @Override
-    public void setFacingDirection(BlockFace face) {
+    public void setFacingDirection(@NotNull BlockFace face) {
         byte data;
 
         switch (face) {
@@ -51,6 +53,7 @@ public class DirectionalContainer extends MaterialData implements Directional {
         setData(data);
     }
 
+    @NotNull
     @Override
     public BlockFace getFacing() {
         byte data = getData();

@@ -1,13 +1,13 @@
 package org.vulcanium.material;
 
-import org.bukkit.Material;
-import org.bukkit.block.BlockFace;
+import org.vulcanium.Material;
+import org.vulcanium.block.BlockFace;
 
 /**
  * Represents a chest
  *
  * @deprecated all usage of MaterialData is deprecated and subject to removal.
- * Use {@link org.bukkit.block.data.BlockData}.
+ * Use {@link org.vulcanium.block.data.BlockData}.
  */
 @Deprecated
 public class Chest extends DirectionalContainer {

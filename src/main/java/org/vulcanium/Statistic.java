@@ -1,3 +1,20 @@
+/*
+ Copyright © 2023
+
+ Owner: Vulcanium
+
+ Contributor: Shadowflare
+ ────────────────────────────────────────────────────────────────────
+ Permission is hereby granted to use and modify the Vulcanium plugin freely:
+
+ 1. Include copyright and permission notice in all copies of the Software.
+ 2. Users can depend on Vulcanium, create, and distribute plugins that rely on it.
+ 3. Republishing Vulcanium elsewhere is prohibited.
+ 4. Source code distribution is not allowed.
+ 5. Publishing a derivative version of the plugin is prohibited.
+ ────────────────────────────────────────────────────────────────────
+ SOFTWARE PROVIDED "AS IT IS," NO WARRANTY. AUTHORS NOT LIABLE FOR DAMAGES.
+ */
 package org.vulcanium;
 
 
@@ -19,8 +36,8 @@ public enum Statistic implements Keyed {
     LEAVE_GAME,
     JUMP,
     DROP_COUNT,
-    DROP(org.bukkit.Statistic.Type.ITEM),
-    PICKUP(org.bukkit.Statistic.Type.ITEM),
+    DROP(Statistic.Type.ITEM),
+    PICKUP(Statistic.Type.ITEM),
     /**
      * Name is misleading, actually records ticks played.
      */
@@ -40,12 +57,12 @@ public enum Statistic implements Keyed {
     SPRINT_ONE_CM,
     CROUCH_ONE_CM,
     AVIATE_ONE_CM,
-    MINE_BLOCK(org.bukkit.Statistic.Type.BLOCK),
-    USE_ITEM(org.bukkit.Statistic.Type.ITEM),
-    BREAK_ITEM(org.bukkit.Statistic.Type.ITEM),
-    CRAFT_ITEM(org.bukkit.Statistic.Type.ITEM),
-    KILL_ENTITY(org.bukkit.Statistic.Type.ENTITY),
-    ENTITY_KILLED_BY(org.bukkit.Statistic.Type.ENTITY),
+    MINE_BLOCK(Statistic.Type.BLOCK),
+    USE_ITEM(Statistic.Type.ITEM),
+    BREAK_ITEM(Statistic.Type.ITEM),
+    CRAFT_ITEM(Statistic.Type.ITEM),
+    KILL_ENTITY(Statistic.Type.ENTITY),
+    ENTITY_KILLED_BY(Statistic.Type.ENTITY),
     TIME_SINCE_DEATH,
     TALKED_TO_VILLAGER,
     TRADED_WITH_VILLAGER,
@@ -96,14 +113,14 @@ public enum Statistic implements Keyed {
     INTERACT_WITH_SMITHING_TABLE,
     STRIDER_ONE_CM;
 
-    private final org.bukkit.Statistic.Type type;
+    private final Statistic.Type type;
     private final NamespacedKey key;
 
     private Statistic() {
-        this(org.bukkit.Statistic.Type.UNTYPED);
+        this(Type.UNTYPED);
     }
 
-    private Statistic(/*@NotNull*/ org.bukkit.Statistic.Type type) {
+    private Statistic(/*@NotNull*/ Statistic.Type type) {
         this.type = type;
         this.key = NamespacedKey.minecraft(name().toLowerCase(Locale.ROOT));
     }
@@ -114,7 +131,7 @@ public enum Statistic implements Keyed {
      * @return the type of this statistic
      */
     @NotNull
-    public org.bukkit.Statistic.Type getType() {
+    public Statistic.Type getType() {
         return type;
     }
 
@@ -130,7 +147,7 @@ public enum Statistic implements Keyed {
      * @return true if this is a substatistic
      */
     public boolean isSubstatistic() {
-        return type != org.bukkit.Statistic.Type.UNTYPED;
+        return type != Statistic.Type.UNTYPED;
     }
 
     /**
@@ -142,7 +159,7 @@ public enum Statistic implements Keyed {
      * @return true if this deals with blocks
      */
     public boolean isBlock() {
-        return type == org.bukkit.Statistic.Type.BLOCK;
+        return type == Statistic.Type.BLOCK;
     }
 
     @NotNull

@@ -1,7 +1,7 @@
 package org.vulcanium.util;
 
 import java.util.Map;
-import org.bukkit.configuration.serialization.SerializableAs;
+import org.vulcanium.configuration.serialization.SerializableAs;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -104,6 +104,7 @@ public class BlockVector extends Vector {
      *
      * @return vector
      */
+    @NotNull
     @Override
     public BlockVector clone() {
         return (BlockVector) super.clone();

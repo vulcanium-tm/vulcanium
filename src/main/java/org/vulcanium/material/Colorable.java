@@ -1,7 +1,7 @@
 package org.vulcanium.material;
 
-import org.bukkit.DyeColor;
-import org.bukkit.UndefinedNullability;
+import org.vulcanium.DyeColor;
+import org.vulcanium.UndefinedNullability;
 import org.jetbrains.annotations.Nullable;
 
 /**

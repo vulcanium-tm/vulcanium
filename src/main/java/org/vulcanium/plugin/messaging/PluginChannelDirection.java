@@ -1,4 +1,4 @@
-package org.bukkit.plugin.messaging;
+package org.vulcanium.plugin.messaging;
 
 /**
  * Represents the different directions a plugin channel may go.

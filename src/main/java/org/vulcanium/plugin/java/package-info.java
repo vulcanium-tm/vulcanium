@@ -1,6 +1,6 @@
 /**
- * Classes for handling {@link org.bukkit.plugin.Plugin plugins} written in
+ * Classes for handling {@link org.vulcanium.plugin.Plugin plugins} written in
  * java.
  */
-package org.bukkit.plugin.java;
+package org.vulcanium.plugin.java;
 

@@ -1,4 +1,4 @@
-package org.bukkit.plugin.java;
+package org.vulcanium.plugin.java;
 
 import com.google.common.base.Preconditions;
 import java.io.File;
@@ -19,30 +19,19 @@ import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 import java.util.logging.Level;
 import java.util.regex.Pattern;
-import org.bukkit.Server;
-import org.bukkit.Warning;
-import org.bukkit.Warning.WarningState;
-import org.bukkit.configuration.serialization.ConfigurationSerializable;
-import org.bukkit.configuration.serialization.ConfigurationSerialization;
-import org.bukkit.event.Event;
-import org.bukkit.event.EventException;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.Listener;
-import org.bukkit.event.server.PluginDisableEvent;
-import org.bukkit.event.server.PluginEnableEvent;
-import org.bukkit.plugin.AuthorNagException;
-import org.bukkit.plugin.EventExecutor;
-import org.bukkit.plugin.InvalidDescriptionException;
-import org.bukkit.plugin.InvalidPluginException;
-import org.bukkit.plugin.Plugin;
-import org.bukkit.plugin.PluginDescriptionFile;
-import org.bukkit.plugin.PluginLoader;
-import org.bukkit.plugin.RegisteredListener;
-import org.bukkit.plugin.SimplePluginManager;
-import org.bukkit.plugin.TimedRegisteredListener;
-import org.bukkit.plugin.UnknownDependencyException;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.vulcanium.Server;
+import org.vulcanium.Warning;
+import org.vulcanium.configuration.serialization.ConfigurationSerializable;
+import org.vulcanium.configuration.serialization.ConfigurationSerialization;
+import org.vulcanium.event.Event;
+import org.vulcanium.event.EventException;
+import org.vulcanium.event.EventHandler;
+import org.vulcanium.event.Listener;
+import org.vulcanium.event.server.PluginDisableEvent;
+import org.vulcanium.event.server.PluginEnableEvent;
+import org.vulcanium.plugin.*;
 import org.yaml.snakeyaml.error.YAMLException;
 
 /**
@@ -141,15 +130,13 @@ public final class JavaPluginLoader implements PluginLoader {
         final PluginClassLoader loader;
         try {
             loader = new PluginClassLoader(this, getClass().getClassLoader(), description, dataFolder, file, (libraryLoader != null) ? libraryLoader.createLoader(description) : null);
-        } catch (InvalidPluginException ex) {
-            throw ex;
         } catch (Throwable ex) {
             throw new InvalidPluginException(ex);
         }
 
         loaders.add(loader);
 
-        return loader.plugin;
+        return (Plugin) loader.plugin;
     }
 
     @Override
@@ -236,12 +223,8 @@ public final class JavaPluginLoader implements PluginLoader {
             Method[] publicMethods = listener.getClass().getMethods();
             Method[] privateMethods = listener.getClass().getDeclaredMethods();
             methods = new HashSet<Method>(publicMethods.length + privateMethods.length, 1.0f);
-            for (Method method : publicMethods) {
-                methods.add(method);
-            }
-            for (Method method : privateMethods) {
-                methods.add(method);
-            }
+            methods.addAll(Arrays.asList(publicMethods));
+            methods.addAll(Arrays.asList(privateMethods));
         } catch (NoClassDefFoundError e) {
             plugin.getLogger().severe("Plugin " + plugin.getDescription().getFullName() + " has failed to register events for " + listener.getClass() + " because " + e.getMessage() + " does not exist.");
             return ret;
@@ -272,7 +255,7 @@ public final class JavaPluginLoader implements PluginLoader {
                 // This loop checks for extending deprecated events
                 if (clazz.getAnnotation(Deprecated.class) != null) {
                     Warning warning = clazz.getAnnotation(Warning.class);
-                    WarningState warningState = server.getWarningState();
+                    Warning.WarningState warningState = server.getWarningState();
                     if (!warningState.printFor(warning)) {
                         break;
                     }
@@ -285,7 +268,7 @@ public final class JavaPluginLoader implements PluginLoader {
                                     method.toGenericString(),
                                     (warning != null && warning.reason().length() != 0) ? warning.reason() : "Server performance will be affected",
                                     Arrays.toString(plugin.getDescription().getAuthors().toArray())),
-                            warningState == WarningState.ON ? new AuthorNagException(null) : null);
+                            warningState == Warning.WarningState.ON ? new AuthorNagException(null) : null);
                     break;
                 }
             }
@@ -374,7 +357,6 @@ public final class JavaPluginLoader implements PluginLoader {
                 try {
                     loader.close();
                 } catch (IOException ex) {
-                    //
                 }
             }
         }

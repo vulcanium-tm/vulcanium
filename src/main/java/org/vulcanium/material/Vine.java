@@ -10,7 +10,7 @@ import java.util.EnumSet;
  * Represents a vine
  *
  * @deprecated all usage of MaterialData is deprecated and subject to removal.
- * Use {@link org.bukkit.block.data.BlockData}.
+ * Use {@link org.vulcanium.block.data.BlockData}.
  */
 @Deprecated
 public class Vine extends MaterialData {

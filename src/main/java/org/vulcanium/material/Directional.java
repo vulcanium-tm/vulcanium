@@ -1,6 +1,6 @@
 package org.vulcanium.material;
 
-import org.bukkit.block.BlockFace;
+import org.vulcanium.block.BlockFace;
 import org.jetbrains.annotations.NotNull;
 
 public interface Directional {

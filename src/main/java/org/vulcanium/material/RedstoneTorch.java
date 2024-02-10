@@ -6,7 +6,7 @@ import org.vulcanium.Material;
  * Represents a redstone torch
  *
  * @deprecated all usage of MaterialData is deprecated and subject to removal.
- * Use {@link org.bukkit.block.data.BlockData}.
+ * Use {@link org.vulcanium.block.data.BlockData}.
  */
 @Deprecated
 public class RedstoneTorch extends Torch implements Redstone {

@@ -1,4 +1,4 @@
-package org.bukkit.plugin.messaging;
+package org.vulcanium.plugin.messaging;
 
 /**
  * Thrown if a Plugin Channel is too long.

@@ -3,7 +3,7 @@ package org.vulcanium.util;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
-import org.bukkit.ChatColor;
+import org.vulcanium.ChatColor;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -94,9 +94,7 @@ public class ChatPaginator {
 
             if (c == ' ' || c == '\n') {
                 if (line.length() == 0 && word.length() > lineLength) { // special case: extremely long word begins a line
-                    for (String partialWord : word.toString().split("(?<=\\G.{" + lineLength + "})")) {
-                        lines.add(partialWord);
-                    }
+                    lines.addAll(Arrays.asList(word.toString().split("(?<=\\G.{" + lineLength + "})")));
                 } else if (line.length() + 1 + word.length() - lineColorChars == lineLength) { // Line exactly the correct length...newline
                     if (line.length() > 0) {
                         line.append(' ');
@@ -141,7 +139,7 @@ public class ChatPaginator {
             lines.set(i, color + subLine);
         }
 
-        return lines.toArray(new String[lines.size()]);
+        return lines.toArray(new String[0]);
     }
 
     public static class ChatPage {

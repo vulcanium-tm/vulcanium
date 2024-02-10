@@ -1,5 +1,5 @@
 /**
- * Static methods for miscellaneous {@link org.bukkit.permissions.Permission
+ * Static methods for miscellaneous {@link org.vulcanium.permissions.Permission
  * permission} functionality.
  */
 package org.vulcanium.util.permissions;

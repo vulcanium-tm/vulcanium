@@ -1,10 +1,12 @@
-package org.bukkit.plugin.messaging;
+package org.vulcanium.plugin.messaging;
 
 import java.util.Set;
-import org.bukkit.NamespacedKey;
-import org.bukkit.entity.Player;
-import org.bukkit.plugin.Plugin;
 import org.jetbrains.annotations.NotNull;
+import org.vulcanium.NamespacedKey;
+import org.vulcanium.entity.Player;
+import org.vulcanium.plugin.Plugin;
+import org.vulcanium.plugin.messaging.PluginMessageListener;
+import org.vulcanium.plugin.messaging.PluginMessageListenerRegistration;
 
 /**
  * A class responsible for managing the registrations of plugin channels and
@@ -200,7 +202,7 @@ public interface Messenger {
      * @param registration Registration to check.
      * @return True if the registration is valid, otherwise false.
      */
-    public boolean isRegistrationValid(@NotNull PluginMessageListenerRegistration registration);
+    boolean isRegistrationValid(@NotNull PluginMessageListenerRegistration registration);
 
     /**
      * Checks if the specified plugin has registered to receive incoming
@@ -230,4 +232,5 @@ public interface Messenger {
      * @param message Raw payload of the message.
      */
     public void dispatchIncomingMessage(@NotNull Player source, @NotNull String channel, @NotNull byte[] message);
+
 }

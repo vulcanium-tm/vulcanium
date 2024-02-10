@@ -1,9 +1,15 @@
 package org.vulcanium;
 
+import org.jetbrains.annotations.NotNull;
+import org.vulcanium.block.Biome;
+import org.vulcanium.block.Block;
+import org.vulcanium.block.BlockState;
+import org.vulcanium.block.data.BlockData;
+import org.vulcanium.entity.Entity;
+import org.vulcanium.persistence.PersistentDataHolder;
+import org.vulcanium.plugin.Plugin;
 
 import java.util.Collection;
-
-import org.jetbrains.annotations.NotNull;
 
 /**
  * Represents a chunk of blocks.

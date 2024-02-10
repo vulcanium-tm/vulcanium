@@ -1,11 +1,9 @@
 package org.vulcanium.permissions;
 
+import java.util.HashMap;
+import java.util.Map;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-
-import java.util.EnumMap;
-import java.util.Map;
-import java.util.regex.Pattern;
 
 /**
  * Represents the possible default values for permissions
@@ -17,15 +15,15 @@ public enum PermissionDefault {
     NOT_OP("!op", "notop", "!operator", "notoperator", "!admin", "notadmin");
 
     private final String[] names;
-    private static final Map<String, PermissionDefault> lookup = new EnumMap<>(PermissionDefault.class);
-    private static final Pattern NAME_PATTERN = Pattern.compile("[^a-z!]");
+    private static final Map<String, PermissionDefault> lookup = new HashMap<String, PermissionDefault>();
 
-    PermissionDefault(String... names) {
+    private PermissionDefault(/*@NotNull*/ String... names) {
         this.names = names;
     }
 
     /**
-     * Calculates the value of this PermissionDefault for the given operator value
+     * Calculates the value of this PermissionDefault for the given operator
+     * value
      *
      * @param op If the target is op
      * @return True if the default should be true, or false
@@ -53,7 +51,12 @@ public enum PermissionDefault {
      */
     @Nullable
     public static PermissionDefault getByName(@NotNull String name) {
-        return lookup.get(NAME_PATTERN.matcher(name.toLowerCase(java.util.Locale.ENGLISH)).replaceAll(""));
+        return lookup.get(name.toLowerCase(java.util.Locale.ENGLISH).replaceAll("[^a-z!]", ""));
+    }
+
+    @Override
+    public String toString() {
+        return names[0];
     }
 
     static {

@@ -1,5 +1,6 @@
 package org.vulcanium.material;
 
+import org.jetbrains.annotations.NotNull;
 import org.vulcanium.Material;
 import org.vulcanium.block.BlockFace;
 
@@ -7,7 +8,7 @@ import org.vulcanium.block.BlockFace;
  * Represents a skull.
  *
  * @deprecated all usage of MaterialData is deprecated and subject to removal.
- * Use {@link org.bukkit.block.data.BlockData}.
+ * Use {@link org.vulcanium.block.data.BlockData}.
  */
 @Deprecated
 public class Skull extends MaterialData implements Directional {
@@ -40,7 +41,7 @@ public class Skull extends MaterialData implements Directional {
     }
 
     @Override
-    public void setFacingDirection(BlockFace face) {
+    public void setFacingDirection(@NotNull BlockFace face) {
         int data;
 
         switch (face) {
@@ -68,6 +69,7 @@ public class Skull extends MaterialData implements Directional {
         setData((byte) data);
     }
 
+    @NotNull
     @Override
     public BlockFace getFacing() {
         int data = getData();

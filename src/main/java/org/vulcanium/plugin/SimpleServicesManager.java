@@ -10,9 +10,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.Set;
-import org.bukkit.Bukkit;
-import org.bukkit.event.server.ServiceRegisterEvent;
-import org.bukkit.event.server.ServiceUnregisterEvent;
+import org.vulcanium.Bukkit;
+import org.vulcanium.event.server.ServiceRegisterEvent;
+import org.vulcanium.event.server.ServiceUnregisterEvent;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 

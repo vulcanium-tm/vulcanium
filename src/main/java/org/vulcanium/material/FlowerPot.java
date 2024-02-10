@@ -19,7 +19,6 @@ public class FlowerPot extends MaterialData {
     public FlowerPot() {
         super(Material.LEGACY_FLOWER_POT);
     }
-
     public FlowerPot(final Material type) {
         super(type);
     }

@@ -1,13 +1,14 @@
 package org.vulcanium.material;
 
-import org.bukkit.Material;
-import org.bukkit.block.BlockFace;
+import org.jetbrains.annotations.NotNull;
+import org.vulcanium.Material;
+import org.vulcanium.block.BlockFace;
 
 /**
  * Represents a button
  *
  * @deprecated all usage of MaterialData is deprecated and subject to removal.
- * Use {@link org.bukkit.block.data.BlockData}.
+ * Use {@link org.vulcanium.block.data.BlockData}.
  */
 @Deprecated
 public class Button extends SimpleAttachableMaterialData implements Redstone {
@@ -55,6 +56,8 @@ public class Button extends SimpleAttachableMaterialData implements Redstone {
      *
      * @return BlockFace attached to
      */
+    @NotNull
+    @NotNull
     @Override
     public BlockFace getAttachedFace() {
         byte data = (byte) (getData() & 0x7);
@@ -86,7 +89,7 @@ public class Button extends SimpleAttachableMaterialData implements Redstone {
      * Sets the direction this button is pointing toward
      */
     @Override
-    public void setFacingDirection(BlockFace face) {
+    public void setFacingDirection(@NotNull BlockFace face) {
         byte data = (byte) (getData() & 0x8);
 
         switch (face) {

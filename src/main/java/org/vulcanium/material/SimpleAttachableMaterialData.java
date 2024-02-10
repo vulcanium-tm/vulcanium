@@ -1,5 +1,6 @@
 package org.vulcanium.material;
 
+import org.jetbrains.annotations.NotNull;
 import org.vulcanium.Material;
 import org.vulcanium.block.BlockFace;
 
@@ -7,7 +8,7 @@ import org.vulcanium.block.BlockFace;
  * Simple utility class for attachable MaterialData subclasses
  *
  * @deprecated all usage of MaterialData is deprecated and subject to removal.
- * Use {@link org.bukkit.block.data.BlockData}.
+ * Use {@link org.vulcanium.block.data.BlockData}.
  */
 @Deprecated
 public abstract class SimpleAttachableMaterialData extends MaterialData implements Attachable {
@@ -31,6 +32,7 @@ public abstract class SimpleAttachableMaterialData extends MaterialData implemen
         super(type, data);
     }
 
+    @NotNull
     @Override
     public BlockFace getFacing() {
         BlockFace attachedFace = getAttachedFace();

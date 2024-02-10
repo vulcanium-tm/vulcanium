@@ -4,6 +4,12 @@ import java.time.Instant;
 import java.util.UUID;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.vulcanium.configuration.serialization.ConfigurationSerializable;
+import org.vulcanium.entity.AnimalTamer;
+import org.vulcanium.entity.EntityType;
+import org.vulcanium.entity.Player;
+import org.vulcanium.permissions.ServerOperator;
+import org.vulcanium.profile.PlayerProfile;
 
 public interface OfflinePlayer extends ServerOperator, AnimalTamer, ConfigurationSerializable {
 

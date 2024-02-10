@@ -1,5 +1,6 @@
 package org.vulcanium.material;
 
+import org.jetbrains.annotations.NotNull;
 import org.vulcanium.Material;
 import org.vulcanium.block.BlockFace;
 
@@ -44,6 +45,7 @@ public class Sign extends MaterialData implements Attachable {
      *
      * @return BlockFace attached to
      */
+    @NotNull
     @Override
     public BlockFace getAttachedFace() {
         if (isWallSign()) {
@@ -74,6 +76,7 @@ public class Sign extends MaterialData implements Attachable {
      *
      * @return BlockFace indicating where this sign is facing
      */
+    @NotNull
     @Override
     public BlockFace getFacing() {
         byte data = getData();
@@ -136,7 +139,7 @@ public class Sign extends MaterialData implements Attachable {
     }
 
     @Override
-    public void setFacingDirection(BlockFace face) {
+    public void setFacingDirection(@NotNull BlockFace face) {
         byte data;
 
         if (isWallSign()) {

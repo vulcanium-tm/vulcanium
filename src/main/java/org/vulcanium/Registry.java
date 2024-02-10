@@ -1,13 +1,49 @@
+/*
+ Copyright © 2023
+
+ Owner: Vulcanium
+
+ Contributor: Shadowflare
+ ────────────────────────────────────────────────────────────────────
+ Permission is hereby granted to use and modify the Vulcanium plugin freely:
+
+ 1. Include copyright and permission notice in all copies of the Software.
+ 2. Users can depend on Vulcanium, create, and distribute plugins that rely on it.
+ 3. Republishing Vulcanium elsewhere is prohibited.
+ 4. Source code distribution is not allowed.
+ 5. Publishing a derivative version of the plugin is prohibited.
+ ────────────────────────────────────────────────────────────────────
+ SOFTWARE PROVIDED "AS IT IS," NO WARRANTY. AUTHORS NOT LIABLE FOR DAMAGES.
+ */
 package org.vulcanium;
 
 import com.google.common.base.Preconditions;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.vulcanium.advancement.Advancement;
+import org.vulcanium.attribute.Attribute;
+import org.vulcanium.block.Biome;
+import org.vulcanium.block.banner.PatternType;
+import org.vulcanium.boss.KeyedBossBar;
+import org.vulcanium.enchantments.Enchantment;
+import org.vulcanium.entity.Cat;
+import org.vulcanium.entity.EntityType;
+import org.vulcanium.entity.Frog;
+import org.vulcanium.entity.Villager;
+import org.vulcanium.entity.memory.MemoryKey;
+import org.vulcanium.generator.structure.Structure;
+import org.vulcanium.generator.structure.StructureType;
+import org.vulcanium.inventory.meta.trim.TrimMaterial;
+import org.vulcanium.inventory.meta.trim.TrimPattern;
+import org.vulcanium.loot.LootTables;
+import org.vulcanium.potion.PotionEffectType;
+import org.vulcanium.potion.PotionType;
 
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Objects;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public interface Registry<T extends Keyed> extends Iterable<T> {

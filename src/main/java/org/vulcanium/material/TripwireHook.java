@@ -1,5 +1,6 @@
 package org.vulcanium.material;
 
+import org.jetbrains.annotations.NotNull;
 import org.vulcanium.Material;
 import org.vulcanium.block.BlockFace;
 
@@ -7,7 +8,7 @@ import org.vulcanium.block.BlockFace;
  * Represents the tripwire hook
  *
  * @deprecated all usage of MaterialData is deprecated and subject to removal.
- * Use {@link org.bukkit.block.data.BlockData}.
+ * Use {@link org.vulcanium.block.data.BlockData}.
  */
 @Deprecated
 public class TripwireHook extends SimpleAttachableMaterialData implements Redstone {
@@ -76,7 +77,7 @@ public class TripwireHook extends SimpleAttachableMaterialData implements Redsto
     }
 
     @Override
-    public void setFacingDirection(BlockFace face) {
+    public void setFacingDirection(@NotNull BlockFace face) {
         int dat = getData() & 0xC;
         switch (face) {
         case WEST:
@@ -95,6 +96,7 @@ public class TripwireHook extends SimpleAttachableMaterialData implements Redsto
         setData((byte) dat);
     }
 
+    @NotNull
     @Override
     public BlockFace getAttachedFace() {
         switch (getData() & 0x3) {

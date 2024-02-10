@@ -1,5 +1,6 @@
 package org.vulcanium.material;
 
+import org.jetbrains.annotations.NotNull;
 import org.vulcanium.Material;
 import org.vulcanium.block.BlockFace;
 
@@ -37,7 +38,7 @@ public class Gate extends MaterialData implements Directional, Openable {
     }
 
     @Override
-    public void setFacingDirection(BlockFace face) {
+    public void setFacingDirection(@NotNull BlockFace face) {
         byte data = (byte) (getData() & ~DIR_BIT);
 
         switch (face) {
@@ -59,6 +60,7 @@ public class Gate extends MaterialData implements Directional, Openable {
         setData(data);
     }
 
+    @NotNull
     @Override
     public BlockFace getFacing() {
         switch (getData() & DIR_BIT) {

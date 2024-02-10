@@ -1,4 +1,4 @@
-package org.bukkit.plugin.messaging;
+package org.vulcanium.plugin.messaging;
 
 /**
  * Thrown if a Plugin Message is sent that is too large to be sent.

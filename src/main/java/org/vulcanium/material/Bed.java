@@ -1,13 +1,14 @@
 package org.vulcanium.material;
 
-import org.bukkit.Material;
-import org.bukkit.block.BlockFace;
+import org.jetbrains.annotations.NotNull;
+import org.vulcanium.Material;
+import org.vulcanium.block.BlockFace;
 
 /**
  * Represents a bed.
  *
  * @deprecated all usage of MaterialData is deprecated and subject to removal.
- * Use {@link org.bukkit.block.data.BlockData}.
+ * Use {@link org.vulcanium.block.data.BlockData}.
  */
 @Deprecated
 public class Bed extends MaterialData implements Directional {
@@ -66,7 +67,7 @@ public class Bed extends MaterialData implements Directional {
      * only affect one of the two blocks the bed is made of.
      */
     @Override
-    public void setFacingDirection(BlockFace face) {
+    public void setFacingDirection(@NotNull BlockFace face) {
         byte data;
 
         switch (face) {
@@ -99,6 +100,7 @@ public class Bed extends MaterialData implements Directional {
      *
      * @return the direction the head of the bed is facing
      */
+    @NotNull
     @Override
     public BlockFace getFacing() {
         byte data = (byte) (getData() & 0x7);

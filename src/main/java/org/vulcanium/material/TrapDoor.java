@@ -1,5 +1,6 @@
 package org.vulcanium.material;
 
+import org.jetbrains.annotations.NotNull;
 import org.vulcanium.Material;
 import org.vulcanium.block.BlockFace;
 
@@ -69,6 +70,7 @@ public class TrapDoor extends SimpleAttachableMaterialData implements Openable {
         setData((byte) dat);
     }
 
+    @NotNull
     @Override
     public BlockFace getAttachedFace() {
         byte data = (byte) (getData() & 0x3);
@@ -92,7 +94,7 @@ public class TrapDoor extends SimpleAttachableMaterialData implements Openable {
     }
 
     @Override
-    public void setFacingDirection(BlockFace face) {
+    public void setFacingDirection(@NotNull BlockFace face) {
         byte data = (byte) (getData() & 0xC);
 
         switch (face) {

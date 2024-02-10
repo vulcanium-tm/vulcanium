@@ -6,7 +6,7 @@ import org.jetbrains.annotations.NotNull;
  * Represents a base {@link Plugin}
  * <p>
  * Extend this class if your plugin is not a {@link
- * org.bukkit.plugin.java.JavaPlugin}
+ * org.vulcanium.plugin.java.JavaPlugin}
  */
 public abstract class PluginBase implements Plugin {
     @Override

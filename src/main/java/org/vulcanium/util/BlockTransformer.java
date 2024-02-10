@@ -1,10 +1,10 @@
 package org.vulcanium.util;
 
-import org.bukkit.block.BlockState;
-import org.bukkit.block.data.BlockData;
-import org.bukkit.generator.LimitedRegion;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
+import org.vulcanium.block.BlockState;
+import org.vulcanium.block.data.BlockData;
+import org.vulcanium.generator.LimitedRegion;
 
 /**
  * A BlockTransformer is used to modify blocks that are placed by structure.

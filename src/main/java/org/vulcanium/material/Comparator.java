@@ -1,7 +1,8 @@
 package org.vulcanium.material;
 
-import org.bukkit.Material;
-import org.bukkit.block.BlockFace;
+import org.jetbrains.annotations.NotNull;
+import org.vulcanium.Material;
+import org.vulcanium.block.BlockFace;
 
 /**
  * Represents a comparator in the on or off state, in normal or subtraction mode and facing in a specific direction.
@@ -10,7 +11,7 @@ import org.bukkit.block.BlockFace;
  * @see Material#LEGACY_REDSTONE_COMPARATOR_ON
  *
  * @deprecated all usage of MaterialData is deprecated and subject to removal.
- * Use {@link org.bukkit.block.data.BlockData}.
+ * Use {@link org.vulcanium.block.data.BlockData}.
  */
 @Deprecated
 public class Comparator extends MaterialData implements Directional, Redstone {
@@ -103,7 +104,7 @@ public class Comparator extends MaterialData implements Directional, Redstone {
      * @see BlockFace
      */
     @Override
-    public void setFacingDirection(BlockFace face) {
+    public void setFacingDirection(@NotNull BlockFace face) {
         int data = getData() & 0xC;
 
         switch (face) {
@@ -134,6 +135,7 @@ public class Comparator extends MaterialData implements Directional, Redstone {
      *
      * @see BlockFace
      */
+    @NotNull
     @Override
     public BlockFace getFacing() {
         byte data = (byte) (getData() & 0x3);

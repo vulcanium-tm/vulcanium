@@ -4,8 +4,8 @@ import java.io.File;
 import java.util.Map;
 import java.util.Set;
 import java.util.regex.Pattern;
-import org.bukkit.event.Event;
-import org.bukkit.event.Listener;
+import org.vulcanium.event.Event;
+import org.vulcanium.event.Listener;
 import org.jetbrains.annotations.NotNull;
 
 /**

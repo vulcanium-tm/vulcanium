@@ -1,11 +1,12 @@
 package org.vulcanium.material;
 
-import org.bukkit.Material;
-import org.bukkit.block.BlockFace;
+import org.jetbrains.annotations.NotNull;
+import org.vulcanium.Material;
+import org.vulcanium.block.BlockFace;
 
 /**
  * @deprecated all usage of MaterialData is deprecated and subject to removal.
- * Use {@link org.bukkit.block.data.BlockData}.
+ * Use {@link org.vulcanium.block.data.BlockData}.
  */
 @Deprecated
 public class Banner extends MaterialData implements Attachable {
@@ -32,6 +33,7 @@ public class Banner extends MaterialData implements Attachable {
         return getItemType() == Material.LEGACY_WALL_BANNER;
     }
 
+    @NotNull
     @Override
     public BlockFace getAttachedFace() {
         if (isWallBanner()) {
@@ -57,6 +59,7 @@ public class Banner extends MaterialData implements Attachable {
         }
     }
 
+    @NotNull
     @Override
     public BlockFace getFacing() {
         byte data = getData();
@@ -119,7 +122,7 @@ public class Banner extends MaterialData implements Attachable {
     }
 
     @Override
-    public void setFacingDirection(BlockFace face) {
+    public void setFacingDirection(@NotNull BlockFace face) {
         byte data;
 
         if (isWallBanner()) {

@@ -1,3 +1,20 @@
+/*
+ Copyright © 2023
+
+ Owner: Vulcanium
+
+ Contributor: Shadowflare
+ ────────────────────────────────────────────────────────────────────
+ Permission is hereby granted to use and modify the Vulcanium plugin freely:
+
+ 1. Include copyright and permission notice in all copies of the Software.
+ 2. Users can depend on Vulcanium, create, and distribute plugins that rely on it.
+ 3. Republishing Vulcanium elsewhere is prohibited.
+ 4. Source code distribution is not allowed.
+ 5. Publishing a derivative version of the plugin is prohibited.
+ ────────────────────────────────────────────────────────────────────
+ SOFTWARE PROVIDED "AS IT IS," NO WARRANTY. AUTHORS NOT LIABLE FOR DAMAGES.
+ */
 package org.vulcanium;
 
 import java.time.Duration;
@@ -9,14 +26,14 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 /**
- * A ban list, containing bans of some {@link org.bukkit.BanList.Type}.
+ * A ban list, containing bans of some {@link BanList.Type}.
  *
  * @param <T> The ban target
  */
 public interface BanList<T> {
 
     /**
-     * Represents a ban-type that a {@link org.bukkit.BanList} may track.
+     * Represents a ban-type that a {@link BanList} may track.
      */
     public enum Type {
         /**

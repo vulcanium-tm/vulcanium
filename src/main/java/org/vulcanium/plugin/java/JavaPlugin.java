@@ -1,4 +1,4 @@
-package org.bukkit.plugin.java;
+package org.vulcanium.plugin.java;
 
 import com.google.common.base.Charsets;
 import com.google.common.base.Preconditions;
@@ -14,25 +14,22 @@ import java.net.URLConnection;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import org.bukkit.Server;
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandSender;
-import org.bukkit.command.PluginCommand;
-import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.configuration.file.YamlConfiguration;
-import org.bukkit.generator.BiomeProvider;
-import org.bukkit.generator.ChunkGenerator;
-import org.bukkit.plugin.PluginBase;
-import org.bukkit.plugin.PluginDescriptionFile;
-import org.bukkit.plugin.PluginLoader;
-import org.bukkit.plugin.PluginLogger;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.vulcanium.Server;
+import org.vulcanium.command.Command;
+import org.vulcanium.command.CommandSender;
+import org.vulcanium.command.PluginCommand;
+import org.vulcanium.configuration.file.FileConfiguration;
+import org.vulcanium.configuration.file.YamlConfiguration;
+import org.vulcanium.generator.BiomeProvider;
+import org.vulcanium.generator.ChunkGenerator;
+import org.vulcanium.plugin.*;
 
 /**
  * Represents a Java plugin and its main class. It contains fundamental methods
  * and fields for a plugin to be loaded and work properly. This is an indirect
- * implementation of {@link org.bukkit.plugin.Plugin}.
+ * implementation of {@link Plugin}.
  */
 public abstract class JavaPlugin extends PluginBase {
     private boolean isEnabled = false;
@@ -185,7 +182,7 @@ public abstract class JavaPlugin extends PluginBase {
 
     @Override
     public void saveResource(@NotNull String resourcePath, boolean replace) {
-        if (resourcePath == null || resourcePath.equals("")) {
+        if (resourcePath == null || resourcePath.isEmpty()) {
             throw new IllegalArgumentException("ResourcePath cannot be null or empty");
         }
 
@@ -312,11 +309,11 @@ public abstract class JavaPlugin extends PluginBase {
         String alias = name.toLowerCase(java.util.Locale.ENGLISH);
         PluginCommand command = getServer().getPluginCommand(alias);
 
-        if (command == null || command.getPlugin() != this) {
+        if (command == null || this != command.getPlugin()) {
             command = getServer().getPluginCommand(description.getName().toLowerCase(java.util.Locale.ENGLISH) + ":" + alias);
         }
 
-        if (command != null && command.getPlugin() == this) {
+        if (command != null && this == command.getPlugin()) {
             return command;
         } else {
             return null;

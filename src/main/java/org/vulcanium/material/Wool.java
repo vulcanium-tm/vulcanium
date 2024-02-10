@@ -2,11 +2,12 @@ package org.vulcanium.material;
 
 import org.vulcanium.DyeColor;
 import org.vulcanium.Material;
+import org.vulcanium.block.data.BlockData;
 
 /**
  * Represents a Wool/Cloth block
  * @deprecated all usage of MaterialData is deprecated and subject to removal.
- * Use {@link org.bukkit.block.data.BlockData}.
+ * Use {@link BlockData}.
  */
 @Deprecated
 public class Wool extends MaterialData implements Colorable {

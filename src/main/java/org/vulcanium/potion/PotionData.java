@@ -15,7 +15,6 @@ public final class PotionData {
      * -- GETTER --
      *  Checks if the potion is in an extended state. This refers to the extended duration potions.
      *
-     * @return true if the potion is extended
      */
     @Getter
     private final boolean extended;
@@ -23,7 +22,6 @@ public final class PotionData {
      * -- GETTER --
      *  Checks if the potion is in an upgraded state. This refers to whether or not the potion is Tier 2.
      *
-     * @return true if the potion is upgraded
      */
     @Getter
     private final boolean upgraded;

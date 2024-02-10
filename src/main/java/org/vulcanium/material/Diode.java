@@ -1,7 +1,8 @@
 package org.vulcanium.material;
 
-import org.bukkit.Material;
-import org.bukkit.block.BlockFace;
+import org.jetbrains.annotations.NotNull;
+import org.vulcanium.Material;
+import org.vulcanium.block.BlockFace;
 
 /**
  * Represents a diode/repeater in the on or off state, with a delay and facing
@@ -11,7 +12,7 @@ import org.bukkit.block.BlockFace;
  * @see Material#LEGACY_DIODE_BLOCK_ON
  *
  * @deprecated all usage of MaterialData is deprecated and subject to removal.
- * Use {@link org.bukkit.block.data.BlockData}.
+ * Use {@link org.vulcanium.block.data.BlockData}.
  */
 @Deprecated
 public class Diode extends MaterialData implements Directional, Redstone {
@@ -122,7 +123,7 @@ public class Diode extends MaterialData implements Directional, Redstone {
      * @see BlockFace
      */
     @Override
-    public void setFacingDirection(BlockFace face) {
+    public void setFacingDirection(@NotNull BlockFace face) {
         int delay = getDelay();
         byte data;
 
@@ -152,6 +153,7 @@ public class Diode extends MaterialData implements Directional, Redstone {
      *
      * @see BlockFace
      */
+    @NotNull
     @Override
     public BlockFace getFacing() {
         byte data = (byte) (getData() & 0x3);

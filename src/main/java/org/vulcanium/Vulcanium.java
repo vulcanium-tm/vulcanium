@@ -1,3 +1,20 @@
+/*
+ Copyright © 2023
+
+ Owner: Vulcanium
+
+ Contributor: Shadowflare
+ ────────────────────────────────────────────────────────────────────
+ Permission is hereby granted to use and modify the Vulcanium plugin freely:
+
+ 1. Include copyright and permission notice in all copies of the Software.
+ 2. Users can depend on Vulcanium, create, and distribute plugins that rely on it.
+ 3. Republishing Vulcanium elsewhere is prohibited.
+ 4. Source code distribution is not allowed.
+ 5. Publishing a derivative version of the plugin is prohibited.
+ ────────────────────────────────────────────────────────────────────
+ SOFTWARE PROVIDED "AS IT IS," NO WARRANTY. AUTHORS NOT LIABLE FOR DAMAGES.
+ */
 package org.vulcanium;
 
 import com.google.common.collect.ImmutableList;
@@ -15,11 +32,38 @@ import java.util.UUID;
 import java.util.function.Consumer;
 import java.util.logging.Logger;
 
+import org.vulcanium.plugin.messaging.Messenger;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.vulcanium.advancement.Advancement;
+import org.vulcanium.block.data.BlockData;
+import org.vulcanium.boss.*;
+import org.vulcanium.command.CommandException;
+import org.vulcanium.command.CommandSender;
+import org.vulcanium.command.ConsoleCommandSender;
+import org.vulcanium.command.PluginCommand;
+import org.vulcanium.entity.Entity;
+import org.vulcanium.entity.Player;
+import org.vulcanium.entity.SpawnCategory;
+import org.vulcanium.event.inventory.InventoryType;
+import org.vulcanium.generator.ChunkGenerator;
+import org.vulcanium.generator.structure.StructureType;
+import org.vulcanium.help.HelpMap;
+import org.vulcanium.inventory.*;
+import org.vulcanium.loot.LootTable;
+import org.vulcanium.map.MapView;
 import org.vulcanium.packs.DataPackManager;
+import org.vulcanium.packs.ResourcePack;
+import org.vulcanium.permissions.Permissible;
+import org.vulcanium.plugin.PluginManager;
+import org.vulcanium.plugin.ServicesManager;
+import org.vulcanium.profile.PlayerProfile;
+import org.vulcanium.scheduler.VulcaniumScheduler;
+import org.vulcanium.scoreboard.Criteria;
+import org.vulcanium.scoreboard.ScoreboardManager;
+import org.vulcanium.structure.StructureManager;
+import org.vulcanium.util.CachedServerIcon;
 
 /**
  * Represents the Vulcanium core, for version and Server singleton handling
@@ -1651,7 +1695,7 @@ public final class Vulcanium {
      * @return the configured warning state
      */
     @NotNull
-    public static WarningState getWarningState() {
+    public static Warning.WarningState getWarningState() {
         return server.getWarningState();
     }
 

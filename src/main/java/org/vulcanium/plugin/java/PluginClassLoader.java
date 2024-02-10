@@ -1,4 +1,4 @@
-package org.bukkit.plugin.java;
+package org.vulcanium.plugin.java;
 
 import com.google.common.base.Preconditions;
 import com.google.common.io.ByteStreams;
@@ -22,9 +22,9 @@ import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 import java.util.jar.Manifest;
 import java.util.logging.Level;
-import org.bukkit.plugin.InvalidPluginException;
-import org.bukkit.plugin.PluginDescriptionFile;
-import org.bukkit.plugin.SimplePluginManager;
+import org.vulcanium.plugin.InvalidPluginException;
+import org.vulcanium.plugin.PluginDescriptionFile;
+import org.vulcanium.plugin.SimplePluginManager;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -162,7 +162,7 @@ final class PluginClassLoader extends URLClassLoader {
 
     @Override
     protected Class<?> findClass(String name) throws ClassNotFoundException {
-        if (name.startsWith("org.bukkit.") || name.startsWith("net.minecraft.")) {
+        if (name.startsWith("org.vulcanium.") || name.startsWith("net.minecraft.")) {
             throw new ClassNotFoundException(name);
         }
         Class<?> result = classes.get(name);

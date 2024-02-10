@@ -11,10 +11,10 @@ import org.jetbrains.annotations.ApiStatus;
 @ApiStatus.Experimental
 public interface FeatureFlag extends Keyed {
 
-    public static final org.bukkit.FeatureFlag VANILLA = Bukkit.getUnsafe().getFeatureFlag(org.bukkit.NamespacedKey.minecraft("vanilla"));
+    public static final FeatureFlag VANILLA = Vulcanium.getUnsafe().getFeatureFlag(NamespacedKey.minecraft("vanilla"));
 
-    @org.bukkit.MinecraftExperimental
-    public static final org.bukkit.FeatureFlag BUNDLE = Bukkit.getUnsafe().getFeatureFlag(org.bukkit.NamespacedKey.minecraft("bundle"));
+    @MinecraftExperimental
+    public static final FeatureFlag BUNDLE = Vulcanium.getUnsafe().getFeatureFlag(NamespacedKey.minecraft("bundle"));
 
     /**
      * <strong>AVAILABLE BETWEEN VERSIONS:</strong> 1.19 - 1.19.4
@@ -22,12 +22,12 @@ public interface FeatureFlag extends Keyed {
      * @deprecated not available since 1.20
      */
     @Deprecated
-    @org.bukkit.MinecraftExperimental
-    public static final org.bukkit.FeatureFlag UPDATE_1_20 = Bukkit.getUnsafe().getFeatureFlag(org.bukkit.NamespacedKey.minecraft("update_1_20"));
-
-    @org.bukkit.MinecraftExperimental
-    public static final org.bukkit.FeatureFlag TRADE_REBALANCE = Bukkit.getUnsafe().getFeatureFlag(org.bukkit.NamespacedKey.minecraft("trade_rebalance"));
+    @MinecraftExperimental
+    public static final FeatureFlag UPDATE_1_20 = Vulcanium.getUnsafe().getFeatureFlag(NamespacedKey.minecraft("update_1_20"));
 
     @MinecraftExperimental
-    public static final org.bukkit.FeatureFlag UPDATE_121 = Bukkit.getUnsafe().getFeatureFlag(NamespacedKey.minecraft("update_1_21"));
+    public static final FeatureFlag TRADE_REBALANCE = Vulcanium.getUnsafe().getFeatureFlag(NamespacedKey.minecraft("trade_rebalance"));
+
+    @MinecraftExperimental
+    public static final FeatureFlag UPDATE_121 = Vulcanium.getUnsafe().getFeatureFlag(NamespacedKey.minecraft("update_1_21"));
 }

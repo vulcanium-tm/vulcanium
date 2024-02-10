@@ -1,5 +1,5 @@
 /**
- * Classes dedicated to letting {@link org.bukkit.plugin.Plugin plugins} run
+ * Classes dedicated to letting {@link org.vulcanium.plugin.Plugin plugins} run
  * code at specific time intervals, including thread safety.
  */
 package org.vulcanium.scheduler;

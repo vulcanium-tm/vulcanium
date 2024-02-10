@@ -1,5 +1,6 @@
 package org.vulcanium.material;
 
+import org.jetbrains.annotations.NotNull;
 import org.vulcanium.Material;
 import org.vulcanium.block.BlockFace;
 
@@ -34,6 +35,7 @@ public class Torch extends SimpleAttachableMaterialData {
      *
      * @return BlockFace attached to
      */
+    @NotNull
     @Override
     public BlockFace getAttachedFace() {
         byte data = getData();
@@ -58,7 +60,7 @@ public class Torch extends SimpleAttachableMaterialData {
     }
 
     @Override
-    public void setFacingDirection(BlockFace face) {
+    public void setFacingDirection(@NotNull BlockFace face) {
         byte data;
 
         switch (face) {

@@ -1,15 +1,14 @@
 package org.vulcanium.util;
 
-import org.bukkit.Location;
-import org.bukkit.World;
-import org.bukkit.generator.structure.Structure;
-import org.bukkit.generator.structure.StructureType;
+import org.vulcanium.Location;
+import org.vulcanium.World;
+import org.vulcanium.generator.structure.Structure;
+import org.vulcanium.generator.structure.StructureType;
 import org.jetbrains.annotations.NotNull;
 
 /**
  * Holds the result of searching for a structure.
  *
- * @see World#locateNearestStructure(Location, Structure, int, boolean)
  * @see World#locateNearestStructure(Location, StructureType, int, boolean)
  */
 public interface StructureSearchResult {

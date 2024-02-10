@@ -1,5 +1,6 @@
 package org.vulcanium.material;
 
+import org.jetbrains.annotations.NotNull;
 import org.vulcanium.Material;
 import org.vulcanium.block.BlockFace;
 
@@ -34,6 +35,7 @@ public class Ladder extends SimpleAttachableMaterialData {
      *
      * @return BlockFace attached to
      */
+    @NotNull
     @Override
     public BlockFace getAttachedFace() {
         byte data = getData();
@@ -59,7 +61,7 @@ public class Ladder extends SimpleAttachableMaterialData {
      * Sets the direction this ladder is facing
      */
     @Override
-    public void setFacingDirection(BlockFace face) {
+    public void setFacingDirection(@NotNull BlockFace face) {
         byte data = (byte) 0x0;
 
         switch (face) {

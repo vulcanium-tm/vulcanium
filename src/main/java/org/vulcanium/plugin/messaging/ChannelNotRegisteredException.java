@@ -1,4 +1,4 @@
-package org.bukkit.plugin.messaging;
+package org.vulcanium.plugin.messaging;
 
 /**
  * Thrown if a Plugin attempts to send a message on an unregistered channel.

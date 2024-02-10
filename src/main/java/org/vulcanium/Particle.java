@@ -5,7 +5,9 @@ import org.vulcanium.inventory.ItemStack;
 import org.vulcanium.material.MaterialData;
 import org.jetbrains.annotations.NotNull;
 
-public class Particle implements Keyed {
+import java.util.Objects;
+
+public enum Particle implements Keyed {
     EXPLOSION_NORMAL("poof"),
     EXPLOSION_LARGE("explosion"),
     EXPLOSION_HUGE("explosion_emitter"),

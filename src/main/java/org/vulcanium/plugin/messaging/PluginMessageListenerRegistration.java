@@ -1,7 +1,7 @@
-package org.bukkit.plugin.messaging;
+package org.vulcanium.plugin.messaging;
 
-import org.bukkit.plugin.Plugin;
 import org.jetbrains.annotations.NotNull;
+import org.vulcanium.plugin.Plugin;
 
 /**
  * Contains information about a {@link Plugin}s registration to a plugin

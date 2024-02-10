@@ -1,7 +1,7 @@
-package org.bukkit.plugin.messaging;
+package org.vulcanium.plugin.messaging;
 
-import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
+import org.vulcanium.entity.Player;
 
 /**
  * A listener for a specific Plugin Channel, which will receive notifications

@@ -1,5 +1,6 @@
 package org.vulcanium.material;
 
+import org.jetbrains.annotations.NotNull;
 import org.vulcanium.Material;
 import org.vulcanium.block.BlockFace;
 
@@ -7,7 +8,7 @@ import org.vulcanium.block.BlockFace;
  * Material data for the piston extension block
  *
  * @deprecated all usage of MaterialData is deprecated and subject to removal.
- * Use {@link org.bukkit.vulcanium.data.BlockData}.
+ * Use {@link org.vulcanium.vulcanium.data.BlockData}.
  */
 @Deprecated
 public class PistonExtensionMaterial extends MaterialData implements Attachable {
@@ -27,7 +28,7 @@ public class PistonExtensionMaterial extends MaterialData implements Attachable 
     }
 
     @Override
-    public void setFacingDirection(BlockFace face) {
+    public void setFacingDirection(@NotNull BlockFace face) {
         byte data = (byte) (getData() & 0x8);
 
         switch (face) {
@@ -50,6 +51,7 @@ public class PistonExtensionMaterial extends MaterialData implements Attachable 
         setData(data);
     }
 
+    @NotNull
     @Override
     public BlockFace getFacing() {
         byte dir = (byte) (getData() & 7);
@@ -90,6 +92,7 @@ public class PistonExtensionMaterial extends MaterialData implements Attachable 
         setData((byte) (sticky ? (getData() | 0x8) : (getData() & ~0x8)));
     }
 
+    @NotNull
     @Override
     public BlockFace getAttachedFace() {
         return getFacing().getOppositeFace();

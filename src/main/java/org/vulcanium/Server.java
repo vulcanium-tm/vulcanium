@@ -1,3 +1,20 @@
+/*
+ Copyright © 2023
+
+ Owner: Vulcanium
+
+ Contributor: Shadowflare
+ ────────────────────────────────────────────────────────────────────
+ Permission is hereby granted to use and modify the Vulcanium plugin freely:
+
+ 1. Include copyright and permission notice in all copies of the Software.
+ 2. Users can depend on Vulcanium, create, and distribute plugins that rely on it.
+ 3. Republishing Vulcanium elsewhere is prohibited.
+ 4. Source code distribution is not allowed.
+ 5. Publishing a derivative version of the plugin is prohibited.
+ ────────────────────────────────────────────────────────────────────
+ SOFTWARE PROVIDED "AS IT IS," NO WARRANTY. AUTHORS NOT LIABLE FOR DAMAGES.
+ */
 package org.vulcanium;
 
 import com.google.common.collect.ImmutableList;
@@ -15,12 +32,43 @@ import java.util.UUID;
 import java.util.function.Consumer;
 import java.util.logging.Logger;
 
-
+import org.vulcanium.entity.Boss;
+import org.vulcanium.event.server.ServerListPingEvent;
+import org.vulcanium.inventory.meta.ItemMeta;
+import org.vulcanium.plugin.messaging.Messenger;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.vulcanium.advancement.Advancement;
+import org.vulcanium.block.data.BlockData;
+import org.vulcanium.boss.*;
+import org.vulcanium.command.CommandException;
+import org.vulcanium.command.CommandSender;
+import org.vulcanium.command.ConsoleCommandSender;
+import org.vulcanium.command.PluginCommand;
+import org.vulcanium.entity.Entity;
+import org.vulcanium.entity.Player;
+import org.vulcanium.entity.SpawnCategory;
+import org.vulcanium.event.inventory.InventoryType;
+import org.vulcanium.event.inventory.PrepareItemCraftEvent;
+import org.vulcanium.generator.ChunkGenerator;
+import org.vulcanium.generator.structure.StructureType;
+import org.vulcanium.help.HelpMap;
+import org.vulcanium.inventory.*;
+import org.vulcanium.loot.LootTable;
+import org.vulcanium.map.MapView;
 import org.vulcanium.packs.DataPackManager;
+import org.vulcanium.packs.ResourcePack;
+import org.vulcanium.permissions.Permissible;
+import org.vulcanium.plugin.PluginManager;
+import org.vulcanium.plugin.ServicesManager;
+import org.vulcanium.plugin.messaging.PluginMessageRecipient;
+import org.vulcanium.profile.PlayerProfile;
+import org.vulcanium.scheduler.VulcaniumScheduler;
+import org.vulcanium.scoreboard.Criteria;
+import org.vulcanium.scoreboard.ScoreboardManager;
+import org.vulcanium.structure.StructureManager;
+import org.vulcanium.util.CachedServerIcon;
 
 /**
  * Represents a server implementation.
@@ -33,7 +81,7 @@ public interface Server extends PluginMessageRecipient {
      * <p>
      * For use in {@link #broadcast(java.lang.String, java.lang.String)}.
      */
-    public static final String BROADCAST_CHANNEL_ADMINISTRATIVE = "bukkit.broadcast.admin";
+    public static final String BROADCAST_CHANNEL_ADMINISTRATIVE = "vulcanium.broadcast.admin";
 
     /**
      * Used for all announcement messages, such as informing users that a
@@ -41,7 +89,7 @@ public interface Server extends PluginMessageRecipient {
      * <p>
      * For use in {@link #broadcast(java.lang.String, java.lang.String)}.
      */
-    public static final String BROADCAST_CHANNEL_USERS = "bukkit.broadcast.user";
+    public static final String BROADCAST_CHANNEL_USERS = "vulcanium.broadcast.user";
 
     /**
      * Gets the name of this server implementation.
@@ -60,12 +108,12 @@ public interface Server extends PluginMessageRecipient {
     public String getVersion();
 
     /**
-     * Gets the Bukkit version that this server is running.
+     * Gets the Vulcanium version that this server is running.
      *
-     * @return version of Bukkit
+     * @return version of Vulcanium
      */
     @NotNull
-    public String getBukkitVersion();
+    public String getVulcaniumVersion();
 
     /**
      * Gets a view of all currently logged in players. This {@linkplain
@@ -551,7 +599,7 @@ public interface Server extends PluginMessageRecipient {
      * @return a scheduling service for this server
      */
     @NotNull
-    public BukkitScheduler getScheduler();
+    public VulcaniumScheduler getScheduler();
 
     /**
      * Gets a services manager.
@@ -567,7 +615,7 @@ public interface Server extends PluginMessageRecipient {
      * @return a list of worlds
      */
     @NotNull
-    public List<org.bukkit.World> getWorlds();
+    public List<World> getWorlds();
 
     /**
      * Creates or loads a world with the given name using the specified
@@ -580,7 +628,7 @@ public interface Server extends PluginMessageRecipient {
      * @return newly created or loaded world
      */
     @Nullable
-    public org.bukkit.World createWorld(@NotNull WorldCreator creator);
+    public World createWorld(@NotNull WorldCreator creator);
 
     /**
      * Unloads a world with the given name.
@@ -598,7 +646,7 @@ public interface Server extends PluginMessageRecipient {
      * @param save whether to save the chunks before unloading
      * @return true if successful, false otherwise
      */
-    public boolean unloadWorld(@NotNull org.bukkit.World world, boolean save);
+    public boolean unloadWorld(@NotNull World world, boolean save);
 
     /**
      * Gets the world with the given name.
@@ -607,7 +655,7 @@ public interface Server extends PluginMessageRecipient {
      * @return a world with the given name, or null if none exists
      */
     @Nullable
-    public org.bukkit.World getWorld(@NotNull String name);
+    public World getWorld(@NotNull String name);
 
     /**
      * Gets the world from the given Unique ID.
@@ -616,17 +664,17 @@ public interface Server extends PluginMessageRecipient {
      * @return a world with the given Unique ID, or null if none exists
      */
     @Nullable
-    public org.bukkit.World getWorld(@NotNull UUID uid);
+    public World getWorld(@NotNull UUID uid);
 
     /**
-     * Create a new virtual {@link org.bukkit.WorldBorder}.
+     * Create a new virtual {@link WorldBorder}.
      * <p>
      * Note that world borders created by the server will not respect any world
      * scaling effects (i.e. coordinates are not divided by 8 in the nether).
      *
      * @return the created world border instance
      *
-     * @see Player#setWorldBorder(org.bukkit.WorldBorder)
+     * @see Player#setWorldBorder(WorldBorder)
      */
     @NotNull
     public WorldBorder createWorldBorder();
@@ -649,7 +697,7 @@ public interface Server extends PluginMessageRecipient {
      * @return a newly created map view
      */
     @NotNull
-    public MapView createMap(@NotNull org.bukkit.World world);
+    public MapView createMap(@NotNull World world);
 
     /**
      * Create a new explorer map targeting the closest nearby structure of a
@@ -663,11 +711,11 @@ public interface Server extends PluginMessageRecipient {
      * @param structureType the type of structure to find
      * @return a newly created item stack
      *
-     * @see org.bukkit.World#locateNearestStructure(org.bukkit.Location,
-     *      org.bukkit.StructureType, int, boolean)
+     * @see World#locateNearestStructure(Location,
+     *      StructureType, int, boolean)
      */
     @NotNull
-    public ItemStack createExplorerMap(@NotNull org.bukkit.World world, @NotNull Location location, @NotNull StructureType structureType);
+    public ItemStack createExplorerMap(@NotNull World world, @NotNull Location location, @NotNull StructureType structureType);
 
     /**
      * Create a new explorer map targeting the closest nearby structure of a
@@ -684,11 +732,11 @@ public interface Server extends PluginMessageRecipient {
      * @param findUnexplored whether to find unexplored structures
      * @return the newly created item stack
      *
-     * @see org.bukkit.World#locateNearestStructure(org.bukkit.Location,
-     *      org.bukkit.StructureType, int, boolean)
+     * @see World#locateNearestStructure(Location,
+     *      StructureType, int, boolean)
      */
     @NotNull
-    public ItemStack createExplorerMap(@NotNull org.bukkit.World world, @NotNull Location location, @NotNull StructureType structureType, int radius, boolean findUnexplored);
+    public ItemStack createExplorerMap(@NotNull World world, @NotNull Location location, @NotNull StructureType structureType, int radius, boolean findUnexplored);
 
     /**
      * Reloads the server, refreshing settings and plugin information.
@@ -777,7 +825,7 @@ public interface Server extends PluginMessageRecipient {
      * </pre>
      *
      * <p>NOTE: This method will not modify the provided ItemStack array, for that, use
-     * {@link #craftItem(ItemStack[], org.bukkit.World, Player)}.</p>
+     * {@link #craftItem(ItemStack[], World, Player)}.</p>
      *
      * @param craftingMatrix list of items to be crafted from.
      *                       Must not contain more than 9 items.
@@ -785,7 +833,7 @@ public interface Server extends PluginMessageRecipient {
      * @return the {@link Recipe} resulting from the given crafting matrix.
      */
     @Nullable
-    public Recipe getCraftingRecipe(@NotNull ItemStack[] craftingMatrix, @NotNull org.bukkit.World world);
+    public Recipe getCraftingRecipe(@NotNull ItemStack[] craftingMatrix, @NotNull World world);
 
     /**
      * Get the crafted item using the list of {@link ItemStack} provided.
@@ -799,10 +847,10 @@ public interface Server extends PluginMessageRecipient {
      * [ 6 7 8 ]
      * </pre>
      *
-     * <p>The {@link org.bukkit.World} and {@link Player} arguments are required to fulfill the Bukkit Crafting
+     * <p>The {@link World} and {@link Player} arguments are required to fulfill the Vulcanium Crafting
      * events.</p>
      *
-     * <p>Calls {@link org.bukkit.event.inventory.PrepareItemCraftEvent} to imitate the {@link Player}
+     * <p>Calls {@link PrepareItemCraftEvent} to imitate the {@link Player}
      * initiating the crafting event.</p>
      *
      * @param craftingMatrix list of items to be crafted from.
@@ -813,7 +861,7 @@ public interface Server extends PluginMessageRecipient {
      * an ItemStack of {@link Material#AIR} is returned.
      */
     @NotNull
-    public ItemStack craftItem(@NotNull ItemStack[] craftingMatrix, @NotNull org.bukkit.World world, @NotNull Player player);
+    public ItemStack craftItem(@NotNull ItemStack[] craftingMatrix, @NotNull World world, @NotNull Player player);
 
     /**
      * Get the crafted item using the list of {@link ItemStack} provided.
@@ -834,7 +882,7 @@ public interface Server extends PluginMessageRecipient {
      * an ItemStack of {@link Material#AIR} is returned.
      */
     @NotNull
-    public ItemStack craftItem(@NotNull ItemStack[] craftingMatrix, @NotNull org.bukkit.World world);
+    public ItemStack craftItem(@NotNull ItemStack[] craftingMatrix, @NotNull World world);
 
     /**
      * Get the crafted item using the list of {@link ItemStack} provided.
@@ -848,10 +896,10 @@ public interface Server extends PluginMessageRecipient {
      * [ 6 7 8 ]
      * </pre>
      *
-     * <p>The {@link org.bukkit.World} and {@link Player} arguments are required to fulfill the Bukkit Crafting
+     * <p>The {@link World} and {@link Player} arguments are required to fulfill the Vulcanium Crafting
      * events.</p>
      *
-     * <p>Calls {@link org.bukkit.event.inventory.PrepareItemCraftEvent} to imitate the {@link Player}
+     * <p>Calls {@link PrepareItemCraftEvent} to imitate the {@link Player}
      * initiating the crafting event.</p>
      *
      * @param craftingMatrix list of items to be crafted from.
@@ -861,7 +909,7 @@ public interface Server extends PluginMessageRecipient {
      * @return resulting {@link ItemCraftResult} containing the resulting item, matrix and any overflow items.
      */
     @NotNull
-    public ItemCraftResult craftItemResult(@NotNull ItemStack[] craftingMatrix, @NotNull org.bukkit.World world, @NotNull Player player);
+    public ItemCraftResult craftItemResult(@NotNull ItemStack[] craftingMatrix, @NotNull World world, @NotNull Player player);
 
     /**
      * Get the crafted item using the list of {@link ItemStack} provided.
@@ -881,7 +929,7 @@ public interface Server extends PluginMessageRecipient {
      * @return resulting {@link ItemCraftResult} containing the resulting item, matrix and any overflow items.
      */
     @NotNull
-    public ItemCraftResult craftItemResult(@NotNull ItemStack[] craftingMatrix, @NotNull org.bukkit.World world);
+    public ItemCraftResult craftItemResult(@NotNull ItemStack[] craftingMatrix, @NotNull World world);
 
     /**
      * Get an iterator through the list of crafting recipes.
@@ -1157,7 +1205,7 @@ public interface Server extends PluginMessageRecipient {
     public ConsoleCommandSender getConsoleSender();
 
     /**
-     * Gets the folder that contains all of the various {@link org.bukkit.World}s.
+     * Gets the folder that contains all of the various {@link World}s.
      *
      * @return folder that contains all worlds
      */
@@ -1397,7 +1445,7 @@ public interface Server extends PluginMessageRecipient {
      * @return the configured warning state
      */
     @NotNull
-    public WarningState getWarningState();
+    public Warning.WarningState getWarningState();
 
     /**
      * Gets the instance of the item factory (for {@link ItemMeta}).
@@ -1491,7 +1539,7 @@ public interface Server extends PluginMessageRecipient {
     /**
      * Create a ChunkData for use in a generator.
      *
-     * See {@link ChunkGenerator#generateChunkData(org.bukkit.World, java.util.Random, int, int, org.bukkit.generator.ChunkGenerator.BiomeGrid)}
+     * See {@link ChunkGenerator#generateChunkData(World, java.util.Random, int, int, ChunkGenerator.BiomeGrid)}
      *
      * @param world the world to create the ChunkData for
      * @return a new ChunkData for the world
@@ -1533,7 +1581,7 @@ public interface Server extends PluginMessageRecipient {
     /**
      * Gets an unmodifiable iterator through all persistent bossbars.
      * <ul>
-     *   <li><b>not</b> bound to a {@link org.bukkit.entity.Boss}</li>
+     *   <li><b>not</b> bound to a {@link Boss}</li>
      *   <li>
      *     <b>not</b> created using
      *     {@link #createBossBar(String, BarColor, BarStyle, BarFlag...)}
@@ -1550,7 +1598,7 @@ public interface Server extends PluginMessageRecipient {
     /**
      * Gets the {@link KeyedBossBar} specified by this key.
      * <ul>
-     *   <li><b>not</b> bound to a {@link org.bukkit.entity.Boss}</li>
+     *   <li><b>not</b> bound to a {@link Boss}</li>
      *   <li>
      *     <b>not</b> created using
      *     {@link #createBossBar(String, BarColor, BarStyle, BarFlag...)}
@@ -1568,7 +1616,7 @@ public interface Server extends PluginMessageRecipient {
     /**
      * Removes a {@link KeyedBossBar} specified by this key.
      * <ul>
-     *   <li><b>not</b> bound to a {@link org.bukkit.entity.Boss}</li>
+     *   <li><b>not</b> bound to a {@link Boss}</li>
      *   <li>
      *     <b>not</b> created using
      *     {@link #createBossBar(String, BarColor, BarStyle, BarFlag...)}
@@ -1660,7 +1708,7 @@ public interface Server extends PluginMessageRecipient {
 
     /**
      * Gets a tag which has already been defined within the server. Plugins are
-     * suggested to use the concrete tags in {@link org.bukkit.Tag} rather than this method
+     * suggested to use the concrete tags in {@link Tag} rather than this method
      * which makes no guarantees about which tags are available, and may also be
      * less performant due to lack of caching.
      * <br>
@@ -1668,7 +1716,7 @@ public interface Server extends PluginMessageRecipient {
      * path consisting of namespace/tags/registry/key is expected.
      * <br>
      * Server implementations are allowed to handle only the registries
-     * indicated in {@link org.bukkit.Tag}.
+     * indicated in {@link Tag}.
      *
      * @param <T> type of the tag
      * @param registry the tag registry to look at
@@ -1677,13 +1725,13 @@ public interface Server extends PluginMessageRecipient {
      * @return the tag or null
      */
     @Nullable
-    <T extends Keyed> org.bukkit.Tag<T> getTag(@NotNull String registry, @NotNull NamespacedKey tag, @NotNull Class<T> clazz);
+    <T extends Keyed> Tag<T> getTag(@NotNull String registry, @NotNull NamespacedKey tag, @NotNull Class<T> clazz);
 
     /**
      * Gets a all tags which have been defined within the server.
      * <br>
      * Server implementations are allowed to handle only the registries
-     * indicated in {@link org.bukkit.Tag}.
+     * indicated in {@link Tag}.
      * <br>
      * No guarantees are made about the mutability of the returned iterator.
      *

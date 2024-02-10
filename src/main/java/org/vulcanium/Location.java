@@ -1,3 +1,20 @@
+/*
+ Copyright © 2023
+
+ Owner: Vulcanium
+
+ Contributor: Shadowflare
+ ────────────────────────────────────────────────────────────────────
+ Permission is hereby granted to use and modify the Vulcanium plugin freely:
+
+ 1. Include copyright and permission notice in all copies of the Software.
+ 2. Users can depend on Vulcanium, create, and distribute plugins that rely on it.
+ 3. Republishing Vulcanium elsewhere is prohibited.
+ 4. Source code distribution is not allowed.
+ 5. Publishing a derivative version of the plugin is prohibited.
+ ────────────────────────────────────────────────────────────────────
+ SOFTWARE PROVIDED "AS IT IS," NO WARRANTY. AUTHORS NOT LIABLE FOR DAMAGES.
+ */
 package org.vulcanium;
 
 import com.google.common.base.Preconditions;
@@ -8,6 +25,10 @@ import java.util.Map;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.vulcanium.block.Block;
+import org.vulcanium.configuration.serialization.ConfigurationSerializable;
+import org.vulcanium.util.NumberConversions;
+import org.vulcanium.util.Vector;
 
 /**
  * Represents a 3-dimensional position in a world.
@@ -79,7 +100,7 @@ public class Location implements Cloneable, ConfigurationSerializable {
         }
 
         World world = this.world.get();
-        return world != null && Bukkit.getWorld(world.getUID()) != null;
+        return world != null && Vulcanium.getWorld(world.getUID()) != null;
     }
 
     /**
@@ -660,7 +681,7 @@ public class Location implements Cloneable, ConfigurationSerializable {
     public static Location deserialize(@NotNull Map<String, Object> args) {
         World world = null;
         if (args.containsKey("world")) {
-            world = Bukkit.getWorld((String) args.get("world"));
+            world = Vulcanium.getWorld((String) args.get("world"));
             if (world == null) {
                 throw new IllegalArgumentException("unknown world");
             }

@@ -1,5 +1,6 @@
 package org.vulcanium.material;
 
+import org.jetbrains.annotations.NotNull;
 import org.vulcanium.Material;
 import org.vulcanium.block.BlockFace;
 
@@ -45,7 +46,7 @@ public class Pumpkin extends MaterialData implements Directional {
     }
 
     @Override
-    public void setFacingDirection(BlockFace face) {
+    public void setFacingDirection(@NotNull BlockFace face) {
         byte data;
 
         switch (face) {
@@ -69,6 +70,7 @@ public class Pumpkin extends MaterialData implements Directional {
         setData(data);
     }
 
+    @NotNull
     @Override
     public BlockFace getFacing() {
         byte data = getData();

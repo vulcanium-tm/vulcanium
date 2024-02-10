@@ -12,15 +12,15 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.regex.Pattern;
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandExecutor;
-import org.bukkit.command.CommandSender;
-import org.bukkit.command.PluginCommand;
-import org.bukkit.command.TabCompleter;
-import org.bukkit.permissions.Permissible;
-import org.bukkit.permissions.Permission;
-import org.bukkit.permissions.PermissionDefault;
-import org.bukkit.plugin.java.JavaPlugin;
+import org.vulcanium.command.Command;
+import org.vulcanium.command.CommandExecutor;
+import org.vulcanium.command.CommandSender;
+import org.vulcanium.command.PluginCommand;
+import org.vulcanium.command.TabCompleter;
+import org.vulcanium.permissions.Permissible;
+import org.vulcanium.permissions.Permission;
+import org.vulcanium.permissions.PermissionDefault;
+import org.vulcanium.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -157,7 +157,7 @@ import org.yaml.snakeyaml.representer.Representer;
  *contributors: [Choco, md_5]
  *website: http://www.curse.com/server-mods/minecraft/myplugin
  *
- *main: com.captaininflamo.bukkit.inferno.Inferno
+ *main: com.captaininflamo.vulcanium.inferno.Inferno
  *depend: [NewFire, FlameWire]
  *api-version: 1.13
  *libraries:
@@ -383,17 +383,17 @@ public final class PluginDescriptionFile {
      * <ul>
      * <li>This must contain the full namespace including the class file
      *     itself.
-     * <li>If your namespace is <code>org.bukkit.plugin</code>, and your class
+     * <li>If your namespace is <code>org.vulcanium.plugin</code>, and your class
      *     file is called <code>MyPlugin</code> then this must be
-     *     <code>org.bukkit.plugin.MyPlugin</code>
-     * <li>No plugin can use <code>org.bukkit.</code> as a base package for
+     *     <code>org.vulcanium.plugin.MyPlugin</code>
+     * <li>No plugin can use <code>org.vulcanium.</code> as a base package for
      *     <b>any class</b>, including the main class.
      * </ul>
      * <p>
      * In the plugin.yml, this entry is named <code>main</code>.
      * <p>
      * Example:
-     * <blockquote><pre>main: org.bukkit.plugin.MyPlugin</pre></blockquote>
+     * <blockquote><pre>main: org.vulcanium.plugin.MyPlugin</pre></blockquote>
      *
      * @return the fully qualified main class for the plugin
      */
@@ -1030,8 +1030,8 @@ public final class PluginDescriptionFile {
 
         try {
             main = map.get("main").toString();
-            if (main.startsWith("org.bukkit.")) {
-                throw new InvalidDescriptionException("main may not be within the org.bukkit namespace");
+            if (main.startsWith("org.vulcanium.")) {
+                throw new InvalidDescriptionException("main may not be within the org.vulcanium namespace");
             }
         } catch (NullPointerException ex) {
             throw new InvalidDescriptionException(ex, "main is not defined");

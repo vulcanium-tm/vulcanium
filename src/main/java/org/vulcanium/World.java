@@ -1,5 +1,21 @@
-package org.vulcanium;
+/*
+ Copyright © 2023
 
+ Owner: Vulcanium
+
+ Contributor: Shadowflare
+ ────────────────────────────────────────────────────────────────────
+ Permission is hereby granted to use and modify the Vulcanium plugin freely:
+
+ 1. Include copyright and permission notice in all copies of the Software.
+ 2. Users can depend on Vulcanium, create, and distribute plugins that rely on it.
+ 3. Republishing Vulcanium elsewhere is prohibited.
+ 4. Source code distribution is not allowed.
+ 5. Publishing a derivative version of the plugin is prohibited.
+ ────────────────────────────────────────────────────────────────────
+ SOFTWARE PROVIDED "AS IT IS," NO WARRANTY. AUTHORS NOT LIABLE FOR DAMAGES.
+ */
+package org.vulcanium;
 
 import java.io.File;
 import java.util.Collection;
@@ -9,9 +25,29 @@ import java.util.Map;
 import java.util.Set;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
+
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.vulcanium.block.Biome;
+import org.vulcanium.block.Block;
+import org.vulcanium.block.Structure;
+import org.vulcanium.block.data.BlockData;
+import org.vulcanium.boss.DragonBattle;
+import org.vulcanium.entity.*;
+import org.vulcanium.event.entity.CreatureSpawnEvent;
+import org.vulcanium.generator.BiomeProvider;
+import org.vulcanium.generator.BlockPopulator;
+import org.vulcanium.generator.ChunkGenerator;
+import org.vulcanium.generator.WorldInfo;
+import org.vulcanium.generator.structure.StructureType;
+import org.vulcanium.inventory.ItemStack;
+import org.vulcanium.material.MaterialData;
+import org.vulcanium.metadata.Metadatable;
+import org.vulcanium.persistence.PersistentDataHolder;
+import org.vulcanium.plugin.Plugin;
+import org.vulcanium.plugin.messaging.PluginMessageRecipient;
+import org.vulcanium.util.*;
 
 /**
  * Represents a world, which may contain entities, chunks and blocks
@@ -470,7 +506,7 @@ public interface World extends RegionAccessor, WorldInfo, PluginMessageRecipient
      * @param speed Speed of the arrow. A recommend speed is 0.6
      * @param spread Spread of the arrow. A recommend spread is 12
      * @param clazz the Entity class for the arrow
-     * {@link entity.SpectralArrow},{@link entity.Arrow},{@link entity.TippedArrow}
+     * {@link SpectralArrow},{@link Arrow},{@link TippedArrow}
      * @return Arrow entity spawned as a result of this method
      */
     @NotNull
@@ -1177,7 +1213,7 @@ public interface World extends RegionAccessor, WorldInfo, PluginMessageRecipient
      *                      in their default state and not further modifications
      *                      to the entity will be made.
      *                      Notably only entities that extend the
-     *                      {@link entity.Mob} interface provide
+     *                      {@link Mob} interface provide
      *                      randomisation logic for their spawn.
      *                      This parameter is hence useless for any other type
      *                      of entity.
@@ -2680,39 +2716,6 @@ public interface World extends RegionAccessor, WorldInfo, PluginMessageRecipient
     public Location locateNearestStructure(@NotNull Location origin, @NotNull StructureType structureType, int radius, boolean findUnexplored);
 
     /**
-     * Find the closest nearby structure of a given {@link StructureType}.
-     * Finding unexplored structures can, and will, block if the world is
-     * looking in chunks that gave not generated yet. This can lead to the world
-     * temporarily freezing while locating an unexplored structure.
-     * <p>
-     * The {@code radius} is not a rigid square radius. Each structure may alter
-     * how many chunks to check for each iteration. Do not assume that only a
-     * radius x radius chunk area will be checked. For example,
-     * {@link StructureType#WOODLAND_MANSION} can potentially check up to 20,000
-     * blocks away (or more) regardless of the radius used.
-     * <p>
-     * This will <i>not</i> load or generate chunks. This can also lead to
-     * instances where the server can hang if you are only looking for
-     * unexplored structures. This is because it will keep looking further and
-     * further out in order to find the structure.
-     * <p>
-     * The difference between searching for a {@link StructureType} and a
-     * {@link Structure} is, that a {@link StructureType} can refer to multiple
-     * {@link Structure Structures} while searching for a {@link Structure}
-     * while only search for the given {@link Structure}.
-     *
-     * @param origin where to start looking for a structure
-     * @param structureType the type of structure to find
-     * @param radius the radius, in chunks, around which to search
-     * @param findUnexplored true to only find unexplored structures
-     * @return the closest {@link Location} and {@link Structure}, or null if no
-     * structure of the specified type exists.
-     * @see #locateNearestStructure(Location, Structure, int, boolean)
-     */
-    @Nullable
-    StructureSearchResult locateNearestStructure(@NotNull Location origin, @NotNull StructureType structureType, int radius, boolean findUnexplored);
-
-    /**
      * Find the closest nearby structure of a given {@link Structure}. Finding
      * unexplored structures can, and will, block if the world is looking in
      * chunks that gave not generated yet. This can lead to the world
@@ -2721,7 +2724,7 @@ public interface World extends RegionAccessor, WorldInfo, PluginMessageRecipient
      * The {@code radius} is not a rigid square radius. Each structure may alter
      * how many chunks to check for each iteration. Do not assume that only a
      * radius x radius chunk area will be checked. For example,
-     * {@link Structure#MANSION} can potentially check up to 20,000 blocks away
+     *  can potentially check up to 20,000 blocks away
      * (or more) regardless of the radius used.
      * <p>
      * This will <i>not</i> load or generate chunks. This can also lead to

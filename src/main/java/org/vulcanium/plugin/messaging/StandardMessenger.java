@@ -1,4 +1,4 @@
-package org.bukkit.plugin.messaging;
+package org.vulcanium.plugin.messaging;
 
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.ImmutableSet.Builder;
@@ -8,9 +8,9 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 import java.util.logging.Level;
-import org.bukkit.entity.Player;
-import org.bukkit.plugin.Plugin;
 import org.jetbrains.annotations.NotNull;
+import org.vulcanium.entity.Player;
+import org.vulcanium.plugin.Plugin;
 
 /**
  * Standard implementation to {@link Messenger}
@@ -71,7 +71,7 @@ public class StandardMessenger implements Messenger {
             Set<String> channels = outgoingByPlugin.get(plugin);
 
             if (channels != null) {
-                String[] toRemove = channels.toArray(new String[channels.size()]);
+                String[] toRemove = channels.toArray(new String[0]);
 
                 outgoingByPlugin.remove(plugin);
 
@@ -141,7 +141,7 @@ public class StandardMessenger implements Messenger {
             Set<PluginMessageListenerRegistration> registrations = incomingByPlugin.get(plugin);
 
             if (registrations != null) {
-                PluginMessageListenerRegistration[] toRemove = registrations.toArray(new PluginMessageListenerRegistration[registrations.size()]);
+                PluginMessageListenerRegistration[] toRemove = registrations.toArray(new PluginMessageListenerRegistration[0]);
 
                 for (PluginMessageListenerRegistration registration : toRemove) {
                     if (registration.getChannel().equals(channel)) {
@@ -157,7 +157,7 @@ public class StandardMessenger implements Messenger {
             Set<PluginMessageListenerRegistration> registrations = incomingByPlugin.get(plugin);
 
             if (registrations != null) {
-                PluginMessageListenerRegistration[] toRemove = registrations.toArray(new PluginMessageListenerRegistration[registrations.size()]);
+                PluginMessageListenerRegistration[] toRemove = registrations.toArray(new PluginMessageListenerRegistration[0]);
 
                 incomingByPlugin.remove(plugin);
 

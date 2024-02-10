@@ -11,7 +11,7 @@ import org.vulcanium.block.BlockFace;
  * @see Material#LEGACY_LOG_2
  *
  * @deprecated all usage of MaterialData is deprecated and subject to removal.
- * Use {@link org.bukkit.block.data.BlockData}.
+ * Use {@link org.vulcanium.block.data.BlockData}.
  */
 @Deprecated
 public class Tree extends Wood {

@@ -24,21 +24,21 @@ import java.util.WeakHashMap;
 import java.util.logging.Level;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import org.bukkit.Server;
-import org.bukkit.World;
-import org.bukkit.command.Command;
-import org.bukkit.command.PluginCommandYamlParser;
-import org.bukkit.command.SimpleCommandMap;
-import org.bukkit.event.Event;
-import org.bukkit.event.EventPriority;
-import org.bukkit.event.HandlerList;
-import org.bukkit.event.Listener;
-import org.bukkit.permissions.Permissible;
-import org.bukkit.permissions.Permission;
-import org.bukkit.permissions.PermissionDefault;
-import org.bukkit.util.FileUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.vulcanium.Server;
+import org.vulcanium.World;
+import org.vulcanium.command.Command;
+import org.vulcanium.command.PluginCommandYamlParser;
+import org.vulcanium.command.SimpleCommandMap;
+import org.vulcanium.event.Event;
+import org.vulcanium.event.EventPriority;
+import org.vulcanium.event.HandlerList;
+import org.vulcanium.event.Listener;
+import org.vulcanium.permissions.Permissible;
+import org.vulcanium.permissions.Permission;
+import org.vulcanium.permissions.PermissionDefault;
+import org.vulcanium.util.FileUtil;
 
 /**
  * Handles all plugin management from the Server
@@ -117,7 +117,7 @@ public final class SimplePluginManager implements PluginManager {
         List<Plugin> result = new ArrayList<Plugin>();
         Set<Pattern> filters = fileAssociations.keySet();
 
-        if (!(server.getUpdateFolder().equals(""))) {
+        if (!(server.getUpdateFolder().isEmpty())) {
             updateDirectory = new File(directory, server.getUpdateFolder());
         }
 
@@ -143,7 +143,7 @@ public final class SimplePluginManager implements PluginManager {
             try {
                 description = loader.getPluginDescription(file);
                 String name = description.getName();
-                if (name.equalsIgnoreCase("bukkit") || name.equalsIgnoreCase("minecraft") || name.equalsIgnoreCase("mojang")) {
+                if (name.equalsIgnoreCase("vulcanium") || name.equalsIgnoreCase("minecraft") || name.equalsIgnoreCase("mojang")) {
                     server.getLogger().log(Level.SEVERE, "Could not load '" + file.getPath() + "' in folder '" + directory.getPath() + "': Restricted Name");
                     continue;
                 } else if (description.rawName.indexOf(' ') != -1) {
@@ -358,7 +358,7 @@ public final class SimplePluginManager implements PluginManager {
             }
         }
 
-        return result.toArray(new Plugin[result.size()]);
+        return result.toArray(new Plugin[0]);
     }
 
     /**
@@ -433,7 +433,7 @@ public final class SimplePluginManager implements PluginManager {
     @Override
     @NotNull
     public synchronized Plugin[] getPlugins() {
-        return plugins.toArray(new Plugin[plugins.size()]);
+        return plugins.toArray(new Plugin[0]);
     }
 
     /**

@@ -1,7 +1,7 @@
 package org.vulcanium.util;
 
-import org.bukkit.entity.Entity;
-import org.bukkit.generator.LimitedRegion;
+import org.vulcanium.entity.Entity;
+import org.vulcanium.generator.LimitedRegion;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 

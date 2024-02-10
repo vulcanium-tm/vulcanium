@@ -1,14 +1,14 @@
 package org.vulcanium.material;
 
-import org.bukkit.Material;
-import org.bukkit.block.BlockFace;
+import org.vulcanium.Material;
+import org.vulcanium.block.BlockFace;
 
 /**
  * This is the superclass for the {@link DetectorRail} and {@link PoweredRail}
  * classes
  *
  * @deprecated all usage of MaterialData is deprecated and subject to removal.
- * Use {@link org.bukkit.block.data.BlockData}.
+ * Use {@link org.vulcanium.block.data.BlockData}.
  */
 @Deprecated
 public class ExtendedRails extends Rails {

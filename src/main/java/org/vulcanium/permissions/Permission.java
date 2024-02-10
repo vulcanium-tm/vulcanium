@@ -1,7 +1,7 @@
 package org.vulcanium.permissions;
 
-import org.bukkit.Bukkit;
-import org.bukkit.plugin.PluginManager;
+import org.vulcanium.Bukkit;
+import org.vulcanium.plugin.PluginManager;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.vulcanium.Vulcanium;

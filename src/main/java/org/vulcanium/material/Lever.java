@@ -1,5 +1,6 @@
 package org.vulcanium.material;
 
+import org.jetbrains.annotations.NotNull;
 import org.vulcanium.Material;
 import org.vulcanium.block.BlockFace;
 
@@ -54,6 +55,7 @@ public class Lever extends SimpleAttachableMaterialData implements Redstone {
      *
      * @return BlockFace attached to
      */
+    @NotNull
     @Override
     public BlockFace getAttachedFace() {
         byte data = (byte) (getData() & 0x7);
@@ -88,7 +90,7 @@ public class Lever extends SimpleAttachableMaterialData implements Redstone {
      * Sets the direction this lever is pointing in
      */
     @Override
-    public void setFacingDirection(BlockFace face) {
+    public void setFacingDirection(@NotNull BlockFace face) {
         byte data = (byte) (getData() & 0x8);
         BlockFace attach = getAttachedFace();
 

@@ -1,0 +1,6 @@
+<component name="CopyrightManager">
+  <copyright>
+    <option name="notice" value="/*&#10; Copyright © 2023&#10;&#10; Owner: Vulcanium&#10;&#10; Contributor: Shadowflare&#10; ────────────────────────────────────────────────────────────────────&#10; Permission is hereby granted to use and modify the Vulcanium plugin freely:&#10;&#10; 1. Include copyright and permission notice in all copies of the Software.&#10; 2. Users can depend on Vulcanium, create, and distribute plugins that rely on it.&#10; 3. Republishing Vulcanium elsewhere is prohibited.&#10; 4. Source code distribution is not allowed.&#10; 5. Publishing a derivative version of the plugin is prohibited.&#10; ────────────────────────────────────────────────────────────────────&#10; SOFTWARE PROVIDED &quot;AS IT IS,&quot; NO WARRANTY. AUTHORS NOT LIABLE FOR DAMAGES.&#10; */" />
+    <option name="myName" value="vulcanium" />
+  </copyright>
+</component>

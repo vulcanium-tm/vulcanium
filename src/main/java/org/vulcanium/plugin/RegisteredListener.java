@@ -1,10 +1,10 @@
 package org.vulcanium.plugin;
 
-import org.bukkit.event.Cancellable;
-import org.bukkit.event.Event;
-import org.bukkit.event.EventException;
-import org.bukkit.event.EventPriority;
-import org.bukkit.event.Listener;
+import org.vulcanium.event.Cancellable;
+import org.vulcanium.event.Event;
+import org.vulcanium.event.EventException;
+import org.vulcanium.event.EventPriority;
+import org.vulcanium.event.Listener;
 import org.jetbrains.annotations.NotNull;
 
 /**

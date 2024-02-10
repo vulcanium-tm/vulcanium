@@ -1,4 +1,4 @@
-package org.bukkit.plugin.messaging;
+package org.vulcanium.plugin.messaging;
 
 /**
  * Thrown if a plugin attempts to register for a reserved channel (such as

@@ -2,14 +2,14 @@ package org.vulcanium.plugin;
 
 import java.io.File;
 import java.util.Set;
-import org.bukkit.event.Event;
-import org.bukkit.event.EventPriority;
-import org.bukkit.event.Listener;
-import org.bukkit.permissions.Permissible;
-import org.bukkit.permissions.Permission;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.vulcanium.event.Event;
+import org.vulcanium.event.EventPriority;
+import org.vulcanium.event.Listener;
+import org.vulcanium.permissions.Permissible;
+import org.vulcanium.permissions.Permission;
 
 /**
  * Handles all plugin management from the Server
@@ -303,4 +303,5 @@ public interface PluginManager {
      * @return True if event timings are to be used
      */
     public boolean useTimings();
+
 }
