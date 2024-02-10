@@ -1,0 +1,29 @@
+plugins {
+    id 'java'
+}
+
+group 'org.vulcanium'
+version '1.20.4-R0.1-SNAPSHOT'
+
+
+task coreJar(type: Jar) {
+    archiveFileName = 'vulcanium-core.jar'
+    manifest {
+        attributes(
+                'Main-Class': 'org.vulcanium.core.Main',
+                'Implementation-Title': 'Vulcanium',
+                'Implementation-Version': version,
+                'Specification-Title': 'Vulcanium',
+                'Specification-Vendor': 'Vulcanium Team',
+        )
+    }
+    from {
+        configurations.compile.collect { it.isDirectory() ? it : zipTree(it) }
+    }
+}
+
+test {
+    testLogging {
+        events "passed", "skipped", "failed"
+    }
+}

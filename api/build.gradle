@@ -1,0 +1,16 @@
+plugins {
+    id 'java'
+}
+
+group = 'org.vulcanium'
+version = '1.20.4-R0.1-SNAPSHOT'
+
+
+task apiJar(type: Jar) {
+    archiveFileName = 'vulcanium-api.jar'
+    from sourceSets.main.output
+}
+
+test {
+    useJUnitPlatform()
+}
