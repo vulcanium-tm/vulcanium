@@ -10,7 +10,8 @@ allprojects {
 }
 ext.exportedProjects = [
         ":core",
-        ":api"
+        ":api",
+        ":services"
 ]
 repositories {
     mavenCentral()
