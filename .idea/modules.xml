@@ -2,8 +2,11 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/core/vulcanium.core.main.iml" filepath="$PROJECT_DIR$/.idea/modules/core/vulcanium.core.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/org.vulcanium.vulcanium.test.iml" filepath="$PROJECT_DIR$/.idea/modules/org.vulcanium.vulcanium.test.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/vulcanium.main.iml" filepath="$PROJECT_DIR$/.idea/modules/vulcanium.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/services/vulcanium.services.main.iml" filepath="$PROJECT_DIR$/.idea/modules/services/vulcanium.services.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/services/vulcanium.services.test.iml" filepath="$PROJECT_DIR$/.idea/modules/services/vulcanium.services.test.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/vulcanium.test.iml" filepath="$PROJECT_DIR$/.idea/modules/vulcanium.test.iml" />
     </modules>
   </component>
 </project>
